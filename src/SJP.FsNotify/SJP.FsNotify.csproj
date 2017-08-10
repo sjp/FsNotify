@@ -1,0 +1,57 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net451;netcoreapp1.1;netstandard1.6</TargetFrameworks>
+    <!-- Don't reference the full NETStandard.Library -->
+    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <TreatSpecificWarningsAsErrors />
+    <!--<DocumentationFile>bin\$(Configuration)\$(TargetFramework)\.xml</DocumentationFile>-->
+    <Authors>Simon Potter</Authors>
+    <Company />
+    <Product />
+    <Description>Improve file system notifications.</Description>
+    <Copyright>Copyright © Simon Potter 2017</Copyright>
+    <PackageLicenseUrl>https://raw.github.com/sjp/SJP.FsNotify/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/sjp/SJP.FsNotify</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/sjp/SJP.FsNotify</RepositoryUrl>
+    <PackageIconUrl>https://raw.github.com/sjp/SJP.FsNotify/master/fsnotify.svg</PackageIconUrl>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net451' ">
+    <DefineConstants>$(DefineConstants);NETFX</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.1' Or '$(TargetFramework)' == 'netstandard1.6' ">
+    <DefineConstants>$(DefineConstants);RUNTIME_HANDLES</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.1' ">
+    <DefineConstants>$(DefineConstants);NET_CORE</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
+    <DefineConstants>$(DefineConstants);NET_STANDARD</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net451' ">
+    <Reference Include="System" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Enums.NET" Version="2.2.0" />
+    <PackageReference Include="System.Reactive.Linq" Version="3.1.1" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp1.1' Or '$(TargetFramework)' == 'netstandard1.6'">
+    <PackageReference Include="System.IO.FileSystem.DriveInfo" Version="4.3.0" />
+    <PackageReference Include="System.IO.FileSystem.Watcher" Version="4.3.0" />
+    <PackageReference Include="System.Runtime.Handles" Version="4.3.0" />
+    <PackageReference Include="System.Threading.Thread" Version="4.3.0" />
+  </ItemGroup>
+
+</Project>
