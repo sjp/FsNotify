@@ -2,33 +2,38 @@
 using System.IO;
 using System.Collections.Concurrent;
 using System.Threading;
+using System.Collections.Generic;
 
 namespace SJP.FsNotify
 {
-    public class BufferedFileSystemWatcher : IDisposable
+    public class BufferedFileSystemWatcher : IFileSystemWatcher
     {
-        public BufferedFileSystemWatcher()
-            : this(new FileSystemWatcher())
+        public BufferedFileSystemWatcher(int capacity = int.MaxValue)
+            : this(new FileSystemWatcher(), capacity)
         {
         }
 
-        public BufferedFileSystemWatcher(string path)
-            : this(new FileSystemWatcher(path))
+        public BufferedFileSystemWatcher(string path, int capacity = int.MaxValue)
+            : this(new FileSystemWatcher(path), capacity)
         {
         }
 
-        public BufferedFileSystemWatcher(string path, string filter)
-            : this(new FileSystemWatcher(path, filter))
+        public BufferedFileSystemWatcher(string path, string filter, int capacity = int.MaxValue)
+            : this(new FileSystemWatcher(path, filter), capacity)
         {
         }
 
-        public BufferedFileSystemWatcher(FileSystemWatcherAdapter watcher)
-            : this(watcher as IFileSystemWatcher)
+        public BufferedFileSystemWatcher(FileSystemWatcherAdapter watcher, int capacity = int.MaxValue)
+            : this(watcher as IFileSystemWatcher, capacity)
         {
         }
 
-        public BufferedFileSystemWatcher(IFileSystemWatcher watcher)
+        public BufferedFileSystemWatcher(IFileSystemWatcher watcher, int capacity = int.MaxValue)
         {
+            if (capacity < 1)
+                throw new ArgumentOutOfRangeException(nameof(capacity), "The bounding capacity must be at least 1. Given: " + capacity.ToString());
+
+            _buffer = new BlockingCollection<FileSystemEventArgs>(capacity);
             _watcher = watcher ?? throw new ArgumentNullException(nameof(watcher));
         }
 
@@ -242,6 +247,6 @@ namespace SJP.FsNotify
         private EventHandler<ErrorEventArgs> _onError;
 
         private readonly IFileSystemWatcher _watcher;
-        private readonly BlockingCollection<FileSystemEventArgs> _buffer = new BlockingCollection<FileSystemEventArgs>(int.MaxValue);
+        private readonly BlockingCollection<FileSystemEventArgs> _buffer;
     }
 }
