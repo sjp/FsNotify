@@ -2,7 +2,7 @@
 
 namespace SJP.FsNotify
 {
-    public class BufferExhaustedException : Exception
+    public sealed class BufferExhaustedException : Exception
     {
         public BufferExhaustedException(string message, int capacity) : base(message)
         {

@@ -5,11 +5,9 @@ namespace SJP.FsNotify
 {
     public interface IEnhancedObservableFileSystemWatcher : IObservableFileSystemWatcher
     {
+        IObservable<FileSystemEventArgs> AttributeChanged { get; }
+
         IObservable<FileSystemEventArgs> CreationTimeChanged { get; }
-
-        IObservable<FileSystemEventArgs> DirectoryNameChanged { get; }
-
-        IObservable<FileSystemEventArgs> FileNameChanged { get; }
 
         IObservable<FileSystemEventArgs> LastAccessChanged { get; }
 

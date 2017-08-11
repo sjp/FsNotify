@@ -2,7 +2,7 @@
 using System.IO;
 using System.Collections.Concurrent;
 using System.Threading;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SJP.FsNotify
 {
@@ -162,24 +162,27 @@ namespace SJP.FsNotify
 
         protected void RaiseBufferedFileSystemEvents()
         {
-            foreach (var fsEvent in _buffer.GetConsumingEnumerable(_cts.Token))
+            Task.Run(() =>
             {
-                switch (fsEvent.ChangeType)
+                foreach (var fsEvent in _buffer.GetConsumingEnumerable(_cts.Token))
                 {
-                    case WatcherChangeTypes.Created:
-                        _onCreated?.Invoke(this, fsEvent);
-                        break;
-                    case WatcherChangeTypes.Changed:
-                        _onChanged?.Invoke(this, fsEvent);
-                        break;
-                    case WatcherChangeTypes.Deleted:
-                        _onDeleted?.Invoke(this, fsEvent);
-                        break;
-                    case WatcherChangeTypes.Renamed:
-                        _onRenamed?.Invoke(this, fsEvent as RenamedEventArgs);
-                        break;
+                    switch (fsEvent.ChangeType)
+                    {
+                        case WatcherChangeTypes.Created:
+                            _onCreated?.Invoke(this, fsEvent);
+                            break;
+                        case WatcherChangeTypes.Changed:
+                            _onChanged?.Invoke(this, fsEvent);
+                            break;
+                        case WatcherChangeTypes.Deleted:
+                            _onDeleted?.Invoke(this, fsEvent);
+                            break;
+                        case WatcherChangeTypes.Renamed:
+                            _onRenamed?.Invoke(this, fsEvent as RenamedEventArgs);
+                            break;
+                    }
                 }
-            }
+            });
         }
 
         protected void OnCreated(object sender, FileSystemEventArgs e)

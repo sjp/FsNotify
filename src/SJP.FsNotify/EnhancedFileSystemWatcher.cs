@@ -5,23 +5,24 @@ using System.Threading;
 using System.Collections.Generic;
 using EnumsNET;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace SJP.FsNotify
 {
     public class EnhancedFileSystemWatcher : IEnhancedFileSystemWatcher
     {
         public EnhancedFileSystemWatcher(int capacity = int.MaxValue)
-            : this(new FileSystemWatcher(), capacity)
+            : this(new BufferedFileSystemWatcher(), capacity)
         {
         }
 
         public EnhancedFileSystemWatcher(string path, int capacity = int.MaxValue)
-            : this(new FileSystemWatcher(path), capacity)
+            : this(new BufferedFileSystemWatcher(path), capacity)
         {
         }
 
         public EnhancedFileSystemWatcher(string path, string filter, int capacity = int.MaxValue)
-            : this(new FileSystemWatcher(path, filter), capacity)
+            : this(new BufferedFileSystemWatcher(path, filter), capacity)
         {
         }
 
@@ -37,7 +38,8 @@ namespace SJP.FsNotify
 
             _buffer = new BlockingCollection<EnhancedFileSystemEventArgs>(capacity);
             _watcher = watcher ?? throw new ArgumentNullException(nameof(watcher));
-            UpdateFilterWatchers();
+
+            NotifyFilter = FlagEnums.GetAllFlags<NotifyFilters>();
         }
 
         public bool EnableRaisingEvents
@@ -49,7 +51,8 @@ namespace SJP.FsNotify
                     return;
 
                 _watcher.EnableRaisingEvents = value;
-                foreach (var watcher in _changeWatchers.Values)
+                var changeWatchers = _changeWatchers.Values.Where(v => v != null);
+                foreach (var watcher in changeWatchers)
                     watcher.EnableRaisingEvents = value;
 
                 if (value)
@@ -63,19 +66,37 @@ namespace SJP.FsNotify
         public string Filter
         {
             get => _watcher.Filter;
-            set => _watcher.Filter = value;
+            set
+            {
+                _watcher.Filter = value;
+                var changeWatchers = _changeWatchers.Values.Where(v => v != null);
+                foreach (var watcher in changeWatchers)
+                    watcher.Filter = value;
+            }
         }
 
         public bool IncludeSubdirectories
         {
             get => _watcher.IncludeSubdirectories;
-            set => _watcher.IncludeSubdirectories = value;
+            set
+            {
+                _watcher.IncludeSubdirectories = value;
+                var changeWatchers = _changeWatchers.Values.Where(v => v != null);
+                foreach (var watcher in changeWatchers)
+                    watcher.IncludeSubdirectories = value;
+            }
         }
 
         public string Path
         {
             get => _watcher.Path;
-            set => _watcher.Path = value;
+            set
+            {
+                _watcher.Path = value;
+                var changeWatchers = _changeWatchers.Values.Where(v => v != null);
+                foreach (var watcher in changeWatchers)
+                    watcher.Path = value;
+            }
         }
 
         public NotifyFilters NotifyFilter
@@ -85,21 +106,6 @@ namespace SJP.FsNotify
             {
                 _watcher.NotifyFilter = value;
                 UpdateFilterWatchers();
-            }
-        }
-
-        public event EventHandler<FileSystemEventArgs> Created
-        {
-            add
-            {
-                if (_onCreated == null)
-                    _watcher.Created += OnCreated;
-                _onCreated += value;
-            }
-            remove
-            {
-                _watcher.Created -= OnCreated;
-                _onCreated -= value;
             }
         }
 
@@ -118,6 +124,21 @@ namespace SJP.FsNotify
             }
         }
 
+        public event EventHandler<FileSystemEventArgs> Created
+        {
+            add
+            {
+                if (_onCreated == null)
+                    _watcher.Created += OnCreated;
+                _onCreated += value;
+            }
+            remove
+            {
+                _watcher.Created -= OnCreated;
+                _onCreated -= value;
+            }
+        }
+
         public event EventHandler<FileSystemEventArgs> Deleted
         {
             add
@@ -130,6 +151,36 @@ namespace SJP.FsNotify
             {
                 _watcher.Deleted -= OnDeleted;
                 _onDeleted -= value;
+            }
+        }
+
+        public event EventHandler<ErrorEventArgs> Error
+        {
+            add
+            {
+                if (_onError == null)
+                    _watcher.Error += OnError;
+                _onError += value;
+            }
+            remove
+            {
+                _watcher.Error -= OnError;
+                _onError -= value;
+            }
+        }
+
+        public event EventHandler<RenamedEventArgs> Renamed
+        {
+            add
+            {
+                if (_onRenamed == null)
+                    _watcher.Renamed += OnRenamed;
+                _onRenamed += value;
+            }
+            remove
+            {
+                _watcher.Renamed -= OnRenamed;
+                _onRenamed -= value;
             }
         }
 
@@ -166,42 +217,6 @@ namespace SJP.FsNotify
                 if (watcher != null)
                     watcher.Changed -= OnCreationTimeChanged;
                 _onCreationTimeChanged -= value;
-            }
-        }
-
-        public event EventHandler<FileSystemEventArgs> DirectoryNameChanged
-        {
-            add
-            {
-                var watcher = _changeWatchers[NotifyFilters.DirectoryName];
-                if (watcher != null && _onDirectoryNameChanged == null)
-                    watcher.Changed += OnDirectoryNameChanged;
-                _onDirectoryNameChanged += value;
-            }
-            remove
-            {
-                var watcher = _changeWatchers[NotifyFilters.DirectoryName];
-                if (watcher != null)
-                    watcher.Changed -= OnDirectoryNameChanged;
-                _onDirectoryNameChanged -= value;
-            }
-        }
-
-        public event EventHandler<FileSystemEventArgs> FileNameChanged
-        {
-            add
-            {
-                var watcher = _changeWatchers[NotifyFilters.FileName];
-                if (watcher != null && _onFileNameChanged == null)
-                    watcher.Changed += OnFileNameChanged;
-                _onFileNameChanged += value;
-            }
-            remove
-            {
-                var watcher = _changeWatchers[NotifyFilters.FileName];
-                if (watcher != null)
-                    watcher.Changed -= OnFileNameChanged;
-                _onFileNameChanged -= value;
             }
         }
 
@@ -259,7 +274,6 @@ namespace SJP.FsNotify
             }
         }
 
-
         public event EventHandler<FileSystemEventArgs> SizeChanged
         {
             add
@@ -278,36 +292,6 @@ namespace SJP.FsNotify
             }
         }
 
-        public event EventHandler<RenamedEventArgs> Renamed
-        {
-            add
-            {
-                if (_onRenamed == null)
-                    _watcher.Renamed += OnRenamed;
-                _onRenamed += value;
-            }
-            remove
-            {
-                _watcher.Renamed -= OnRenamed;
-                _onRenamed -= value;
-            }
-        }
-
-        public event EventHandler<ErrorEventArgs> Error
-        {
-            add
-            {
-                if (_onError == null)
-                    _watcher.Error += OnError;
-                _onError += value;
-            }
-            remove
-            {
-                _watcher.Error -= OnError;
-                _onError -= value;
-            }
-        }
-
         public WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType) => _watcher.WaitForChanged(changeType);
 
         public WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType, int timeout) => _watcher.WaitForChanged(changeType, timeout);
@@ -316,124 +300,110 @@ namespace SJP.FsNotify
 
         protected void RaiseBufferedFileSystemEvents()
         {
-            foreach (var fsEvent in _buffer.GetConsumingEnumerable(_cts.Token))
+            Task.Run(() =>
             {
-                switch (fsEvent.Event)
+                foreach (var fsEvent in _buffer.GetConsumingEnumerable(_cts.Token))
                 {
-                    case FileSystemEvent.Create:
-                        _onCreated?.Invoke(this, fsEvent.EventArgs);
-                        break;
-                    case FileSystemEvent.Change:
-                        _onChanged?.Invoke(this, fsEvent.EventArgs);
-                        break;
-                    case FileSystemEvent.Delete:
-                        _onDeleted?.Invoke(this, fsEvent.EventArgs);
-                        break;
-                    case FileSystemEvent.Rename:
-                        _onRenamed?.Invoke(this, fsEvent.EventArgs as RenamedEventArgs);
-                        break;
-                    case FileSystemEvent.AttributeChange:
-                    case FileSystemEvent.CreationTimeChange:
-                    case FileSystemEvent.DirectoryNameChange:
-                    case FileSystemEvent.FileNameChange:
-                    case FileSystemEvent.LastAccessChange:
-                    case FileSystemEvent.LastWriteChange:
-                    case FileSystemEvent.SecurityChange:
-                    case FileSystemEvent.SizeChange:
-                        var filter = _eventToFilterMap[fsEvent.Event];
-                        var handler = GetNotifyHandler(filter);
-                        handler?.Invoke(this, fsEvent.EventArgs);
-                        break;
+                    switch (fsEvent.Event)
+                    {
+                        case FileSystemEvent.Create:
+                            _onCreated?.Invoke(this, fsEvent.EventArgs);
+                            break;
+                        case FileSystemEvent.Change:
+                            _onChanged?.Invoke(this, fsEvent.EventArgs);
+                            break;
+                        case FileSystemEvent.Delete:
+                            _onDeleted?.Invoke(this, fsEvent.EventArgs);
+                            break;
+                        case FileSystemEvent.Rename:
+                            _onRenamed?.Invoke(this, fsEvent.EventArgs as RenamedEventArgs);
+                            break;
+                        case FileSystemEvent.AttributeChange:
+                        case FileSystemEvent.CreationTimeChange:
+                        case FileSystemEvent.LastAccessChange:
+                        case FileSystemEvent.LastWriteChange:
+                        case FileSystemEvent.SecurityChange:
+                        case FileSystemEvent.SizeChange:
+                            var filter = _eventToFilterMap[fsEvent.Event];
+                            var handler = GetNotifyHandler(filter);
+                            handler?.Invoke(this, fsEvent.EventArgs);
+                            break;
+                    }
                 }
-            }
+            });
         }
 
-        protected void OnCreated(object sender, FileSystemEventArgs e)
+        protected virtual void OnCreated(object sender, FileSystemEventArgs e)
         {
             var args = new EnhancedFileSystemEventArgs(FileSystemEvent.Create, e);
             if (!_buffer.TryAdd(args))
                 OnBufferExceeded();
         }
 
-        protected void OnChanged(object sender, FileSystemEventArgs e)
+        protected virtual void OnChanged(object sender, FileSystemEventArgs e)
         {
             var args = new EnhancedFileSystemEventArgs(FileSystemEvent.Change, e);
             if (!_buffer.TryAdd(args))
                 OnBufferExceeded();
         }
 
-        protected void OnDeleted(object sender, FileSystemEventArgs e)
+        protected virtual void OnDeleted(object sender, FileSystemEventArgs e)
         {
             var args = new EnhancedFileSystemEventArgs(FileSystemEvent.Delete, e);
             if (!_buffer.TryAdd(args))
                 OnBufferExceeded();
         }
 
-        protected void OnRenamed(object sender, RenamedEventArgs e)
+        protected virtual void OnRenamed(object sender, RenamedEventArgs e)
         {
             var args = new EnhancedFileSystemEventArgs(FileSystemEvent.Rename, e);
             if (!_buffer.TryAdd(args))
                 OnBufferExceeded();
         }
 
-        protected void OnAttributeChanged(object sender, FileSystemEventArgs e)
+        protected virtual void OnAttributeChanged(object sender, FileSystemEventArgs e)
         {
             var args = new EnhancedFileSystemEventArgs(FileSystemEvent.AttributeChange, e);
             if (!_buffer.TryAdd(args))
                 OnBufferExceeded();
-
         }
 
-        protected void OnCreationTimeChanged(object sender, FileSystemEventArgs e)
+        protected virtual void OnCreationTimeChanged(object sender, FileSystemEventArgs e)
         {
             var args = new EnhancedFileSystemEventArgs(FileSystemEvent.CreationTimeChange, e);
             if (!_buffer.TryAdd(args))
                 OnBufferExceeded();
         }
 
-        protected void OnDirectoryNameChanged(object sender, FileSystemEventArgs e)
-        {
-            var args = new EnhancedFileSystemEventArgs(FileSystemEvent.DirectoryNameChange, e);
-            if (!_buffer.TryAdd(args))
-                OnBufferExceeded();
-        }
-
-        protected void OnFileNameChanged(object sender, FileSystemEventArgs e)
-        {
-            var args = new EnhancedFileSystemEventArgs(FileSystemEvent.FileNameChange, e);
-            if (!_buffer.TryAdd(args))
-                OnBufferExceeded();
-        }
-
-        protected void OnLastAccessChanged(object sender, FileSystemEventArgs e)
+        protected virtual void OnLastAccessChanged(object sender, FileSystemEventArgs e)
         {
             var args = new EnhancedFileSystemEventArgs(FileSystemEvent.LastAccessChange, e);
             if (!_buffer.TryAdd(args))
                 OnBufferExceeded();
         }
 
-        protected void OnLastWriteChanged(object sender, FileSystemEventArgs e)
+        protected virtual void OnLastWriteChanged(object sender, FileSystemEventArgs e)
         {
             var args = new EnhancedFileSystemEventArgs(FileSystemEvent.LastWriteChange, e);
             if (!_buffer.TryAdd(args))
                 OnBufferExceeded();
         }
 
-        protected void OnSecurityChanged(object sender, FileSystemEventArgs e)
+        protected virtual void OnSecurityChanged(object sender, FileSystemEventArgs e)
         {
             var args = new EnhancedFileSystemEventArgs(FileSystemEvent.SecurityChange, e);
             if (!_buffer.TryAdd(args))
                 OnBufferExceeded();
         }
 
-        protected void OnSizeChanged(object sender, FileSystemEventArgs e)
+        protected virtual void OnSizeChanged(object sender, FileSystemEventArgs e)
         {
             var args = new EnhancedFileSystemEventArgs(FileSystemEvent.SizeChange, e);
             if (!_buffer.TryAdd(args))
                 OnBufferExceeded();
         }
 
-        protected void OnError(object sender, ErrorEventArgs e)
+        protected virtual void OnError(object sender, ErrorEventArgs e)
         {
             _onError?.Invoke(this, e);
         }
@@ -441,7 +411,7 @@ namespace SJP.FsNotify
         protected void UpdateFilterWatchers()
         {
             var existingFilters = new HashSet<NotifyFilters>(_changeWatchers.Keys);
-            var newFilters = new HashSet<NotifyFilters>(_watcher.NotifyFilter.GetFlags());
+            var newFilters = new HashSet<NotifyFilters>(_watcher.NotifyFilter.GetFlags().Where(f => !_ignoredNotifyFilterFlags.Contains(f)));
 
             // remove anything not currently part of the filter set
             var extraFilters = existingFilters.Except(newFilters);
@@ -452,14 +422,16 @@ namespace SJP.FsNotify
                 _changeWatchers.Remove(filter);
             }
 
+            // add anything not currently set
             var missingFilters = newFilters.Except(existingFilters);
             foreach (var filter in missingFilters)
             {
-                var watcher = new FileSystemWatcher(_watcher.Path, _watcher.Filter)
+                var watcher = new BufferedFileSystemWatcher(_watcher.Path, _watcher.Filter)
                 {
                     NotifyFilter = filter,
                     IncludeSubdirectories = IncludeSubdirectories
                 };
+
                 var handler = GetNotifyHandler(filter);
                 if (handler != null)
                     watcher.Changed += handler.Invoke;
@@ -467,7 +439,7 @@ namespace SJP.FsNotify
                 if (EnableRaisingEvents)
                     watcher.EnableRaisingEvents = true;
 
-                _changeWatchers[filter] = new FileSystemWatcherAdapter(watcher);
+                _changeWatchers[filter] = watcher;
             }
         }
 
@@ -479,10 +451,6 @@ namespace SJP.FsNotify
                     return _onAttributeChanged;
                 case NotifyFilters.CreationTime:
                     return _onCreationTimeChanged;
-                case NotifyFilters.DirectoryName:
-                    return _onDirectoryNameChanged;
-                case NotifyFilters.FileName:
-                    return _onFileNameChanged;
                 case NotifyFilters.LastAccess:
                     return _onLastAccessChanged;
                 case NotifyFilters.LastWrite:
@@ -491,6 +459,9 @@ namespace SJP.FsNotify
                     return _onSecurityChanged;
                 case NotifyFilters.Size:
                     return _onSizeChanged;
+                case NotifyFilters.DirectoryName:
+                case NotifyFilters.FileName:
+                    return null; // handled by rename event instead
                 default:
                     throw new ArgumentOutOfRangeException(nameof(filter));
             }
@@ -521,13 +492,8 @@ namespace SJP.FsNotify
             _onRenamed = null;
             _onError = null;
 
-            //foreach (var filter in _notifyHandlers.Keys)
-             //   _notifyHandlers[filter] = null;
-
             _onAttributeChanged = null;
             _onCreationTimeChanged = null;
-            _onDirectoryNameChanged = null;
-            _onFileNameChanged = null;
             _onLastAccessChanged = null;
             _onLastWriteChanged = null;
             _onSecurityChanged = null;
@@ -545,34 +511,8 @@ namespace SJP.FsNotify
         private EventHandler<RenamedEventArgs> _onRenamed;
         private EventHandler<ErrorEventArgs> _onError;
 
-        private readonly static IReadOnlyDictionary<FileSystemEvent, NotifyFilters> _eventToFilterMap = new Dictionary<FileSystemEvent, NotifyFilters>
-        {
-            [FileSystemEvent.AttributeChange] = NotifyFilters.Attributes,
-            [FileSystemEvent.CreationTimeChange] = NotifyFilters.CreationTime,
-            [FileSystemEvent.DirectoryNameChange] = NotifyFilters.DirectoryName,
-            [FileSystemEvent.FileNameChange] = NotifyFilters.FileName,
-            [FileSystemEvent.LastAccessChange] = NotifyFilters.LastAccess,
-            [FileSystemEvent.LastWriteChange] = NotifyFilters.LastWrite,
-            [FileSystemEvent.SecurityChange] = NotifyFilters.Security,
-            [FileSystemEvent.SizeChange] = NotifyFilters.Size
-        };
-
-        // now for the specific change events
-        private readonly IDictionary<NotifyFilters, EventHandler<FileSystemEventArgs>> _notifyHandlers = new Dictionary<NotifyFilters, EventHandler<FileSystemEventArgs>>
-        {
-            [NotifyFilters.Attributes] = null,
-            [NotifyFilters.CreationTime] = null,
-            [NotifyFilters.DirectoryName] = null,
-            [NotifyFilters.FileName] = null,
-            [NotifyFilters.LastAccess] = null,
-            [NotifyFilters.LastWrite] = null,
-            [NotifyFilters.Security] = null,
-            [NotifyFilters.Size] = null
-        };
         private EventHandler<FileSystemEventArgs> _onAttributeChanged;
         private EventHandler<FileSystemEventArgs> _onCreationTimeChanged;
-        private EventHandler<FileSystemEventArgs> _onDirectoryNameChanged;
-        private EventHandler<FileSystemEventArgs> _onFileNameChanged;
         private EventHandler<FileSystemEventArgs> _onLastAccessChanged;
         private EventHandler<FileSystemEventArgs> _onLastWriteChanged;
         private EventHandler<FileSystemEventArgs> _onSecurityChanged;
@@ -581,6 +521,17 @@ namespace SJP.FsNotify
         private readonly IFileSystemWatcher _watcher;
         private readonly BlockingCollection<EnhancedFileSystemEventArgs> _buffer;
         private readonly IDictionary<NotifyFilters, IFileSystemWatcher> _changeWatchers = new Dictionary<NotifyFilters, IFileSystemWatcher>();
+
+        private readonly static IEnumerable<NotifyFilters> _ignoredNotifyFilterFlags = new[] { NotifyFilters.DirectoryName, NotifyFilters.FileName };
+        private readonly static IReadOnlyDictionary<FileSystemEvent, NotifyFilters> _eventToFilterMap = new Dictionary<FileSystemEvent, NotifyFilters>
+        {
+            [FileSystemEvent.AttributeChange] = NotifyFilters.Attributes,
+            [FileSystemEvent.CreationTimeChange] = NotifyFilters.CreationTime,
+            [FileSystemEvent.LastAccessChange] = NotifyFilters.LastAccess,
+            [FileSystemEvent.LastWriteChange] = NotifyFilters.LastWrite,
+            [FileSystemEvent.SecurityChange] = NotifyFilters.Security,
+            [FileSystemEvent.SizeChange] = NotifyFilters.Size
+        };
     }
 
     public class EnhancedFileSystemEventArgs : EventArgs
@@ -605,8 +556,6 @@ namespace SJP.FsNotify
         // the following are really just a type of 'Change' event
         AttributeChange,
         CreationTimeChange,
-        DirectoryNameChange,
-        FileNameChange,
         LastAccessChange,
         LastWriteChange,
         SecurityChange,
