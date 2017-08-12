@@ -343,6 +343,8 @@ namespace SJP.FsNotify
                             var handler = GetNotifyHandler(filter);
                             handler?.Invoke(this, fsEvent.EventArgs);
                             break;
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(FileSystemEvent), $"Unknown or unexpected value for { nameof(FileSystemEvent) }.");
                     }
                 }
             });
@@ -515,7 +517,7 @@ namespace SJP.FsNotify
             }
         }
 
-        protected void OnBufferExceeded()
+        protected virtual void OnBufferExceeded()
         {
             var ex = new BufferExhaustedException($"File system event queue buffer exhausted. { _buffer.BoundedCapacity } events exceeded.", _buffer.BoundedCapacity);
             _onError?.Invoke(this, new ErrorEventArgs(ex));
@@ -580,5 +582,36 @@ namespace SJP.FsNotify
             [FileSystemEvent.SecurityChange] = NotifyFilters.Security,
             [FileSystemEvent.SizeChange] = NotifyFilters.Size
         };
+
+        protected enum FileSystemEvent
+        {
+            Create,
+            Change,
+            Delete,
+            Rename,
+            // the following are really just a type of 'Change' event
+            AttributeChange,
+            CreationTimeChange,
+            LastAccessChange,
+            LastWriteChange,
+            SecurityChange,
+            SizeChange
+        }
+
+        protected class EnhancedFileSystemEventArgs : EventArgs
+        {
+            public EnhancedFileSystemEventArgs(FileSystemEvent e, FileSystemEventArgs args)
+            {
+                if (!e.IsValid())
+                    throw new ArgumentException($"The { nameof(FileSystemEvent) } provided must be a valid enum.", nameof(e));
+
+                Event = e;
+                EventArgs = args ?? throw new ArgumentNullException(nameof(args));
+            }
+
+            public FileSystemEvent Event { get; }
+
+            public FileSystemEventArgs EventArgs { get; }
+        }
     }
 }

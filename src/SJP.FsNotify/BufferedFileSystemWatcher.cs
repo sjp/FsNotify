@@ -199,12 +199,14 @@ namespace SJP.FsNotify
                         case WatcherChangeTypes.Renamed:
                             _onRenamed?.Invoke(this, fsEvent as RenamedEventArgs);
                             break;
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(WatcherChangeTypes), $"Unknown or unexpected value for { nameof(WatcherChangeTypes) }.");
                     }
                 }
             });
         }
 
-        protected void OnCreated(object sender, FileSystemEventArgs e)
+        protected virtual void OnCreated(object sender, FileSystemEventArgs e)
         {
             if (e == null)
                 throw new ArgumentNullException(nameof(e));
@@ -213,7 +215,7 @@ namespace SJP.FsNotify
                 OnBufferExceeded();
         }
 
-        protected void OnChanged(object sender, FileSystemEventArgs e)
+        protected virtual void OnChanged(object sender, FileSystemEventArgs e)
         {
             if (e == null)
                 throw new ArgumentNullException(nameof(e));
@@ -222,7 +224,7 @@ namespace SJP.FsNotify
                 OnBufferExceeded();
         }
 
-        protected void OnDeleted(object sender, FileSystemEventArgs e)
+        protected virtual void OnDeleted(object sender, FileSystemEventArgs e)
         {
             if (e == null)
                 throw new ArgumentNullException(nameof(e));
@@ -231,7 +233,7 @@ namespace SJP.FsNotify
                 OnBufferExceeded();
         }
 
-        protected void OnRenamed(object sender, RenamedEventArgs e)
+        protected virtual void OnRenamed(object sender, RenamedEventArgs e)
         {
             if (e == null)
                 throw new ArgumentNullException(nameof(e));
@@ -240,7 +242,7 @@ namespace SJP.FsNotify
                 OnBufferExceeded();
         }
 
-        protected void OnError(object sender, ErrorEventArgs e)
+        protected virtual void OnError(object sender, ErrorEventArgs e)
         {
             if (e == null)
                 throw new ArgumentNullException(nameof(e));
@@ -248,7 +250,7 @@ namespace SJP.FsNotify
             _onError?.Invoke(this, e);
         }
 
-        protected void OnBufferExceeded()
+        protected virtual void OnBufferExceeded()
         {
             var ex = new BufferExhaustedException($"File system event queue buffer exhausted. { _buffer.BoundedCapacity } events exceeded.", _buffer.BoundedCapacity);
             _onError?.Invoke(this, new ErrorEventArgs(ex));
