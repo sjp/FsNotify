@@ -3,6 +3,7 @@ using System.IO;
 using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
+using EnumsNET;
 
 namespace SJP.FsNotify
 {
@@ -75,7 +76,13 @@ namespace SJP.FsNotify
         public NotifyFilters NotifyFilter
         {
             get => _watcher.NotifyFilter;
-            set => _watcher.NotifyFilter = value;
+            set
+            {
+                if (!value.IsValid())
+                    throw new ArgumentException($"The { nameof(NotifyFilters) } provided must be a valid enum.", nameof(NotifyFilter));
+
+                _watcher.NotifyFilter = value;
+            }
         }
 
         public event EventHandler<FileSystemEventArgs> Created
@@ -154,9 +161,21 @@ namespace SJP.FsNotify
             }
         }
 
-        public WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType) => _watcher.WaitForChanged(changeType);
+        public WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType)
+        {
+            if (!changeType.IsValid())
+                throw new ArgumentException($"The { nameof(WatcherChangeTypes) } provided must be a valid enum.", nameof(changeType));
 
-        public WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType, int timeout) => _watcher.WaitForChanged(changeType, timeout);
+            return _watcher.WaitForChanged(changeType);
+        }
+
+        public WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType, int timeout)
+        {
+            if (!changeType.IsValid())
+                throw new ArgumentException($"The { nameof(WatcherChangeTypes) } provided must be a valid enum.", nameof(changeType));
+
+            return _watcher.WaitForChanged(changeType, timeout);
+        }
 
         public void Dispose() => Dispose(true);
 
@@ -187,30 +206,45 @@ namespace SJP.FsNotify
 
         protected void OnCreated(object sender, FileSystemEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException(nameof(e));
+
             if (!_buffer.TryAdd(e))
                 OnBufferExceeded();
         }
 
         protected void OnChanged(object sender, FileSystemEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException(nameof(e));
+
             if (!_buffer.TryAdd(e))
                 OnBufferExceeded();
         }
 
         protected void OnDeleted(object sender, FileSystemEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException(nameof(e));
+
             if (!_buffer.TryAdd(e))
                 OnBufferExceeded();
         }
 
         protected void OnRenamed(object sender, RenamedEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException(nameof(e));
+
             if (!_buffer.TryAdd(e))
                 OnBufferExceeded();
         }
 
         protected void OnError(object sender, ErrorEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException(nameof(e));
+
             _onError?.Invoke(this, e);
         }
 

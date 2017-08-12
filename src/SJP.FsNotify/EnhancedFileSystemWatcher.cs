@@ -104,6 +104,9 @@ namespace SJP.FsNotify
             get => _watcher.NotifyFilter;
             set
             {
+                if (!value.IsValid())
+                    throw new ArgumentException($"The { nameof(NotifyFilters) } provided must be a valid enum.", nameof(NotifyFilter));
+
                 _watcher.NotifyFilter = value;
                 UpdateFilterWatchers();
             }
@@ -292,9 +295,21 @@ namespace SJP.FsNotify
             }
         }
 
-        public WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType) => _watcher.WaitForChanged(changeType);
+        public WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType)
+        {
+            if (!changeType.IsValid())
+                throw new ArgumentException($"The { nameof(WatcherChangeTypes) } provided must be a valid enum.", nameof(changeType));
 
-        public WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType, int timeout) => _watcher.WaitForChanged(changeType, timeout);
+            return _watcher.WaitForChanged(changeType);
+        }
+
+        public WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType, int timeout)
+        {
+            if (!changeType.IsValid())
+                throw new ArgumentException($"The { nameof(WatcherChangeTypes) } provided must be a valid enum.", nameof(changeType));
+
+            return _watcher.WaitForChanged(changeType, timeout);
+        }
 
         public void Dispose() => Dispose(true);
 
@@ -335,6 +350,9 @@ namespace SJP.FsNotify
 
         protected virtual void OnCreated(object sender, FileSystemEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException(nameof(e));
+
             var args = new EnhancedFileSystemEventArgs(FileSystemEvent.Create, e);
             if (!_buffer.TryAdd(args))
                 OnBufferExceeded();
@@ -342,6 +360,9 @@ namespace SJP.FsNotify
 
         protected virtual void OnChanged(object sender, FileSystemEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException(nameof(e));
+
             var args = new EnhancedFileSystemEventArgs(FileSystemEvent.Change, e);
             if (!_buffer.TryAdd(args))
                 OnBufferExceeded();
@@ -349,6 +370,9 @@ namespace SJP.FsNotify
 
         protected virtual void OnDeleted(object sender, FileSystemEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException(nameof(e));
+
             var args = new EnhancedFileSystemEventArgs(FileSystemEvent.Delete, e);
             if (!_buffer.TryAdd(args))
                 OnBufferExceeded();
@@ -356,6 +380,9 @@ namespace SJP.FsNotify
 
         protected virtual void OnRenamed(object sender, RenamedEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException(nameof(e));
+
             var args = new EnhancedFileSystemEventArgs(FileSystemEvent.Rename, e);
             if (!_buffer.TryAdd(args))
                 OnBufferExceeded();
@@ -363,6 +390,9 @@ namespace SJP.FsNotify
 
         protected virtual void OnAttributeChanged(object sender, FileSystemEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException(nameof(e));
+
             var args = new EnhancedFileSystemEventArgs(FileSystemEvent.AttributeChange, e);
             if (!_buffer.TryAdd(args))
                 OnBufferExceeded();
@@ -370,6 +400,9 @@ namespace SJP.FsNotify
 
         protected virtual void OnCreationTimeChanged(object sender, FileSystemEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException(nameof(e));
+
             var args = new EnhancedFileSystemEventArgs(FileSystemEvent.CreationTimeChange, e);
             if (!_buffer.TryAdd(args))
                 OnBufferExceeded();
@@ -377,6 +410,9 @@ namespace SJP.FsNotify
 
         protected virtual void OnLastAccessChanged(object sender, FileSystemEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException(nameof(e));
+
             var args = new EnhancedFileSystemEventArgs(FileSystemEvent.LastAccessChange, e);
             if (!_buffer.TryAdd(args))
                 OnBufferExceeded();
@@ -384,6 +420,9 @@ namespace SJP.FsNotify
 
         protected virtual void OnLastWriteChanged(object sender, FileSystemEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException(nameof(e));
+
             var args = new EnhancedFileSystemEventArgs(FileSystemEvent.LastWriteChange, e);
             if (!_buffer.TryAdd(args))
                 OnBufferExceeded();
@@ -391,6 +430,9 @@ namespace SJP.FsNotify
 
         protected virtual void OnSecurityChanged(object sender, FileSystemEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException(nameof(e));
+
             var args = new EnhancedFileSystemEventArgs(FileSystemEvent.SecurityChange, e);
             if (!_buffer.TryAdd(args))
                 OnBufferExceeded();
@@ -398,6 +440,9 @@ namespace SJP.FsNotify
 
         protected virtual void OnSizeChanged(object sender, FileSystemEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException(nameof(e));
+
             var args = new EnhancedFileSystemEventArgs(FileSystemEvent.SizeChange, e);
             if (!_buffer.TryAdd(args))
                 OnBufferExceeded();
@@ -405,6 +450,9 @@ namespace SJP.FsNotify
 
         protected virtual void OnError(object sender, ErrorEventArgs e)
         {
+            if (e == null)
+                throw new ArgumentNullException(nameof(e));
+
             _onError?.Invoke(this, e);
         }
 
@@ -532,33 +580,5 @@ namespace SJP.FsNotify
             [FileSystemEvent.SecurityChange] = NotifyFilters.Security,
             [FileSystemEvent.SizeChange] = NotifyFilters.Size
         };
-    }
-
-    public class EnhancedFileSystemEventArgs : EventArgs
-    {
-        public EnhancedFileSystemEventArgs(FileSystemEvent e, FileSystemEventArgs args)
-        {
-            Event = e;
-            EventArgs = args ?? throw new ArgumentNullException(nameof(args));
-        }
-
-        public FileSystemEvent Event { get; }
-
-        public FileSystemEventArgs EventArgs { get; }
-    }
-
-    public enum FileSystemEvent
-    {
-        Create,
-        Change,
-        Delete,
-        Rename,
-        // the following are really just a type of 'Change' event
-        AttributeChange,
-        CreationTimeChange,
-        LastAccessChange,
-        LastWriteChange,
-        SecurityChange,
-        SizeChange
     }
 }

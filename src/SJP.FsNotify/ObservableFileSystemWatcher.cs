@@ -13,7 +13,7 @@ namespace SJP.FsNotify
 
         public ObservableFileSystemWatcher(IFileSystemWatcher watcher)
         {
-            _watcher = watcher;
+            _watcher = watcher ?? throw new ArgumentNullException(nameof(watcher));
 
             Changed = Observable
                 .FromEventPattern<EventHandler<FileSystemEventArgs>, FileSystemEventArgs>(h => _watcher.Changed += h, h => _watcher.Changed -= h)

@@ -7,7 +7,7 @@ namespace SJP.FsNotify
     {
         public FileSystemWatcherAdapter(FileSystemWatcher watcher)
         {
-            _watcher = watcher;
+            _watcher = watcher ?? throw new ArgumentNullException(nameof(watcher));
         }
 
         public static implicit operator FileSystemWatcherAdapter(FileSystemWatcher watcher) => new FileSystemWatcherAdapter(watcher);

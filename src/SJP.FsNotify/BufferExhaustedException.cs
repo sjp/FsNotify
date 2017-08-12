@@ -6,6 +6,9 @@ namespace SJP.FsNotify
     {
         public BufferExhaustedException(string message, int capacity) : base(message)
         {
+            if (string.IsNullOrWhiteSpace(message))
+                throw new ArgumentNullException(nameof(message));
+
             Capacity = capacity;
         }
 
