@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using EnumsNET;
 
 namespace SJP.FsNotify
 {
@@ -72,9 +73,21 @@ namespace SJP.FsNotify
             set => _watcher.Path = value;
         }
 
-        public WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType) => _watcher.WaitForChanged(changeType);
+        public WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType)
+        {
+            if (!changeType.IsValid())
+                throw new ArgumentException($"The { nameof(WatcherChangeTypes) } provided must be a valid enum.", nameof(changeType));
 
-        public WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType, int timeout) => _watcher.WaitForChanged(changeType, timeout);
+            return _watcher.WaitForChanged(changeType);
+        }
+
+        public WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType, int timeout)
+        {
+            if (!changeType.IsValid())
+                throw new ArgumentException($"The { nameof(WatcherChangeTypes) } provided must be a valid enum.", nameof(changeType));
+
+            return _watcher.WaitForChanged(changeType, timeout);
+        }
 
         public void Dispose() => Dispose(true);
 

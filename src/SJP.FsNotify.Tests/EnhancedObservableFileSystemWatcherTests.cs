@@ -1,10 +1,10 @@
 using System;
 using NUnit.Framework;
 
-namespace UnitTestProject1
+namespace SJP.FsNotify.Tests
 {
     [TestFixture]
-    public class UnitTest1
+    public class EnhancedObservableFileSystemWatcherTests : FsNotifyTest
     {
         [Test]
         public void TestMethod1()
