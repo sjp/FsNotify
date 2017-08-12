@@ -52,10 +52,6 @@ namespace ConsoleApp1
 
         private static void OnLastAccessChanged(object sender, FileSystemEventArgs e) => Console.WriteLine("Changed last access time " + e.FullPath);
 
-        private static void Watcher_FileNameChanged(object sender, FileSystemEventArgs e) => Console.WriteLine("Changed file name " + e.FullPath);
-
-        private static void Watcher_DirectoryNameChanged(object sender, FileSystemEventArgs e) => Console.WriteLine("Changed directory name " + e.FullPath);
-
         private static void OnCreationTimeChanged(object sender, FileSystemEventArgs e) => Console.WriteLine("Changed creation time " + e.FullPath);
 
         private static void OnAttributeChanged(object sender, FileSystemEventArgs e) => Console.WriteLine("Changed attribute " + e.FullPath);

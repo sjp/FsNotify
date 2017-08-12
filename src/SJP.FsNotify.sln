@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26430.16
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SJP.FsNotify", "SJP.FsNotify\SJP.FsNotify.csproj", "{E1BE688A-D8B3-4AF5-86F0-26DEFC319705}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SJP.FsNotify", "SJP.FsNotify\SJP.FsNotify.csproj", "{E1BE688A-D8B3-4AF5-86F0-26DEFC319705}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{23BF47E3-C503-4A47-B6DE-38EA7B4BEC16}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SJP.FsNotify.ConsoleTest", "SJP.FsNotify.ConsoleTest\SJP.FsNotify.ConsoleTest.csproj", "{23BF47E3-C503-4A47-B6DE-38EA7B4BEC16}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SJP.FsNotify.Tests", "SJP.FsNotify.Tests\SJP.FsNotify.Tests.csproj", "{9646E798-969B-4FAB-85AA-BB47B735220B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{23BF47E3-C503-4A47-B6DE-38EA7B4BEC16}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{23BF47E3-C503-4A47-B6DE-38EA7B4BEC16}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{23BF47E3-C503-4A47-B6DE-38EA7B4BEC16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9646E798-969B-4FAB-85AA-BB47B735220B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9646E798-969B-4FAB-85AA-BB47B735220B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9646E798-969B-4FAB-85AA-BB47B735220B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9646E798-969B-4FAB-85AA-BB47B735220B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
