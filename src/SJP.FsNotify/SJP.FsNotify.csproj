@@ -6,7 +6,7 @@
     <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <TreatSpecificWarningsAsErrors />
-    <!--<DocumentationFile>bin\$(Configuration)\$(TargetFramework)\.xml</DocumentationFile>-->
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\.xml</DocumentationFile>
     <Authors>Simon Potter</Authors>
     <Company />
     <Product />
@@ -32,9 +32,7 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp1.1' Or '$(TargetFramework)' == 'netstandard1.3'">
-    <PackageReference Include="System.IO.FileSystem.DriveInfo" Version="4.3.0" />
     <PackageReference Include="System.IO.FileSystem.Watcher" Version="4.3.0" />
-    <PackageReference Include="System.Runtime.Handles" Version="4.3.0" />
     <PackageReference Include="System.Threading.Thread" Version="4.3.0" />
   </ItemGroup>
 

@@ -9,23 +9,47 @@ using System.Threading.Tasks;
 
 namespace SJP.FsNotify
 {
+    /// <summary>
+    /// Listens to the file system change notifications and raises events when a directory, or file in a directory, changes. Also provides further events in addition to those provided by <see cref="IFileSystemWatcher"/>.
+    /// </summary>
     public class EnhancedFileSystemWatcher : IEnhancedFileSystemWatcher
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EnhancedFileSystemWatcher"/> class, given the specified directory to monitor.
+        /// </summary>
+        /// <param name="path">The directory to monitor, in standard or Universal Naming Convention (UNC) notation.</param>
+        /// <param name="capacity">The maximum number of file system events to buffer before stopping.</param>
         public EnhancedFileSystemWatcher(string path, int capacity = int.MaxValue)
             : this(new BufferedFileSystemWatcher(path), capacity)
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EnhancedFileSystemWatcher"/> class, given the specified directory and type of files to monitor.
+        /// </summary>
+        /// <param name="path">The directory to monitor, in standard or Universal Naming Convention (UNC) notation.</param>
+        /// <param name="filter">The type of files to watch. For example, <c>*.txt</c> watches for changes to all text files.</param>
+        /// <param name="capacity">The maximum number of file system events to buffer before stopping.</param>
         public EnhancedFileSystemWatcher(string path, string filter, int capacity = int.MaxValue)
             : this(new BufferedFileSystemWatcher(path, filter), capacity)
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EnhancedFileSystemWatcher"/> class, given a <see cref="FileSystemWatcher"/> to derive information from.
+        /// </summary>
+        /// <param name="watcher">A file system watcher to derive events from. A regular <see cref="FileSystemWatcher"/> can be provided.</param>
+        /// <param name="capacity">The maximum number of file system events to buffer before stopping.</param>
         public EnhancedFileSystemWatcher(FileSystemWatcherAdapter watcher, int capacity = int.MaxValue)
             : this(new BufferedFileSystemWatcher(watcher), capacity)
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EnhancedFileSystemWatcher"/> class, given an <see cref="IFileSystemWatcher"/> to derive information from.
+        /// </summary>
+        /// <param name="watcher">A file system watcher to derive events from.</param>
+        /// <param name="capacity">The maximum number of file system events to buffer before stopping.</param>
         public EnhancedFileSystemWatcher(IFileSystemWatcher watcher, int capacity = int.MaxValue)
         {
             if (capacity < 1)
@@ -39,6 +63,9 @@ namespace SJP.FsNotify
             NotifyFilter = FlagEnums.GetAllFlags<NotifyFilters>();
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the <see cref="EnhancedFileSystemWatcher"/> is enabled.
+        /// </summary>
         public bool EnableRaisingEvents
         {
             get => _watcher.EnableRaisingEvents;
@@ -60,6 +87,9 @@ namespace SJP.FsNotify
             }
         }
 
+        /// <summary>
+        /// Gets or sets the filter string used to determine what files are monitored in a directory.
+        /// </summary>
         public string Filter
         {
             get => _watcher.Filter;
@@ -72,6 +102,9 @@ namespace SJP.FsNotify
             }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether subdirectories within the specified path should be monitored.
+        /// </summary>
         public bool IncludeSubdirectories
         {
             get => _watcher.IncludeSubdirectories;
@@ -84,6 +117,9 @@ namespace SJP.FsNotify
             }
         }
 
+        /// <summary>
+        /// Gets or sets the path of the directory to watch.
+        /// </summary>
         public string Path
         {
             get => _watcher.Path;
@@ -96,6 +132,9 @@ namespace SJP.FsNotify
             }
         }
 
+        /// <summary>
+        /// Gets or sets the type of changes to watch for.
+        /// </summary>
         public NotifyFilters NotifyFilter
         {
             get => _watcher.NotifyFilter;
@@ -109,6 +148,9 @@ namespace SJP.FsNotify
             }
         }
 
+        /// <summary>
+        /// Occurs when a file or directory in the specified <see cref="Path"/> is changed.
+        /// </summary>
         public event EventHandler<FileSystemEventArgs> Changed
         {
             add
@@ -124,6 +166,9 @@ namespace SJP.FsNotify
             }
         }
 
+        /// <summary>
+        /// Occurs when a file or directory in the specified <see cref="Path"/> is created.
+        /// </summary>
         public event EventHandler<FileSystemEventArgs> Created
         {
             add
@@ -139,6 +184,9 @@ namespace SJP.FsNotify
             }
         }
 
+        /// <summary>
+        /// Occurs when a file or directory in the specified <see cref="Path"/> is deleted.
+        /// </summary>
         public event EventHandler<FileSystemEventArgs> Deleted
         {
             add
@@ -154,6 +202,9 @@ namespace SJP.FsNotify
             }
         }
 
+        /// <summary>
+        /// Occurs when the instance of <see cref="EnhancedFileSystemWatcher"/> is unable to continue monitoring changes.
+        /// </summary>
         public event EventHandler<ErrorEventArgs> Error
         {
             add
@@ -169,6 +220,9 @@ namespace SJP.FsNotify
             }
         }
 
+        /// <summary>
+        /// Occurs when a file or directory in the specified <see cref="Path"/> is renamed.
+        /// </summary>
         public event EventHandler<RenamedEventArgs> Renamed
         {
             add
@@ -184,6 +238,9 @@ namespace SJP.FsNotify
             }
         }
 
+        /// <summary>
+        /// Occurs when a file or directory in the specified <see cref="Path"/> has an attribute change.
+        /// </summary>
         public event EventHandler<FileSystemEventArgs> AttributeChanged
         {
             add
@@ -202,6 +259,9 @@ namespace SJP.FsNotify
             }
         }
 
+        /// <summary>
+        /// Occurs when a file or directory in the specified <see cref="Path"/> has its creation time changed.
+        /// </summary>
         public event EventHandler<FileSystemEventArgs> CreationTimeChanged
         {
             add
@@ -220,6 +280,9 @@ namespace SJP.FsNotify
             }
         }
 
+        /// <summary>
+        /// Occurs when a file or directory in the specified <see cref="Path"/> has its last access time changed.
+        /// </summary>
         public event EventHandler<FileSystemEventArgs> LastAccessChanged
         {
             add
@@ -238,6 +301,9 @@ namespace SJP.FsNotify
             }
         }
 
+        /// <summary>
+        /// Occurs when a file or directory in the specified <see cref="Path"/> has its last write time changed.
+        /// </summary>
         public event EventHandler<FileSystemEventArgs> LastWriteChanged
         {
             add
@@ -256,6 +322,9 @@ namespace SJP.FsNotify
             }
         }
 
+        /// <summary>
+        /// Occurs when a file or directory in the specified <see cref="Path"/> has its security settings changed.
+        /// </summary>
         public event EventHandler<FileSystemEventArgs> SecurityChanged
         {
             add
@@ -274,6 +343,9 @@ namespace SJP.FsNotify
             }
         }
 
+        /// <summary>
+        /// Occurs when a file or directory in the specified <see cref="Path"/> has its size changed.
+        /// </summary>
         public event EventHandler<FileSystemEventArgs> SizeChanged
         {
             add
@@ -292,6 +364,11 @@ namespace SJP.FsNotify
             }
         }
 
+        /// <summary>
+        /// A synchronous method that returns a structure that contains specific information on the change that occurred, given the type of change you want to monitor.
+        /// </summary>
+        /// <param name="changeType">The <see cref="WatcherChangeTypes"/> to watch for.</param>
+        /// <returns>A <see cref="WaitForChangedResult"/> that contains specific information on the change that occurred.</returns>
         public WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType)
         {
             if (!changeType.IsValid())
@@ -300,6 +377,12 @@ namespace SJP.FsNotify
             return _watcher.WaitForChanged(changeType);
         }
 
+        /// <summary>
+        /// A synchronous method that returns a structure that contains specific information on the change that occurred, given the type of change you want to monitor and the time (in milliseconds) to wait before timing out.
+        /// </summary>
+        /// <param name="changeType">The <see cref="WatcherChangeTypes"/> to watch for.</param>
+        /// <param name="timeout">The time (in milliseconds) to wait before timing out.</param>
+        /// <returns>A <see cref="WaitForChangedResult"/> that contains specific information on the change that occurred.</returns>
         public WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType, int timeout)
         {
             if (!changeType.IsValid())
@@ -308,8 +391,14 @@ namespace SJP.FsNotify
             return _watcher.WaitForChanged(changeType, timeout);
         }
 
+        /// <summary>
+        /// Releases any resources used by the <see cref="EnhancedFileSystemWatcher"/> instance.
+        /// </summary>
         public void Dispose() => Dispose(true);
 
+        /// <summary>
+        /// When called, begins buffering of file system events in the background.
+        /// </summary>
         protected void RaiseBufferedFileSystemEvents()
         {
             Task.Run(() =>
@@ -347,6 +436,11 @@ namespace SJP.FsNotify
             });
         }
 
+        /// <summary>
+        /// Raises the <see cref="Created"/> event.
+        /// </summary>
+        /// <param name="sender">Ignored.</param>
+        /// <param name="e">A <see cref="FileSystemEventArgs"/> that contains the event data.</param>
         protected virtual void OnCreated(object sender, FileSystemEventArgs e)
         {
             if (e == null)
@@ -357,6 +451,11 @@ namespace SJP.FsNotify
                 OnBufferExceeded();
         }
 
+        /// <summary>
+        /// Raises the <see cref="Changed"/> event.
+        /// </summary>
+        /// <param name="sender">Ignored.</param>
+        /// <param name="e">A <see cref="FileSystemEventArgs"/> that contains the event data.</param>
         protected virtual void OnChanged(object sender, FileSystemEventArgs e)
         {
             if (e == null)
@@ -367,6 +466,11 @@ namespace SJP.FsNotify
                 OnBufferExceeded();
         }
 
+        /// <summary>
+        /// Raises the <see cref="Deleted"/> event.
+        /// </summary>
+        /// <param name="sender">Ignored.</param>
+        /// <param name="e">A <see cref="FileSystemEventArgs"/> that contains the event data.</param>
         protected virtual void OnDeleted(object sender, FileSystemEventArgs e)
         {
             if (e == null)
@@ -377,6 +481,11 @@ namespace SJP.FsNotify
                 OnBufferExceeded();
         }
 
+        /// <summary>
+        /// Raises the <see cref="Renamed"/> event.
+        /// </summary>
+        /// <param name="sender">Ignored.</param>
+        /// <param name="e">A <see cref="RenamedEventArgs"/> that contains the event data.</param>
         protected virtual void OnRenamed(object sender, RenamedEventArgs e)
         {
             if (e == null)
@@ -387,6 +496,11 @@ namespace SJP.FsNotify
                 OnBufferExceeded();
         }
 
+        /// <summary>
+        /// Raises the <see cref="AttributeChanged"/> event.
+        /// </summary>
+        /// <param name="sender">Ignored.</param>
+        /// <param name="e">A <see cref="FileSystemEventArgs"/> that contains the event data.</param>
         protected virtual void OnAttributeChanged(object sender, FileSystemEventArgs e)
         {
             if (e == null)
@@ -397,6 +511,11 @@ namespace SJP.FsNotify
                 OnBufferExceeded();
         }
 
+        /// <summary>
+        /// Raises the <see cref="CreationTimeChanged"/> event.
+        /// </summary>
+        /// <param name="sender">Ignored.</param>
+        /// <param name="e">A <see cref="FileSystemEventArgs"/> that contains the event data.</param>
         protected virtual void OnCreationTimeChanged(object sender, FileSystemEventArgs e)
         {
             if (e == null)
@@ -407,6 +526,11 @@ namespace SJP.FsNotify
                 OnBufferExceeded();
         }
 
+        /// <summary>
+        /// Raises the <see cref="LastAccessChanged"/> event.
+        /// </summary>
+        /// <param name="sender">Ignored.</param>
+        /// <param name="e">A <see cref="FileSystemEventArgs"/> that contains the event data.</param>
         protected virtual void OnLastAccessChanged(object sender, FileSystemEventArgs e)
         {
             if (e == null)
@@ -417,6 +541,11 @@ namespace SJP.FsNotify
                 OnBufferExceeded();
         }
 
+        /// <summary>
+        /// Raises the <see cref="LastWriteChanged"/> event.
+        /// </summary>
+        /// <param name="sender">Ignored.</param>
+        /// <param name="e">A <see cref="FileSystemEventArgs"/> that contains the event data.</param>
         protected virtual void OnLastWriteChanged(object sender, FileSystemEventArgs e)
         {
             if (e == null)
@@ -427,6 +556,11 @@ namespace SJP.FsNotify
                 OnBufferExceeded();
         }
 
+        /// <summary>
+        /// Raises the <see cref="SecurityChanged"/> event.
+        /// </summary>
+        /// <param name="sender">Ignored.</param>
+        /// <param name="e">A <see cref="FileSystemEventArgs"/> that contains the event data.</param>
         protected virtual void OnSecurityChanged(object sender, FileSystemEventArgs e)
         {
             if (e == null)
@@ -437,6 +571,11 @@ namespace SJP.FsNotify
                 OnBufferExceeded();
         }
 
+        /// <summary>
+        /// Raises the <see cref="SizeChanged"/> event.
+        /// </summary>
+        /// <param name="sender">Ignored.</param>
+        /// <param name="e">A <see cref="FileSystemEventArgs"/> that contains the event data.</param>
         protected virtual void OnSizeChanged(object sender, FileSystemEventArgs e)
         {
             if (e == null)
@@ -447,6 +586,11 @@ namespace SJP.FsNotify
                 OnBufferExceeded();
         }
 
+        /// <summary>
+        /// Raises the <see cref="Error"/> event.
+        /// </summary>
+        /// <param name="sender">Ignored.</param>
+        /// <param name="e">A <see cref="ErrorEventArgs"/> that contains the event data.</param>
         protected virtual void OnError(object sender, ErrorEventArgs e)
         {
             if (e == null)
@@ -455,6 +599,9 @@ namespace SJP.FsNotify
             _onError?.Invoke(this, e);
         }
 
+        /// <summary>
+        /// Used to refresh the underlying <see cref="IFileSystemWatcher"/> instances which track specific events. Only required when <see cref="NotifyFilter"/> has changed.
+        /// </summary>
         protected void UpdateFilterWatchers()
         {
             var existingFilters = new HashSet<NotifyFilters>(_changeWatchers.Keys);
@@ -490,8 +637,16 @@ namespace SJP.FsNotify
             }
         }
 
+        /// <summary>
+        /// Retrieves the <see cref="EventHandler{FileSystemEventArgs}"/> instance which will handle a given event. For <see cref="NotifyFilters.DirectoryName"/> and <see cref="NotifyFilters.FileName"/>, this will always be <b>null</b>.
+        /// </summary>
+        /// <param name="filter">A single value of the <see cref="NotifyFilters"/> enum, which determines which specific event to track.</param>
+        /// <returns>An <see cref="EventHandler{FileSystemEventArgs}"/> instance.</returns>
         protected EventHandler<FileSystemEventArgs> GetNotifyHandler(NotifyFilters filter)
         {
+            if (!filter.IsValid())
+                throw new ArgumentException($"The { nameof(NotifyFilters) } provided must be a valid enum.", nameof(NotifyFilter));
+
             switch (filter)
             {
                 case NotifyFilters.Attributes:
@@ -514,12 +669,19 @@ namespace SJP.FsNotify
             }
         }
 
+        /// <summary>
+        /// Handles the scenario where the in-memory buffer has been exhausted.
+        /// </summary>
         protected virtual void OnBufferExceeded()
         {
             var ex = new BufferExhaustedException($"File system event queue buffer exhausted. { _buffer.BoundedCapacity } events exceeded.", _buffer.BoundedCapacity);
             _onError?.Invoke(this, new ErrorEventArgs(ex));
         }
 
+        /// <summary>
+        /// Releases the managed resources used by the <see cref="EnhancedFileSystemWatcher"/>.
+        /// </summary>
+        /// <param name="disposing"><b>True</b> if managed resources are to be disposed. <b>False</b> will not dispose any resources.</param>
         protected virtual void Dispose(bool disposing)
         {
             if (_disposed)
@@ -580,23 +742,73 @@ namespace SJP.FsNotify
             [FileSystemEvent.SizeChange] = NotifyFilters.Size
         };
 
+        /// <summary>
+        /// A type of file system event.
+        /// </summary>
         protected enum FileSystemEvent
         {
+            /// <summary>
+            /// File or directory creation.
+            /// </summary>
             Create,
+
+            /// <summary>
+            /// A generic change in a file or directory.
+            /// </summary>
             Change,
+
+            /// <summary>
+            /// File or directory deletion.
+            /// </summary>
             Delete,
+
+            /// <summary>
+            /// A rename for a file or directory.
+            /// </summary>
             Rename,
+
             // the following are really just a type of 'Change' event
+            /// <summary>
+            /// File or directory attribute change.
+            /// </summary>
             AttributeChange,
+
+            /// <summary>
+            /// File or directory creation time change.
+            /// </summary>
             CreationTimeChange,
+
+            /// <summary>
+            /// File or directory last access time change.
+            /// </summary>
             LastAccessChange,
+
+            /// <summary>
+            /// File or directory last write time change.
+            /// </summary>
             LastWriteChange,
+
+            /// <summary>
+            /// File or directory security settings change.
+            /// </summary>
             SecurityChange,
+
+            /// <summary>
+            /// File or directory size change.
+            /// </summary>
             SizeChange
         }
 
+        /// <summary>
+        /// Provides data for enhanced file system events.
+        /// </summary>
         protected class EnhancedFileSystemEventArgs : EventArgs
         {
+            /// <summary>
+            /// Initializes a new instance of the FileSystemEventArgs class.
+            /// </summary>
+            /// <param name="e">A file system event that has occurred.</param>
+            /// <param name="args">Further information about the event from <paramref name="e"/>.</param>
             public EnhancedFileSystemEventArgs(FileSystemEvent e, FileSystemEventArgs args)
             {
                 if (!e.IsValid())
@@ -606,8 +818,14 @@ namespace SJP.FsNotify
                 EventArgs = args ?? throw new ArgumentNullException(nameof(args));
             }
 
+            /// <summary>
+            /// The file system event that has occurred.
+            /// </summary>
             public FileSystemEvent Event { get; }
 
+            /// <summary>
+            /// Further information about the file system event, <see cref="Event"/>.
+            /// </summary>
             public FileSystemEventArgs EventArgs { get; }
         }
     }
