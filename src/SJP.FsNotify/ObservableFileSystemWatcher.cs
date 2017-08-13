@@ -6,6 +6,16 @@ namespace SJP.FsNotify
 {
     public class ObservableFileSystemWatcher : IObservableFileSystemWatcher
     {
+        public ObservableFileSystemWatcher(string path)
+            : this(new BufferedFileSystemWatcher(path))
+        {
+        }
+
+        public ObservableFileSystemWatcher(string path, string filter)
+            : this(new BufferedFileSystemWatcher(path, filter))
+        {
+        }
+
         public ObservableFileSystemWatcher(FileSystemWatcherAdapter watcher)
             : this(new BufferedFileSystemWatcher(watcher))
         {
