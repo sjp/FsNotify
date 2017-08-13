@@ -47,6 +47,7 @@ namespace SJP.FsNotify
                     return;
 
                 _watcher.EnableRaisingEvents = value;
+
                 if (value)
                 {
                     _cts = new CancellationTokenSource();

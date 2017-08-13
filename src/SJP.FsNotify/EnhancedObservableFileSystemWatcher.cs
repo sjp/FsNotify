@@ -6,11 +6,6 @@ namespace SJP.FsNotify
 {
     public class EnhancedObservableFileSystemWatcher : IEnhancedObservableFileSystemWatcher
     {
-        public EnhancedObservableFileSystemWatcher(int capacity = int.MaxValue)
-            : this(new EnhancedFileSystemWatcher(capacity))
-        {
-        }
-
         public EnhancedObservableFileSystemWatcher(string path, int capacity = int.MaxValue)
             : this(new EnhancedFileSystemWatcher(path, capacity))
         {

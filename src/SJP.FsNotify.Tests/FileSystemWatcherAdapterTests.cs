@@ -205,6 +205,17 @@ namespace SJP.FsNotify.Tests
         }
 
         [Test]
+        public void NotifyFilters_WhenGivenInvalidEnum_ThrowsArgumentException()
+        {
+            var watcher = new FileSystemWatcher();
+            using (var adapter = new FileSystemWatcherAdapter(watcher))
+            {
+                const NotifyFilters filter = (NotifyFilters)32908;
+                Assert.Throws<ArgumentException>(() => adapter.NotifyFilter = filter);
+            }
+        }
+
+        [Test]
         public void WaitForChanged_WhenGivenInvalidEnum_ThrowsArgumentException()
         {
             var watcher = new FileSystemWatcher();

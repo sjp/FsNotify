@@ -64,7 +64,13 @@ namespace SJP.FsNotify
         public NotifyFilters NotifyFilter
         {
             get => _watcher.NotifyFilter;
-            set => _watcher.NotifyFilter = value;
+            set
+            {
+                if (!value.IsValid())
+                    throw new ArgumentException($"The { nameof(NotifyFilters) } provided must be a valid enum.", nameof(NotifyFilter));
+
+                _watcher.NotifyFilter = value;
+            }
         }
 
         public string Path

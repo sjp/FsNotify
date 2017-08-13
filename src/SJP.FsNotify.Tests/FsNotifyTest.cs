@@ -19,7 +19,9 @@ namespace SJP.FsNotify.Tests
             if (testDir == null)
                 throw new ArgumentNullException(nameof(testDir));
 
-            var fileName = Path.ChangeExtension(Path.GetRandomFileName(), extension);
+            var fileName = Path.GetRandomFileName();
+            if (!string.IsNullOrEmpty(extension))
+                fileName = Path.ChangeExtension(fileName, extension);
             var filePath = Path.Combine(testDir.FullName, fileName);
 
             return new FileInfo(filePath);

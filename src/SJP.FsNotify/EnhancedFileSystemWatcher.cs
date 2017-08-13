@@ -11,11 +11,6 @@ namespace SJP.FsNotify
 {
     public class EnhancedFileSystemWatcher : IEnhancedFileSystemWatcher
     {
-        public EnhancedFileSystemWatcher(int capacity = int.MaxValue)
-            : this(new BufferedFileSystemWatcher(), capacity)
-        {
-        }
-
         public EnhancedFileSystemWatcher(string path, int capacity = int.MaxValue)
             : this(new BufferedFileSystemWatcher(path), capacity)
         {
@@ -27,7 +22,7 @@ namespace SJP.FsNotify
         }
 
         public EnhancedFileSystemWatcher(FileSystemWatcherAdapter watcher, int capacity = int.MaxValue)
-            : this(watcher as IFileSystemWatcher, capacity)
+            : this(new BufferedFileSystemWatcher(watcher), capacity)
         {
         }
 
@@ -36,9 +31,11 @@ namespace SJP.FsNotify
             if (capacity < 1)
                 throw new ArgumentOutOfRangeException(nameof(capacity), "The bounding capacity must be at least 1. Given: " + capacity.ToString());
 
-            _buffer = new BlockingCollection<EnhancedFileSystemEventArgs>(capacity);
             _watcher = watcher ?? throw new ArgumentNullException(nameof(watcher));
+            if (string.IsNullOrEmpty(_watcher.Path))
+                throw new ArgumentException($"The { nameof(Path) } property must be set.", nameof(watcher));
 
+            _buffer = new BlockingCollection<EnhancedFileSystemEventArgs>(capacity);
             NotifyFilter = FlagEnums.GetAllFlags<NotifyFilters>();
         }
 
@@ -50,16 +47,16 @@ namespace SJP.FsNotify
                 if (_watcher.EnableRaisingEvents == value)
                     return;
 
-                _watcher.EnableRaisingEvents = value;
-                var changeWatchers = _changeWatchers.Values.Where(v => v != null);
-                foreach (var watcher in changeWatchers)
-                    watcher.EnableRaisingEvents = value;
-
                 if (value)
                 {
                     _cts = new CancellationTokenSource();
                     RaiseBufferedFileSystemEvents();
                 }
+
+                _watcher.EnableRaisingEvents = value;
+                var changeWatchers = _changeWatchers.Values.Where(v => v != null);
+                foreach (var watcher in changeWatchers)
+                    watcher.EnableRaisingEvents = value;
             }
         }
 
