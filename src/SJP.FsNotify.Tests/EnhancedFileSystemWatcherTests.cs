@@ -343,6 +343,7 @@ namespace SJP.FsNotify.Tests
                 {
                     enhancedWatcher.Created += (s, e) => { };
                     enhancedWatcher.EnableRaisingEvents = true;
+                    await Task.Delay(100);
 
                     var testFile = GetTestFile(testDir);
                     testFile.Create().Dispose();
@@ -370,6 +371,7 @@ namespace SJP.FsNotify.Tests
                 {
                     enhancedWatcher.Changed += (s, e) => { };
                     enhancedWatcher.EnableRaisingEvents = true;
+                    await Task.Delay(100);
 
                     var testFile = GetTestFile(testDir);
                     testFile.Create().Dispose();
@@ -401,6 +403,7 @@ namespace SJP.FsNotify.Tests
                 {
                     enhancedWatcher.Renamed += (s, e) => { };
                     enhancedWatcher.EnableRaisingEvents = true;
+                    await Task.Delay(100);
 
                     var testFile = GetTestFile(testDir);
                     var testFile2 = GetTestFile(testDir);
@@ -430,6 +433,7 @@ namespace SJP.FsNotify.Tests
                 {
                     enhancedWatcher.Deleted += (s, e) => { };
                     enhancedWatcher.EnableRaisingEvents = true;
+                    await Task.Delay(100);
 
                     var testFile = GetTestFile(testDir);
                     testFile.Create().Dispose();
@@ -459,6 +463,7 @@ namespace SJP.FsNotify.Tests
                     enhancedWatcher.Created += (s, e) => Task.Delay(100).Wait();
                     enhancedWatcher.Error += (s, e) => { };
                     enhancedWatcher.EnableRaisingEvents = true;
+                    await Task.Delay(100);
 
                     var testFile1 = GetTestFile(testDir);
                     var testFile2 = GetTestFile(testDir);
@@ -491,6 +496,7 @@ namespace SJP.FsNotify.Tests
                 {
                     enhancedWatcher.Created += (s, e) => Task.Delay(100).Wait();
                     enhancedWatcher.EnableRaisingEvents = true;
+                    await Task.Delay(100);
 
                     var testFile1 = GetTestFile(testDir);
                     var testFile2 = GetTestFile(testDir);
@@ -688,6 +694,7 @@ namespace SJP.FsNotify.Tests
                 {
                     enhancedWatcher.AttributeChanged += (s, e) => { };
                     enhancedWatcher.EnableRaisingEvents = true;
+                    await Task.Delay(100);
 
                     var testFile = GetTestFile(testDir);
                     testFile.Create().Dispose();

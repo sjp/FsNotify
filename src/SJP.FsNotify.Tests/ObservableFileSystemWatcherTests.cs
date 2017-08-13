@@ -35,7 +35,7 @@ namespace SJP.FsNotify.Tests
                     var createdCalled = false;
                     obsWatcher.Created.Subscribe(e => createdCalled = true);
                     obsWatcher.Start();
-                    Task.Delay(100).Wait();
+                    await Task.Delay(100);
 
                     var testFile = GetTestFile(testDir);
                     testFile.Create().Dispose();
@@ -86,7 +86,7 @@ namespace SJP.FsNotify.Tests
         }
 
         [Test]
-        public void Renamed_WhenFileRenamed_PublishedRename()
+        public async Task Renamed_WhenFileRenamed_PublishedRename()
         {
             var testDir = GetTestDirectory();
             try
@@ -98,14 +98,14 @@ namespace SJP.FsNotify.Tests
                     var renamedCalled = false;
                     obsWatcher.Renamed.Subscribe(e => renamedCalled = true);
                     obsWatcher.Start();
-                    Task.Delay(100).Wait();
+                    await Task.Delay(100);
 
                     var testFile = GetTestFile(testDir);
                     var testFile2 = GetTestFile(testDir);
                     testFile.Create().Dispose();
                     File.Move(testFile.FullName, testFile2.FullName);
 
-                    Task.Delay(100).Wait();
+                    await Task.Delay(100);
                     Assert.IsTrue(renamedCalled);
                 }
             }
@@ -129,7 +129,7 @@ namespace SJP.FsNotify.Tests
                     var deletedCalled = false;
                     obsWatcher.Deleted.Subscribe(e => deletedCalled = true);
                     obsWatcher.Start();
-                    Task.Delay(100).Wait();
+                    await Task.Delay(100);
 
                     var testFile = GetTestFile(testDir);
                     testFile.Create().Dispose();

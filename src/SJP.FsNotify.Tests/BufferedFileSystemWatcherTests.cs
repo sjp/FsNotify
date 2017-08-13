@@ -259,6 +259,7 @@ namespace SJP.FsNotify.Tests
                 {
                     bufferedWatcher.Created += (s, e) => { };
                     bufferedWatcher.EnableRaisingEvents = true;
+                    await Task.Delay(100);
 
                     var testFile = GetTestFile(testDir);
                     testFile.Create().Dispose();
@@ -286,6 +287,7 @@ namespace SJP.FsNotify.Tests
                 {
                     bufferedWatcher.Changed += (s, e) => { };
                     bufferedWatcher.EnableRaisingEvents = true;
+                    await Task.Delay(100);
 
                     var testFile = GetTestFile(testDir);
                     testFile.Create().Dispose();
@@ -317,6 +319,7 @@ namespace SJP.FsNotify.Tests
                 {
                     bufferedWatcher.Renamed += (s, e) => { };
                     bufferedWatcher.EnableRaisingEvents = true;
+                    await Task.Delay(100);
 
                     var testFile = GetTestFile(testDir);
                     var testFile2 = GetTestFile(testDir);
@@ -346,6 +349,7 @@ namespace SJP.FsNotify.Tests
                 {
                     bufferedWatcher.Deleted += (s, e) => { };
                     bufferedWatcher.EnableRaisingEvents = true;
+                    await Task.Delay(100);
 
                     var testFile = GetTestFile(testDir);
                     testFile.Create().Dispose();
@@ -375,6 +379,7 @@ namespace SJP.FsNotify.Tests
                     bufferedWatcher.Created += (s, e) => Task.Delay(100).Wait();
                     bufferedWatcher.Error += (s, e) => {};
                     bufferedWatcher.EnableRaisingEvents = true;
+                    await Task.Delay(100);
 
                     var testFile1 = GetTestFile(testDir);
                     var testFile2 = GetTestFile(testDir);
@@ -407,6 +412,7 @@ namespace SJP.FsNotify.Tests
                 {
                     bufferedWatcher.Created += (s, e) => Task.Delay(100).Wait();
                     bufferedWatcher.EnableRaisingEvents = true;
+                    await Task.Delay(100);
 
                     var testFile1 = GetTestFile(testDir);
                     var testFile2 = GetTestFile(testDir);
@@ -440,6 +446,7 @@ namespace SJP.FsNotify.Tests
                     var createdCalled = false;
                     bufferedWatcher.Created += (s, e) => createdCalled = true;
                     bufferedWatcher.EnableRaisingEvents = true;
+                    await Task.Delay(100);
 
                     var testFile = GetTestFile(testDir);
                     testFile.Create().Dispose();
@@ -468,6 +475,7 @@ namespace SJP.FsNotify.Tests
                     var changedCalled = false;
                     bufferedWatcher.Changed += (s, e) => changedCalled = true;
                     bufferedWatcher.EnableRaisingEvents = true;
+                    await Task.Delay(100);
 
                     var testFile = GetTestFile(testDir);
                     testFile.Create().Dispose();
@@ -489,7 +497,7 @@ namespace SJP.FsNotify.Tests
         }
 
         [Test]
-        public void Rename_WhenFileRenamedAndEventBound_RaisesEvent()
+        public async Task Rename_WhenFileRenamedAndEventBound_RaisesEvent()
         {
             var testDir = GetTestDirectory();
             try
@@ -501,13 +509,14 @@ namespace SJP.FsNotify.Tests
                     var renamedCalled = false;
                     bufferedWatcher.Renamed += (s, e) => renamedCalled = true;
                     bufferedWatcher.EnableRaisingEvents = true;
+                    await Task.Delay(100);
 
                     var testFile = GetTestFile(testDir);
                     var testFile2 = GetTestFile(testDir);
                     testFile.Create().Dispose();
                     File.Move(testFile.FullName, testFile2.FullName);
 
-                    Task.Delay(10).Wait();
+                    await Task.Delay(100);
                     Assert.IsTrue(renamedCalled);
                 }
             }
@@ -531,6 +540,7 @@ namespace SJP.FsNotify.Tests
                     var deletedCalled = false;
                     bufferedWatcher.Deleted += (s, e) => deletedCalled = true;
                     bufferedWatcher.EnableRaisingEvents = true;
+                    await Task.Delay(100);
 
                     var testFile = GetTestFile(testDir);
                     testFile.Create().Dispose();
@@ -561,6 +571,7 @@ namespace SJP.FsNotify.Tests
                     bufferedWatcher.Created += (s, e) => Task.Delay(10000).Wait();
                     bufferedWatcher.Error += (s, e) => errorCalled = true;
                     bufferedWatcher.EnableRaisingEvents = true;
+                    await Task.Delay(100);
 
                     var testFile1 = GetTestFile(testDir);
                     var testFile2 = GetTestFile(testDir);
