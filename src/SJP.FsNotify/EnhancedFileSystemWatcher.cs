@@ -436,12 +436,33 @@ namespace SJP.FsNotify
             });
         }
 
+        private void OnCreated(object sender, FileSystemEventArgs e) => OnCreated(e);
+
+        private void OnChanged(object sender, FileSystemEventArgs e) => OnChanged(e);
+
+        private void OnDeleted(object sender, FileSystemEventArgs e) => OnDeleted(e);
+
+        private void OnRenamed(object sender, RenamedEventArgs e) => OnRenamed(e);
+
+        private void OnError(object sender, ErrorEventArgs e) => OnError(e);
+
+        private void OnAttributeChanged(object sender, FileSystemEventArgs e) => OnAttributeChanged(e);
+
+        private void OnCreationTimeChanged(object sender, FileSystemEventArgs e) => OnCreationTimeChanged(e);
+
+        private void OnLastAccessChanged(object sender, FileSystemEventArgs e) => OnLastAccessChanged(e);
+
+        private void OnLastWriteChanged(object sender, FileSystemEventArgs e) => OnLastWriteChanged(e);
+
+        private void OnSecurityChanged(object sender, FileSystemEventArgs e) => OnSecurityChanged(e);
+
+        private void OnSizeChanged(object sender, FileSystemEventArgs e) => OnSizeChanged(e);
+
         /// <summary>
         /// Raises the <see cref="Created"/> event.
         /// </summary>
-        /// <param name="sender">Ignored.</param>
         /// <param name="e">A <see cref="FileSystemEventArgs"/> that contains the event data.</param>
-        protected virtual void OnCreated(object sender, FileSystemEventArgs e)
+        protected virtual void OnCreated(FileSystemEventArgs e)
         {
             if (e == null)
                 throw new ArgumentNullException(nameof(e));
@@ -454,9 +475,8 @@ namespace SJP.FsNotify
         /// <summary>
         /// Raises the <see cref="Changed"/> event.
         /// </summary>
-        /// <param name="sender">Ignored.</param>
         /// <param name="e">A <see cref="FileSystemEventArgs"/> that contains the event data.</param>
-        protected virtual void OnChanged(object sender, FileSystemEventArgs e)
+        protected virtual void OnChanged(FileSystemEventArgs e)
         {
             if (e == null)
                 throw new ArgumentNullException(nameof(e));
@@ -469,9 +489,8 @@ namespace SJP.FsNotify
         /// <summary>
         /// Raises the <see cref="Deleted"/> event.
         /// </summary>
-        /// <param name="sender">Ignored.</param>
         /// <param name="e">A <see cref="FileSystemEventArgs"/> that contains the event data.</param>
-        protected virtual void OnDeleted(object sender, FileSystemEventArgs e)
+        protected virtual void OnDeleted(FileSystemEventArgs e)
         {
             if (e == null)
                 throw new ArgumentNullException(nameof(e));
@@ -484,9 +503,8 @@ namespace SJP.FsNotify
         /// <summary>
         /// Raises the <see cref="Renamed"/> event.
         /// </summary>
-        /// <param name="sender">Ignored.</param>
         /// <param name="e">A <see cref="RenamedEventArgs"/> that contains the event data.</param>
-        protected virtual void OnRenamed(object sender, RenamedEventArgs e)
+        protected virtual void OnRenamed(RenamedEventArgs e)
         {
             if (e == null)
                 throw new ArgumentNullException(nameof(e));
@@ -499,9 +517,8 @@ namespace SJP.FsNotify
         /// <summary>
         /// Raises the <see cref="AttributeChanged"/> event.
         /// </summary>
-        /// <param name="sender">Ignored.</param>
         /// <param name="e">A <see cref="FileSystemEventArgs"/> that contains the event data.</param>
-        protected virtual void OnAttributeChanged(object sender, FileSystemEventArgs e)
+        protected virtual void OnAttributeChanged(FileSystemEventArgs e)
         {
             if (e == null)
                 throw new ArgumentNullException(nameof(e));
@@ -514,9 +531,8 @@ namespace SJP.FsNotify
         /// <summary>
         /// Raises the <see cref="CreationTimeChanged"/> event.
         /// </summary>
-        /// <param name="sender">Ignored.</param>
         /// <param name="e">A <see cref="FileSystemEventArgs"/> that contains the event data.</param>
-        protected virtual void OnCreationTimeChanged(object sender, FileSystemEventArgs e)
+        protected virtual void OnCreationTimeChanged(FileSystemEventArgs e)
         {
             if (e == null)
                 throw new ArgumentNullException(nameof(e));
@@ -529,9 +545,8 @@ namespace SJP.FsNotify
         /// <summary>
         /// Raises the <see cref="LastAccessChanged"/> event.
         /// </summary>
-        /// <param name="sender">Ignored.</param>
         /// <param name="e">A <see cref="FileSystemEventArgs"/> that contains the event data.</param>
-        protected virtual void OnLastAccessChanged(object sender, FileSystemEventArgs e)
+        protected virtual void OnLastAccessChanged(FileSystemEventArgs e)
         {
             if (e == null)
                 throw new ArgumentNullException(nameof(e));
@@ -544,9 +559,8 @@ namespace SJP.FsNotify
         /// <summary>
         /// Raises the <see cref="LastWriteChanged"/> event.
         /// </summary>
-        /// <param name="sender">Ignored.</param>
         /// <param name="e">A <see cref="FileSystemEventArgs"/> that contains the event data.</param>
-        protected virtual void OnLastWriteChanged(object sender, FileSystemEventArgs e)
+        protected virtual void OnLastWriteChanged(FileSystemEventArgs e)
         {
             if (e == null)
                 throw new ArgumentNullException(nameof(e));
@@ -559,9 +573,8 @@ namespace SJP.FsNotify
         /// <summary>
         /// Raises the <see cref="SecurityChanged"/> event.
         /// </summary>
-        /// <param name="sender">Ignored.</param>
         /// <param name="e">A <see cref="FileSystemEventArgs"/> that contains the event data.</param>
-        protected virtual void OnSecurityChanged(object sender, FileSystemEventArgs e)
+        protected virtual void OnSecurityChanged(FileSystemEventArgs e)
         {
             if (e == null)
                 throw new ArgumentNullException(nameof(e));
@@ -574,9 +587,8 @@ namespace SJP.FsNotify
         /// <summary>
         /// Raises the <see cref="SizeChanged"/> event.
         /// </summary>
-        /// <param name="sender">Ignored.</param>
         /// <param name="e">A <see cref="FileSystemEventArgs"/> that contains the event data.</param>
-        protected virtual void OnSizeChanged(object sender, FileSystemEventArgs e)
+        protected virtual void OnSizeChanged(FileSystemEventArgs e)
         {
             if (e == null)
                 throw new ArgumentNullException(nameof(e));
@@ -589,9 +601,8 @@ namespace SJP.FsNotify
         /// <summary>
         /// Raises the <see cref="Error"/> event.
         /// </summary>
-        /// <param name="sender">Ignored.</param>
         /// <param name="e">A <see cref="ErrorEventArgs"/> that contains the event data.</param>
-        protected virtual void OnError(object sender, ErrorEventArgs e)
+        protected virtual void OnError(ErrorEventArgs e)
         {
             if (e == null)
                 throw new ArgumentNullException(nameof(e));

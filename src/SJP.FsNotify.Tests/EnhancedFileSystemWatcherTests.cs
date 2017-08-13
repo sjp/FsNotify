@@ -997,25 +997,25 @@ namespace SJP.FsNotify.Tests
 
             public bool OnSizeChangedCalled => _onSizeChangedCalled;
 
-            protected override void OnCreated(object sender, FileSystemEventArgs e) => _onCreatedCalled = true;
+            protected override void OnCreated(FileSystemEventArgs e) => _onCreatedCalled = true;
 
-            protected override void OnChanged(object sender, FileSystemEventArgs e) => _onChangedCalled = true;
+            protected override void OnChanged(FileSystemEventArgs e) => _onChangedCalled = true;
 
-            protected override void OnRenamed(object sender, RenamedEventArgs e) => _onRenamedCalled = true;
+            protected override void OnRenamed(RenamedEventArgs e) => _onRenamedCalled = true;
 
-            protected override void OnDeleted(object sender, FileSystemEventArgs e) => _onDeletedCalled = true;
+            protected override void OnDeleted(FileSystemEventArgs e) => _onDeletedCalled = true;
 
-            protected override void OnAttributeChanged(object sender, FileSystemEventArgs e) => _onAttributeChangedCalled = true;
+            protected override void OnAttributeChanged(FileSystemEventArgs e) => _onAttributeChangedCalled = true;
 
-            protected override void OnCreationTimeChanged(object sender, FileSystemEventArgs e) => _onCreationTimeChangedCalled = true;
+            protected override void OnCreationTimeChanged(FileSystemEventArgs e) => _onCreationTimeChangedCalled = true;
 
-            protected override void OnLastAccessChanged(object sender, FileSystemEventArgs e) => _onLastAccessChangedCalled = true;
+            protected override void OnLastAccessChanged(FileSystemEventArgs e) => _onLastAccessChangedCalled = true;
 
-            protected override void OnLastWriteChanged(object sender, FileSystemEventArgs e) => _onLastWriteChangedCalled = true;
+            protected override void OnLastWriteChanged(FileSystemEventArgs e) => _onLastWriteChangedCalled = true;
 
-            protected override void OnSecurityChanged(object sender, FileSystemEventArgs e) => _onSecurityChangedCalled = true;
+            protected override void OnSecurityChanged(FileSystemEventArgs e) => _onSecurityChangedCalled = true;
 
-            protected override void OnSizeChanged(object sender, FileSystemEventArgs e) => _onSizeChangedCalled = true;
+            protected override void OnSizeChanged(FileSystemEventArgs e) => _onSizeChangedCalled = true;
 
             private bool _onCreatedCalled;
             private bool _onChangedCalled;
@@ -1045,12 +1045,12 @@ namespace SJP.FsNotify.Tests
 
             public bool OnBufferExceededCalled => _onBufferExceededCalled;
 
-            protected override void OnError(object sender, ErrorEventArgs e) => _onErrorCalled = true;
+            protected override void OnError(ErrorEventArgs e) => _onErrorCalled = true;
 
             protected override void OnBufferExceeded()
             {
                 _onBufferExceededCalled = true;
-                OnError(this, new ErrorEventArgs(new Exception()));
+                OnError(new ErrorEventArgs(new Exception()));
             }
 
             private bool _onErrorCalled;

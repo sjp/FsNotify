@@ -612,13 +612,13 @@ namespace SJP.FsNotify.Tests
 
             public bool OnDeletedCalled => _onDeletedCalled;
 
-            protected override void OnCreated(object sender, FileSystemEventArgs e) => _onCreatedCalled = true;
+            protected override void OnCreated(FileSystemEventArgs e) => _onCreatedCalled = true;
 
-            protected override void OnChanged(object sender, FileSystemEventArgs e) => _onChangedCalled = true;
+            protected override void OnChanged(FileSystemEventArgs e) => _onChangedCalled = true;
 
-            protected override void OnRenamed(object sender, RenamedEventArgs e) => _onRenamedCalled = true;
+            protected override void OnRenamed(RenamedEventArgs e) => _onRenamedCalled = true;
 
-            protected override void OnDeleted(object sender, FileSystemEventArgs e) => _onDeletedCalled = true;
+            protected override void OnDeleted(FileSystemEventArgs e) => _onDeletedCalled = true;
 
             private bool _onCreatedCalled;
             private bool _onChangedCalled;
@@ -642,12 +642,12 @@ namespace SJP.FsNotify.Tests
 
             public bool OnBufferExceededCalled => _onBufferExceededCalled;
 
-            protected override void OnError(object sender, ErrorEventArgs e) => _onErrorCalled = true;
+            protected override void OnError(ErrorEventArgs e) => _onErrorCalled = true;
 
             protected override void OnBufferExceeded()
             {
                 _onBufferExceededCalled = true;
-                OnError(this, new ErrorEventArgs(new Exception()));
+                OnError(new ErrorEventArgs(new Exception()));
             }
 
             private bool _onErrorCalled;
