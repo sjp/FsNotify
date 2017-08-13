@@ -19,12 +19,31 @@ namespace SJP.FsNotify
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="EnhancedObservableFileSystemWatcher"/> class, given the specified directory to monitor.
+        /// </summary>
+        /// <param name="directory">The directory to monitor, in standard or Universal Naming Convention (UNC) notation.</param>
+        public EnhancedObservableFileSystemWatcher(DirectoryInfo directory)
+            : this(new EnhancedFileSystemWatcher(directory))
+        {
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="EnhancedObservableFileSystemWatcher"/> class, given the specified directory and type of files to monitor.
         /// </summary>
         /// <param name="path">The directory to monitor, in standard or Universal Naming Convention (UNC) notation.</param>
         /// <param name="filter">The type of files to watch. For example, <c>*.txt</c> watches for changes to all text files.</param>
         public EnhancedObservableFileSystemWatcher(string path, string filter)
             : this(new EnhancedFileSystemWatcher(path, filter))
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EnhancedObservableFileSystemWatcher"/> class, given the specified directory and type of files to monitor.
+        /// </summary>
+        /// <param name="directory">The directory to monitor, in standard or Universal Naming Convention (UNC) notation.</param>
+        /// <param name="filter">The type of files to watch. For example, <c>*.txt</c> watches for changes to all text files.</param>
+        public EnhancedObservableFileSystemWatcher(DirectoryInfo directory, string filter)
+            : this(new EnhancedFileSystemWatcher(directory, filter))
         {
         }
 

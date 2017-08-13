@@ -25,6 +25,16 @@ namespace SJP.FsNotify
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="EnhancedFileSystemWatcher"/> class, given the specified directory to monitor.
+        /// </summary>
+        /// <param name="directory">The directory to monitor, in standard or Universal Naming Convention (UNC) notation.</param>
+        /// <param name="capacity">The maximum number of file system events to buffer before stopping.</param>
+        public EnhancedFileSystemWatcher(DirectoryInfo directory, int capacity = int.MaxValue)
+            : this(new BufferedFileSystemWatcher(directory), capacity)
+        {
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="EnhancedFileSystemWatcher"/> class, given the specified directory and type of files to monitor.
         /// </summary>
         /// <param name="path">The directory to monitor, in standard or Universal Naming Convention (UNC) notation.</param>
@@ -32,6 +42,17 @@ namespace SJP.FsNotify
         /// <param name="capacity">The maximum number of file system events to buffer before stopping.</param>
         public EnhancedFileSystemWatcher(string path, string filter, int capacity = int.MaxValue)
             : this(new BufferedFileSystemWatcher(path, filter), capacity)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EnhancedFileSystemWatcher"/> class, given the specified directory and type of files to monitor.
+        /// </summary>
+        /// <param name="directory">The directory to monitor, in standard or Universal Naming Convention (UNC) notation.</param>
+        /// <param name="filter">The type of files to watch. For example, <c>*.txt</c> watches for changes to all text files.</param>
+        /// <param name="capacity">The maximum number of file system events to buffer before stopping.</param>
+        public EnhancedFileSystemWatcher(DirectoryInfo directory, string filter, int capacity = int.MaxValue)
+            : this(new BufferedFileSystemWatcher(directory, filter), capacity)
         {
         }
 

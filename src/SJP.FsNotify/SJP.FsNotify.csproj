@@ -10,7 +10,7 @@
     <Authors>Simon Potter</Authors>
     <Company />
     <Product />
-    <Description>Improved file system notification events.</Description>
+    <Description>Improved file system notification events for .NET</Description>
     <Copyright>Copyright © Simon Potter 2017</Copyright>
     <PackageLicenseUrl>https://raw.github.com/sjp/SJP.FsNotify/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/sjp/SJP.FsNotify</PackageProjectUrl>

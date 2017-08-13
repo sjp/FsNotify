@@ -23,6 +23,36 @@ namespace SJP.FsNotify.Tests
         }
 
         [Test]
+        public void Ctor_GivenNullDirectoryInfo_ThrowsArgNullException()
+        {
+            DirectoryInfo dir = null;
+            Assert.Throws<ArgumentNullException>(() => new EnhancedFileSystemWatcher(dir));
+        }
+
+        [Test]
+        public void Ctor_GivenNullDirectoryInfoAndValidFilter_ThrowsArgNullException()
+        {
+            DirectoryInfo dir = null;
+            const string filter = "*.*";
+            Assert.Throws<ArgumentNullException>(() => new EnhancedFileSystemWatcher(dir, filter));
+        }
+
+        [Test]
+        public void Ctor_GivenNullPath_ThrowsArgNullException()
+        {
+            string path = null;
+            Assert.Throws<ArgumentNullException>(() => new EnhancedFileSystemWatcher(path));
+        }
+
+        [Test]
+        public void Ctor_GivenNullPathAndValidFilter_ThrowsArgNullException()
+        {
+            string path = null;
+            const string filter = "*.*";
+            Assert.Throws<ArgumentNullException>(() => new EnhancedFileSystemWatcher(path, filter));
+        }
+
+        [Test]
         public void Ctor_GivenWatcherWithoutPathSet_ThrowsArgNullException()
         {
             var watcher = new FileSystemWatcher();

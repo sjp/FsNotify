@@ -23,6 +23,36 @@ namespace SJP.FsNotify.Tests
         }
 
         [Test]
+        public void Ctor_GivenNullDirectoryInfo_ThrowsArgNullException()
+        {
+            DirectoryInfo dir = null;
+            Assert.Throws<ArgumentNullException>(() => new ObservableFileSystemWatcher(dir));
+        }
+
+        [Test]
+        public void Ctor_GivenNullDirectoryInfoAndValidFilter_ThrowsArgNullException()
+        {
+            DirectoryInfo dir = null;
+            const string filter = "*.*";
+            Assert.Throws<ArgumentNullException>(() => new ObservableFileSystemWatcher(dir, filter));
+        }
+
+        [Test]
+        public void Ctor_GivenNullPath_ThrowsArgNullException()
+        {
+            string path = null;
+            Assert.Throws<ArgumentNullException>(() => new ObservableFileSystemWatcher(path));
+        }
+
+        [Test]
+        public void Ctor_GivenNullPathAndValidFilter_ThrowsArgNullException()
+        {
+            string path = null;
+            const string filter = "*.*";
+            Assert.Throws<ArgumentNullException>(() => new ObservableFileSystemWatcher(path, filter));
+        }
+
+        [Test]
         public async Task Created_WhenFileCreated_PublishesCreate()
         {
             var testDir = GetTestDirectory();

@@ -32,6 +32,16 @@ namespace SJP.FsNotify
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="BufferedFileSystemWatcher"/> class, given the specified directory and type of files to monitor.
+        /// </summary>
+        /// <param name="directory">The directory to monitor, in standard or Universal Naming Convention (UNC) notation.</param>
+        /// <param name="capacity">The maximum number of file system events to buffer before stopping.</param>
+        public BufferedFileSystemWatcher(DirectoryInfo directory, int capacity = int.MaxValue)
+            : this(new FileSystemWatcher(directory?.FullName ?? throw new ArgumentNullException(nameof(directory))), capacity)
+        {
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="BufferedFileSystemWatcher"/> class, given a <see cref="FileSystemWatcher"/> to derive information from.
         /// </summary>
         /// <param name="path">The directory to monitor, in standard or Universal Naming Convention (UNC) notation.</param>
@@ -39,6 +49,17 @@ namespace SJP.FsNotify
         /// <param name="capacity">The maximum number of file system events to buffer before stopping.</param>
         public BufferedFileSystemWatcher(string path, string filter, int capacity = int.MaxValue)
             : this(new FileSystemWatcher(path, filter), capacity)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BufferedFileSystemWatcher"/> class, given a <see cref="FileSystemWatcher"/> to derive information from.
+        /// </summary>
+        /// <param name="directory">The directory to monitor, in standard or Universal Naming Convention (UNC) notation.</param>
+        /// <param name="filter">The type of files to watch. For example, <c>*.txt</c> watches for changes to all text files.</param>
+        /// <param name="capacity">The maximum number of file system events to buffer before stopping.</param>
+        public BufferedFileSystemWatcher(DirectoryInfo directory, string filter, int capacity = int.MaxValue)
+            : this(new FileSystemWatcher(directory?.FullName ?? throw new ArgumentNullException(nameof(directory)), filter), capacity)
         {
         }
 

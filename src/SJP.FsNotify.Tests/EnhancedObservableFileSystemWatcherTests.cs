@@ -19,7 +19,37 @@ namespace SJP.FsNotify.Tests
         public void Ctor_GivenNullIFileSystemWatcher_ThrowsArgNullException()
         {
             IFileSystemWatcher watcher = null;
-            Assert.Throws<ArgumentNullException>(() => new ObservableFileSystemWatcher(watcher));
+            Assert.Throws<ArgumentNullException>(() => new EnhancedObservableFileSystemWatcher(watcher));
+        }
+
+        [Test]
+        public void Ctor_GivenNullDirectoryInfo_ThrowsArgNullException()
+        {
+            DirectoryInfo dir = null;
+            Assert.Throws<ArgumentNullException>(() => new EnhancedObservableFileSystemWatcher(dir));
+        }
+
+        [Test]
+        public void Ctor_GivenNullDirectoryInfoAndValidFilter_ThrowsArgNullException()
+        {
+            DirectoryInfo dir = null;
+            const string filter = "*.*";
+            Assert.Throws<ArgumentNullException>(() => new EnhancedObservableFileSystemWatcher(dir, filter));
+        }
+
+        [Test]
+        public void Ctor_GivenNullPath_ThrowsArgNullException()
+        {
+            string path = null;
+            Assert.Throws<ArgumentNullException>(() => new EnhancedObservableFileSystemWatcher(path));
+        }
+
+        [Test]
+        public void Ctor_GivenNullPathAndValidFilter_ThrowsArgNullException()
+        {
+            string path = null;
+            const string filter = "*.*";
+            Assert.Throws<ArgumentNullException>(() => new EnhancedObservableFileSystemWatcher(path, filter));
         }
 
         [Test]
