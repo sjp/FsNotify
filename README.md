@@ -16,7 +16,7 @@ Avoid some of the pitfalls of [`FileSystemWatcher`](https://docs.microsoft.com/e
 * Supports .NET Framework 4.5.1, .NET Core 1.1, .NET Standard 1.3.
 * Avoids many of the pitfalls of `FileSystemWatcher`, in particular when it can exhaust its internal buffer.
 * Easy migration from `FileSystemWatcher`.
-* Handle more fine-grained events, such as an event which is only raised when a file attribute changes, and not just when *something* about a file has changed.
+* Handle more fine-grained events, such as an event which is only raised when a file attribute changes, and not just when *something* about a file has changed. See: `EnhancedFileSystemWatcher` and `EnhancedObservableFileSystemWatcher`.
 * [Reactively](http://reactivex.io/) observe asynchronous streams of file system events with `ObservableFileSystemWatcher` and `EnhancedObservableFileSystemWatcher`.
 * Minimal and focused.
 
