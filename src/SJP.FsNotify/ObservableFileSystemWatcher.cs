@@ -60,6 +60,7 @@ namespace SJP.FsNotify
         /// Initializes a new instance of the <see cref="ObservableFileSystemWatcher"/> class, given an <see cref="IFileSystemWatcher"/> to derive information from.
         /// </summary>
         /// <param name="watcher">A file system watcher to derive events from.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="watcher"/> is <b>null</b>.</exception>
         public ObservableFileSystemWatcher(IFileSystemWatcher watcher)
         {
             _watcher = watcher ?? throw new ArgumentNullException(nameof(watcher));
@@ -111,7 +112,7 @@ namespace SJP.FsNotify
         public IObservable<FileSystemEventArgs> Deleted { get; }
 
         /// <summary>
-        /// Provides a subscription to notifications when the instance of <see cref="IObservableFileSystemWatcher"/> is unable to continue monitoring changes.
+        /// Provides a subscription to notifications when the instance of <see cref="ObservableFileSystemWatcher"/> is unable to continue monitoring changes.
         /// </summary>
         public IObservable<ErrorEventArgs> Errors { get; }
 

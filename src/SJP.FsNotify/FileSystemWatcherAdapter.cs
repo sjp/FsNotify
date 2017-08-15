@@ -13,6 +13,7 @@ namespace SJP.FsNotify
         /// Initializes a new instance of the <see cref="FileSystemWatcherAdapter"/> class, given a <see cref="FileSystemWatcher"/> to derive information from.
         /// </summary>
         /// <param name="watcher">A file system watcher to derive events from. A regular <see cref="FileSystemWatcher"/> can be provided.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="watcher"/> is <b>null</b>.</exception>
         public FileSystemWatcherAdapter(FileSystemWatcher watcher)
         {
             _watcher = watcher ?? throw new ArgumentNullException(nameof(watcher));
@@ -100,6 +101,7 @@ namespace SJP.FsNotify
         /// <summary>
         /// Gets or sets the type of changes to watch for.
         /// </summary>
+        /// <exception cref="ArgumentException"><b>value</b> is an invalid enum.</exception>
         public NotifyFilters NotifyFilter
         {
             get => _watcher.NotifyFilter;
@@ -126,6 +128,7 @@ namespace SJP.FsNotify
         /// </summary>
         /// <param name="changeType">The <see cref="WatcherChangeTypes"/> to watch for.</param>
         /// <returns>A <see cref="WaitForChangedResult"/> that contains specific information on the change that occurred.</returns>
+        /// <exception cref="ArgumentException"><paramref name="changeType"/> is not a valid enum.</exception>
         public WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType)
         {
             if (!changeType.IsValid())
@@ -140,6 +143,7 @@ namespace SJP.FsNotify
         /// <param name="changeType">The <see cref="WatcherChangeTypes"/> to watch for.</param>
         /// <param name="timeout">The time (in milliseconds) to wait before timing out.</param>
         /// <returns>A <see cref="WaitForChangedResult"/> that contains specific information on the change that occurred.</returns>
+        /// <exception cref="ArgumentException"><paramref name="changeType"/> is not a valid enum.</exception>
         public WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType, int timeout)
         {
             if (!changeType.IsValid())

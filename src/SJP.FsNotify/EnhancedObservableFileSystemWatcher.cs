@@ -69,6 +69,7 @@ namespace SJP.FsNotify
         /// Initializes a new instance of the <see cref="EnhancedFileSystemWatcher"/> class, given an <see cref="IEnhancedFileSystemWatcher"/> to derive information from.
         /// </summary>
         /// <param name="watcher">An enhanced file system watcher to derive events from.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="watcher"/> is <b>null</b>.</exception>
         public EnhancedObservableFileSystemWatcher(IEnhancedFileSystemWatcher watcher)
         {
             _watcher = watcher ?? throw new ArgumentNullException(nameof(watcher));
@@ -148,7 +149,7 @@ namespace SJP.FsNotify
         public IObservable<FileSystemEventArgs> Deleted { get; }
 
         /// <summary>
-        /// Provides a subscription to notifications when the instance of <see cref="IObservableFileSystemWatcher"/> is unable to continue monitoring changes.
+        /// Provides a subscription to notifications when the instance of <see cref="EnhancedObservableFileSystemWatcher"/> is unable to continue monitoring changes.
         /// </summary>
         public IObservable<ErrorEventArgs> Errors { get; }
 
@@ -193,7 +194,7 @@ namespace SJP.FsNotify
         public void Dispose() => Dispose(true);
 
         /// <summary>
-        /// Releases the managed resources used by the <see cref="BufferedFileSystemWatcher"/>.
+        /// Releases the managed resources used by the <see cref="EnhancedObservableFileSystemWatcher"/>.
         /// </summary>
         /// <param name="disposing"><b>True</b> if managed resources are to be disposed. <b>False</b> will not dispose any resources.</param>
         protected virtual void Dispose(bool disposing)

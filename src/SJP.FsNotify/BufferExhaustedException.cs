@@ -12,6 +12,7 @@ namespace SJP.FsNotify
         /// </summary>
         /// <param name="message">A description of the error.</param>
         /// <param name="capacity">The number of file system events to stored in the buffer.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="message"/> is <b>null</b>, empty, or whitespace.</exception>
         public BufferExhaustedException(string message, int capacity) : base(message)
         {
             if (string.IsNullOrWhiteSpace(message))

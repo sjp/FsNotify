@@ -4,7 +4,7 @@ using System.IO;
 namespace SJP.FsNotify
 {
     /// <summary>
-    /// Represents a file system watcher whose behaviour matches those provided by <see cref="FileSystemWatcher"/>.
+    /// Represents a file system watcher whose behavior matches those provided by <see cref="FileSystemWatcher"/>.
     /// </summary>
     public interface IFileSystemWatcher : IDisposable
     {

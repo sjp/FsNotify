@@ -36,6 +36,7 @@ namespace SJP.FsNotify
         /// </summary>
         /// <param name="directory">The directory to monitor, in standard or Universal Naming Convention (UNC) notation.</param>
         /// <param name="capacity">The maximum number of file system events to buffer before stopping.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="directory"/> is <b>null</b>.</exception>
         public BufferedFileSystemWatcher(DirectoryInfo directory, int capacity = int.MaxValue)
             : this(new FileSystemWatcher(directory?.FullName ?? throw new ArgumentNullException(nameof(directory))), capacity)
         {
@@ -58,6 +59,7 @@ namespace SJP.FsNotify
         /// <param name="directory">The directory to monitor, in standard or Universal Naming Convention (UNC) notation.</param>
         /// <param name="filter">The type of files to watch. For example, <c>*.txt</c> watches for changes to all text files.</param>
         /// <param name="capacity">The maximum number of file system events to buffer before stopping.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="directory"/> is <b>null</b>.</exception>
         public BufferedFileSystemWatcher(DirectoryInfo directory, string filter, int capacity = int.MaxValue)
             : this(new FileSystemWatcher(directory?.FullName ?? throw new ArgumentNullException(nameof(directory)), filter), capacity)
         {
@@ -78,6 +80,7 @@ namespace SJP.FsNotify
         /// </summary>
         /// <param name="watcher">A file system watcher to derive events from.</param>
         /// <param name="capacity">The maximum number of file system events to buffer before stopping.</param>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="capacity"/> is less than <b>1</b>.</exception>
         public BufferedFileSystemWatcher(IFileSystemWatcher watcher, int capacity = int.MaxValue)
         {
             if (capacity < 1)
@@ -138,6 +141,7 @@ namespace SJP.FsNotify
         /// <summary>
         /// Gets or sets the type of changes to watch for.
         /// </summary>
+        /// <exception cref="ArgumentException"><b>value</b> is not a valid enum.</exception>
         public NotifyFilters NotifyFilter
         {
             get => _watcher.NotifyFilter;
@@ -223,7 +227,7 @@ namespace SJP.FsNotify
         }
 
         /// <summary>
-        /// Occurs when the instance of <see cref="IFileSystemWatcher"/> is unable to continue monitoring changes.
+        /// Occurs when the instance of <see cref="BufferedFileSystemWatcher"/> is unable to continue monitoring changes.
         /// </summary>
         public event EventHandler<ErrorEventArgs> Error
         {
@@ -246,6 +250,7 @@ namespace SJP.FsNotify
         /// </summary>
         /// <param name="changeType">The <see cref="WatcherChangeTypes"/> to watch for.</param>
         /// <returns>A <see cref="WaitForChangedResult"/> that contains specific information on the change that occurred.</returns>
+        /// <exception cref="ArgumentException"><paramref name="changeType"/> is not a valid enum.</exception>
         public WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType)
         {
             if (!changeType.IsValid())
@@ -260,6 +265,7 @@ namespace SJP.FsNotify
         /// <param name="changeType">The <see cref="WatcherChangeTypes"/> to watch for.</param>
         /// <param name="timeout">The time (in milliseconds) to wait before timing out.</param>
         /// <returns>A <see cref="WaitForChangedResult"/> that contains specific information on the change that occurred.</returns>
+        /// <exception cref="ArgumentException"><paramref name="changeType"/> is not a valid enum.</exception>
         public WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType, int timeout)
         {
             if (!changeType.IsValid())
@@ -317,6 +323,7 @@ namespace SJP.FsNotify
         /// Raises the <see cref="Created"/> event.
         /// </summary>
         /// <param name="e">A <see cref="FileSystemEventArgs"/> that contains the event data.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="e"/> is <b>null</b>.</exception>
         protected virtual void OnCreated(FileSystemEventArgs e)
         {
             if (e == null)
@@ -330,6 +337,7 @@ namespace SJP.FsNotify
         /// Raises the <see cref="Changed"/> event.
         /// </summary>
         /// <param name="e">A <see cref="FileSystemEventArgs"/> that contains the event data.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="e"/> is <b>null</b>.</exception>
         protected virtual void OnChanged(FileSystemEventArgs e)
         {
             if (e == null)
@@ -343,6 +351,7 @@ namespace SJP.FsNotify
         /// Raises the <see cref="Deleted"/> event.
         /// </summary>
         /// <param name="e">A <see cref="FileSystemEventArgs"/> that contains the event data.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="e"/> is <b>null</b>.</exception>
         protected virtual void OnDeleted(FileSystemEventArgs e)
         {
             if (e == null)
@@ -356,6 +365,7 @@ namespace SJP.FsNotify
         /// Raises the <see cref="Renamed"/> event.
         /// </summary>
         /// <param name="e">A <see cref="RenamedEventArgs"/> that contains the event data.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="e"/> is <b>null</b>.</exception>
         protected virtual void OnRenamed(RenamedEventArgs e)
         {
             if (e == null)
@@ -369,6 +379,7 @@ namespace SJP.FsNotify
         /// Raises the <see cref="Error"/> event.
         /// </summary>
         /// <param name="e">A <see cref="ErrorEventArgs"/> that contains the event data.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="e"/> is <b>null</b>.</exception>
         protected virtual void OnError(ErrorEventArgs e)
         {
             if (e == null)
