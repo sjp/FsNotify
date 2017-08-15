@@ -2,7 +2,7 @@
 using System.IO;
 using SJP.FsNotify;
 
-namespace ConsoleApp1
+namespace SJP.FsNotify.ConsoleTest
 {
     internal static class Program
     {

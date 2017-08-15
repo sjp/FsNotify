@@ -6,10 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.IO.FileSystem.DriveInfo" Version="4.3.0" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\SJP.FsNotify\SJP.FsNotify.csproj" />
   </ItemGroup>
 
