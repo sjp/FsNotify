@@ -23,23 +23,25 @@ namespace ConsoleApp1
                 return ExitFailure;
             }
 
-            var watcher = new EnhancedFileSystemWatcher(dirPath) { IncludeSubdirectories = true };
+            using (var watcher = new EnhancedFileSystemWatcher(dirPath) { IncludeSubdirectories = true })
+            {
+                watcher.AttributeChanged += OnAttributeChanged;
+                watcher.CreationTimeChanged += OnCreationTimeChanged;
+                watcher.LastAccessChanged += OnLastAccessChanged;
+                watcher.LastWriteChanged += OnLastWriteChanged;
+                watcher.SecurityChanged += OnSecurityChanged;
+                watcher.SizeChanged += OnSizeChanged;
+                watcher.Changed += OnChanged;
+                watcher.Created += OnCreated;
+                watcher.Deleted += OnDeleted;
+                watcher.Renamed += OnRenamed;
+                watcher.Error += OnError;
 
-            watcher.AttributeChanged += OnAttributeChanged;
-            watcher.CreationTimeChanged += OnCreationTimeChanged;
-            watcher.LastAccessChanged += OnLastAccessChanged;
-            watcher.LastWriteChanged += OnLastWriteChanged;
-            watcher.SecurityChanged += OnSecurityChanged;
-            watcher.SizeChanged += OnSizeChanged;
-            watcher.Changed += OnChanged;
-            watcher.Created += OnCreated;
-            watcher.Deleted += OnDeleted;
-            watcher.Renamed += OnRenamed;
+                watcher.EnableRaisingEvents = true;
 
-            watcher.EnableRaisingEvents = true;
-
-            Console.WriteLine("Press any key to exit...");
-            Console.ReadKey();
+                Console.WriteLine("Press any key to exit...");
+                Console.ReadKey();
+            }
 
             return ExitSuccess;
         }
@@ -63,6 +65,14 @@ namespace ConsoleApp1
         private static void OnCreated(object sender, FileSystemEventArgs e) => Console.WriteLine("Created " + e.FullPath);
 
         private static void OnChanged(object sender, FileSystemEventArgs e) => Console.WriteLine("Changed " + e.FullPath);
+
+        private static void OnError(object sender, ErrorEventArgs e)
+        {
+            var exception = e.GetException();
+            Console.WriteLine("An error has occurred.");
+            Console.WriteLine("Message: " + exception.Message);
+            Console.WriteLine("Stack trace: " + exception.StackTrace);
+        }
 
         private const int ExitFailure = 1;
         private const int ExitSuccess = 0;
