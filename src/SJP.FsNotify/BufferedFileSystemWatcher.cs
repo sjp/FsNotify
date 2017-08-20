@@ -167,8 +167,9 @@ namespace SJP.FsNotify
             }
             remove
             {
-                _watcher.Created -= OnCreated;
                 _onCreated -= value;
+                if (_onCreated == null)
+                    _watcher.Created -= OnCreated;
             }
         }
 
@@ -185,8 +186,9 @@ namespace SJP.FsNotify
             }
             remove
             {
-                _watcher.Changed -= OnChanged;
                 _onChanged -= value;
+                if (_onChanged == null)
+                    _watcher.Changed -= OnChanged;
             }
         }
 
@@ -203,8 +205,9 @@ namespace SJP.FsNotify
             }
             remove
             {
-                _watcher.Deleted -= OnDeleted;
                 _onDeleted -= value;
+                if (_onDeleted == null)
+                    _watcher.Deleted -= OnDeleted;
             }
         }
 
@@ -221,8 +224,9 @@ namespace SJP.FsNotify
             }
             remove
             {
-                _watcher.Renamed -= OnRenamed;
                 _onRenamed -= value;
+                if (_onRenamed == null)
+                    _watcher.Renamed -= OnRenamed;
             }
         }
 
@@ -239,9 +243,9 @@ namespace SJP.FsNotify
             }
             remove
             {
+                _onError -= value;
                 if (_onError == null)
                     _watcher.Error -= OnError;
-                _onError -= value;
             }
         }
 

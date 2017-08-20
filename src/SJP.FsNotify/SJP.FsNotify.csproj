@@ -12,10 +12,10 @@
     <Product />
     <Description>Improved file system notification events for .NET</Description>
     <Copyright>Copyright © Simon Potter 2017</Copyright>
-    <PackageLicenseUrl>https://raw.github.com/sjp/SJP.FsNotify/master/LICENSE</PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/sjp/SJP.FsNotify</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/sjp/SJP.FsNotify</RepositoryUrl>
-    <PackageIconUrl>https://raw.github.com/sjp/SJP.FsNotify/master/fsnotify.svg</PackageIconUrl>
+    <PackageLicenseUrl>https://raw.github.com/sjp/FsNotify/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/sjp/FsNotify</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/sjp/FsNotify</RepositoryUrl>
+    <PackageIconUrl>https://raw.github.com/sjp/FsNotify/master/fsnotify.svg</PackageIconUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">

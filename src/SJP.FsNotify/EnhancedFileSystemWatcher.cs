@@ -186,8 +186,9 @@ namespace SJP.FsNotify
             }
             remove
             {
-                _watcher.Changed -= OnChanged;
                 _onChanged -= value;
+                if (_onChanged == null)
+                    _watcher.Changed -= OnChanged;
             }
         }
 
@@ -204,8 +205,9 @@ namespace SJP.FsNotify
             }
             remove
             {
-                _watcher.Created -= OnCreated;
                 _onCreated -= value;
+                if (_onCreated == null)
+                    _watcher.Created -= OnCreated;
             }
         }
 
@@ -222,8 +224,9 @@ namespace SJP.FsNotify
             }
             remove
             {
-                _watcher.Deleted -= OnDeleted;
                 _onDeleted -= value;
+                if (_onDeleted == null)
+                    _watcher.Deleted -= OnDeleted;
             }
         }
 
@@ -240,8 +243,9 @@ namespace SJP.FsNotify
             }
             remove
             {
-                _watcher.Error -= OnError;
                 _onError -= value;
+                if (_onError == null)
+                    _watcher.Error -= OnError;
             }
         }
 
@@ -258,8 +262,9 @@ namespace SJP.FsNotify
             }
             remove
             {
-                _watcher.Renamed -= OnRenamed;
                 _onRenamed -= value;
+                if (_onRenamed == null)
+                    _watcher.Renamed -= OnRenamed;
             }
         }
 
@@ -277,10 +282,10 @@ namespace SJP.FsNotify
             }
             remove
             {
-                var watcher = _changeWatchers[NotifyFilters.Attributes];
-                if (watcher != null)
-                    watcher.Changed -= OnAttributeChanged;
                 _onAttributeChanged -= value;
+                var watcher = _changeWatchers[NotifyFilters.Attributes];
+                if (watcher != null && _onAttributeChanged == null)
+                    watcher.Changed -= OnAttributeChanged;
             }
         }
 
@@ -298,10 +303,10 @@ namespace SJP.FsNotify
             }
             remove
             {
-                var watcher = _changeWatchers[NotifyFilters.CreationTime];
-                if (watcher != null)
-                    watcher.Changed -= OnCreationTimeChanged;
                 _onCreationTimeChanged -= value;
+                var watcher = _changeWatchers[NotifyFilters.CreationTime];
+                if (watcher != null && _onCreationTimeChanged == null)
+                    watcher.Changed -= OnCreationTimeChanged;
             }
         }
 
@@ -319,10 +324,10 @@ namespace SJP.FsNotify
             }
             remove
             {
-                var watcher = _changeWatchers[NotifyFilters.LastAccess];
-                if (watcher != null)
-                    watcher.Changed -= OnLastAccessChanged;
                 _onLastAccessChanged -= value;
+                var watcher = _changeWatchers[NotifyFilters.LastAccess];
+                if (watcher != null && _onLastAccessChanged == null)
+                    watcher.Changed -= OnLastAccessChanged;
             }
         }
 
@@ -340,10 +345,10 @@ namespace SJP.FsNotify
             }
             remove
             {
-                var watcher = _changeWatchers[NotifyFilters.LastWrite];
-                if (watcher != null)
-                    watcher.Changed -= OnLastWriteChanged;
                 _onLastWriteChanged -= value;
+                var watcher = _changeWatchers[NotifyFilters.LastWrite];
+                if (watcher != null && _onLastWriteChanged == null)
+                    watcher.Changed -= OnLastWriteChanged;
             }
         }
 
@@ -361,10 +366,10 @@ namespace SJP.FsNotify
             }
             remove
             {
-                var watcher = _changeWatchers[NotifyFilters.Security];
-                if (watcher != null)
-                    watcher.Changed -= OnSecurityChanged;
                 _onSecurityChanged -= value;
+                var watcher = _changeWatchers[NotifyFilters.Security];
+                if (watcher != null && _onSecurityChanged == null)
+                    watcher.Changed -= OnSecurityChanged;
             }
         }
 
@@ -382,10 +387,10 @@ namespace SJP.FsNotify
             }
             remove
             {
-                var watcher = _changeWatchers[NotifyFilters.Size];
-                if (watcher != null)
-                    watcher.Changed -= OnSizeChanged;
                 _onSizeChanged -= value;
+                var watcher = _changeWatchers[NotifyFilters.Size];
+                if (watcher != null && _onSizeChanged == null)
+                    watcher.Changed -= OnSizeChanged;
             }
         }
 
