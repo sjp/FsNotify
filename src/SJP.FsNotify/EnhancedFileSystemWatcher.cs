@@ -71,9 +71,9 @@ namespace SJP.FsNotify
         /// </summary>
         /// <param name="watcher">A file system watcher to derive events from.</param>
         /// <param name="capacity">The maximum number of file system events to buffer before stopping.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="watcher"/> is <b>null</b>.</exception>
-        /// <exception cref="ArgumentException"><paramref name="watcher"/>'s <c>Path</c> property is <b>null</b> or empty.</exception>
-        /// <exception cref="ArgumentOutOfRangeException"><paramref name="capacity"/> is less than <b>1</b>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="watcher"/> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentException"><paramref name="watcher"/>'s <c>Path</c> property is <c>null</c> or empty.</exception>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="capacity"/> is less than <c>1</c>.</exception>
         public EnhancedFileSystemWatcher(IFileSystemWatcher watcher, int capacity = int.MaxValue)
         {
             if (capacity < 1)
@@ -159,7 +159,7 @@ namespace SJP.FsNotify
         /// <summary>
         /// Gets or sets the type of changes to watch for.
         /// </summary>
-        /// <exception cref="ArgumentException"><b>value</b> is an invalid enum.</exception>
+        /// <exception cref="ArgumentException"><c>value</c> is an invalid enum.</exception>
         public NotifyFilters NotifyFilter
         {
             get => _watcher.NotifyFilter;
@@ -495,7 +495,7 @@ namespace SJP.FsNotify
         /// Raises the <see cref="Created"/> event.
         /// </summary>
         /// <param name="e">A <see cref="FileSystemEventArgs"/> that contains the event data.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="e"/> is <b>null</b>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="e"/> is <c>null</c>.</exception>
         protected virtual void OnCreated(FileSystemEventArgs e)
         {
             if (e == null)
@@ -510,7 +510,7 @@ namespace SJP.FsNotify
         /// Raises the <see cref="Changed"/> event.
         /// </summary>
         /// <param name="e">A <see cref="FileSystemEventArgs"/> that contains the event data.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="e"/> is <b>null</b>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="e"/> is <c>null</c>.</exception>
         protected virtual void OnChanged(FileSystemEventArgs e)
         {
             if (e == null)
@@ -525,7 +525,7 @@ namespace SJP.FsNotify
         /// Raises the <see cref="Deleted"/> event.
         /// </summary>
         /// <param name="e">A <see cref="FileSystemEventArgs"/> that contains the event data.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="e"/> is <b>null</b>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="e"/> is <c>null</c>.</exception>
         protected virtual void OnDeleted(FileSystemEventArgs e)
         {
             if (e == null)
@@ -540,7 +540,7 @@ namespace SJP.FsNotify
         /// Raises the <see cref="Renamed"/> event.
         /// </summary>
         /// <param name="e">A <see cref="RenamedEventArgs"/> that contains the event data.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="e"/> is <b>null</b>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="e"/> is <c>null</c>.</exception>
         protected virtual void OnRenamed(RenamedEventArgs e)
         {
             if (e == null)
@@ -555,7 +555,7 @@ namespace SJP.FsNotify
         /// Raises the <see cref="AttributeChanged"/> event.
         /// </summary>
         /// <param name="e">A <see cref="FileSystemEventArgs"/> that contains the event data.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="e"/> is <b>null</b>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="e"/> is <c>null</c>.</exception>
         protected virtual void OnAttributeChanged(FileSystemEventArgs e)
         {
             if (e == null)
@@ -570,7 +570,7 @@ namespace SJP.FsNotify
         /// Raises the <see cref="CreationTimeChanged"/> event.
         /// </summary>
         /// <param name="e">A <see cref="FileSystemEventArgs"/> that contains the event data.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="e"/> is <b>null</b>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="e"/> is <c>null</c>.</exception>
         protected virtual void OnCreationTimeChanged(FileSystemEventArgs e)
         {
             if (e == null)
@@ -585,7 +585,7 @@ namespace SJP.FsNotify
         /// Raises the <see cref="LastAccessChanged"/> event.
         /// </summary>
         /// <param name="e">A <see cref="FileSystemEventArgs"/> that contains the event data.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="e"/> is <b>null</b>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="e"/> is <c>null</c>.</exception>
         protected virtual void OnLastAccessChanged(FileSystemEventArgs e)
         {
             if (e == null)
@@ -600,7 +600,7 @@ namespace SJP.FsNotify
         /// Raises the <see cref="LastWriteChanged"/> event.
         /// </summary>
         /// <param name="e">A <see cref="FileSystemEventArgs"/> that contains the event data.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="e"/> is <b>null</b>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="e"/> is <c>null</c>.</exception>
         protected virtual void OnLastWriteChanged(FileSystemEventArgs e)
         {
             if (e == null)
@@ -615,7 +615,7 @@ namespace SJP.FsNotify
         /// Raises the <see cref="SecurityChanged"/> event.
         /// </summary>
         /// <param name="e">A <see cref="FileSystemEventArgs"/> that contains the event data.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="e"/> is <b>null</b>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="e"/> is <c>null</c>.</exception>
         protected virtual void OnSecurityChanged(FileSystemEventArgs e)
         {
             if (e == null)
@@ -630,7 +630,7 @@ namespace SJP.FsNotify
         /// Raises the <see cref="SizeChanged"/> event.
         /// </summary>
         /// <param name="e">A <see cref="FileSystemEventArgs"/> that contains the event data.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="e"/> is <b>null</b>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="e"/> is <c>null</c>.</exception>
         protected virtual void OnSizeChanged(FileSystemEventArgs e)
         {
             if (e == null)
@@ -645,7 +645,7 @@ namespace SJP.FsNotify
         /// Raises the <see cref="Error"/> event.
         /// </summary>
         /// <param name="e">A <see cref="ErrorEventArgs"/> that contains the event data.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="e"/> is <b>null</b>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="e"/> is <c>null</c>.</exception>
         protected virtual void OnError(ErrorEventArgs e)
         {
             if (e == null)
@@ -693,7 +693,7 @@ namespace SJP.FsNotify
         }
 
         /// <summary>
-        /// Retrieves the <see cref="EventHandler{FileSystemEventArgs}"/> instance which will handle a given event. For <see cref="NotifyFilters.DirectoryName"/> and <see cref="NotifyFilters.FileName"/>, this will always be <b>null</b>.
+        /// Retrieves the <see cref="EventHandler{FileSystemEventArgs}"/> instance which will handle a given event. For <see cref="NotifyFilters.DirectoryName"/> and <see cref="NotifyFilters.FileName"/>, this will always be <c>null</c>.
         /// </summary>
         /// <param name="filter">A single value of the <see cref="NotifyFilters"/> enum, which determines which specific event to track.</param>
         /// <returns>An <see cref="EventHandler{FileSystemEventArgs}"/> instance.</returns>
@@ -738,7 +738,7 @@ namespace SJP.FsNotify
         /// <summary>
         /// Releases the managed resources used by the <see cref="EnhancedFileSystemWatcher"/>.
         /// </summary>
-        /// <param name="disposing"><b>True</b> if managed resources are to be disposed. <b>False</b> will not dispose any resources.</param>
+        /// <param name="disposing"><c>true</c> if managed resources are to be disposed. <c>false</c> will not dispose any resources.</param>
         protected virtual void Dispose(bool disposing)
         {
             if (_disposed)
@@ -867,7 +867,7 @@ namespace SJP.FsNotify
             /// <param name="e">A file system event that has occurred.</param>
             /// <param name="args">Further information about the event from <paramref name="e"/>.</param>
             /// <exception cref="ArgumentException"><paramref name="e"/> is not a valid enum.</exception>
-            /// <exception cref="ArgumentNullException"><paramref name="args"/> is <b>null</b>.</exception>
+            /// <exception cref="ArgumentNullException"><paramref name="args"/> is <c>null</c>.</exception>
             public EnhancedFileSystemEventArgs(FileSystemEvent e, FileSystemEventArgs args)
             {
                 if (!e.IsValid())

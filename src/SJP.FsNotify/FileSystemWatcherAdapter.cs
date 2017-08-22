@@ -13,7 +13,7 @@ namespace SJP.FsNotify
         /// Initializes a new instance of the <see cref="FileSystemWatcherAdapter"/> class, given a <see cref="FileSystemWatcher"/> to derive information from.
         /// </summary>
         /// <param name="watcher">A file system watcher to derive events from. A regular <see cref="FileSystemWatcher"/> can be provided.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="watcher"/> is <b>null</b>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="watcher"/> is <c>null</c>.</exception>
         public FileSystemWatcherAdapter(FileSystemWatcher watcher)
         {
             _watcher = watcher ?? throw new ArgumentNullException(nameof(watcher));
@@ -101,7 +101,7 @@ namespace SJP.FsNotify
         /// <summary>
         /// Gets or sets the type of changes to watch for.
         /// </summary>
-        /// <exception cref="ArgumentException"><b>value</b> is an invalid enum.</exception>
+        /// <exception cref="ArgumentException"><c>value</c> is an invalid enum.</exception>
         public NotifyFilters NotifyFilter
         {
             get => _watcher.NotifyFilter;
@@ -160,7 +160,7 @@ namespace SJP.FsNotify
         /// <summary>
         /// Releases the managed resources used by the <see cref="FileSystemWatcherAdapter"/>.
         /// </summary>
-        /// <param name="disposing"><b>True</b> if managed resources are to be disposed. <b>False</b> will not dispose any resources.</param>
+        /// <param name="disposing"><c>true</c> if managed resources are to be disposed. <c>false</c> will not dispose any resources.</param>
         protected virtual void Dispose(bool disposing)
         {
             if (_disposed)
