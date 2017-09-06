@@ -21,8 +21,6 @@ Avoid some of the pitfalls of [`FileSystemWatcher`](https://docs.microsoft.com/e
 
 ## Installation
 
-**NOTE:** This project is still a work in progress. However, once ready, it will be available by the following methods.
-
 ```powershell
 Install-Package SJP.FsNotify
 ```
