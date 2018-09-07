@@ -94,7 +94,7 @@ These events are rather self-explanatory and further information can be obtained
 
 Like `BufferedFileSystemWatcher`, `EnhancedFileSystemWatcher` can be created with an optional argument that specifies the size of the buffer.
 
-In addition to the events that `BufferedFileSystemWatcher` exposes, EnhancedFileSystemWatcher` provides six further events:
+In addition to the events that `BufferedFileSystemWatcher` exposes, `EnhancedFileSystemWatcher` provides six further events:
 
 * `AttributeChanged`
 * `CreationTimeChanged`
