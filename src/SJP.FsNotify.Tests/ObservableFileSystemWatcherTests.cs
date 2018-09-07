@@ -6,31 +6,31 @@ using NUnit.Framework;
 namespace SJP.FsNotify.Tests
 {
     [TestFixture]
-    public class ObservableFileSystemWatcherTests : FsNotifyTest
+    internal sealed class ObservableFileSystemWatcherTests : FsNotifyTest
     {
         [Test]
-        public void Ctor_GivenNullFileSystemWatcher_ThrowsArgNullException()
+        public static void Ctor_GivenNullFileSystemWatcher_ThrowsArgNullException()
         {
             FileSystemWatcher watcher = null;
             Assert.Throws<ArgumentNullException>(() => new ObservableFileSystemWatcher(watcher));
         }
 
         [Test]
-        public void Ctor_GivenNullIFileSystemWatcher_ThrowsArgNullException()
+        public static void Ctor_GivenNullIFileSystemWatcher_ThrowsArgNullException()
         {
             IFileSystemWatcher watcher = null;
             Assert.Throws<ArgumentNullException>(() => new ObservableFileSystemWatcher(watcher));
         }
 
         [Test]
-        public void Ctor_GivenNullDirectoryInfo_ThrowsArgNullException()
+        public static void Ctor_GivenNullDirectoryInfo_ThrowsArgNullException()
         {
             DirectoryInfo dir = null;
             Assert.Throws<ArgumentNullException>(() => new ObservableFileSystemWatcher(dir));
         }
 
         [Test]
-        public void Ctor_GivenNullDirectoryInfoAndValidFilter_ThrowsArgNullException()
+        public static void Ctor_GivenNullDirectoryInfoAndValidFilter_ThrowsArgNullException()
         {
             DirectoryInfo dir = null;
             const string filter = "*.*";
@@ -38,22 +38,22 @@ namespace SJP.FsNotify.Tests
         }
 
         [Test]
-        public void Ctor_GivenNullPath_ThrowsArgNullException()
+        public static void Ctor_GivenNullPath_ThrowsArgNullException()
         {
-            string path = null;
+            const string path = null;
             Assert.Throws<ArgumentNullException>(() => new ObservableFileSystemWatcher(path));
         }
 
         [Test]
-        public void Ctor_GivenNullPathAndValidFilter_ThrowsArgNullException()
+        public static void Ctor_GivenNullPathAndValidFilter_ThrowsArgNullException()
         {
-            string path = null;
+            const string path = null;
             const string filter = "*.*";
             Assert.Throws<ArgumentNullException>(() => new ObservableFileSystemWatcher(path, filter));
         }
 
         [Test]
-        public async Task Created_WhenFileCreated_PublishesCreate()
+        public static async Task Created_WhenFileCreated_PublishesCreate()
         {
             var testDir = GetTestDirectory();
             try
@@ -63,14 +63,14 @@ namespace SJP.FsNotify.Tests
                 using (var obsWatcher = new ObservableFileSystemWatcher(watcher))
                 {
                     var createdCalled = false;
-                    obsWatcher.Created.Subscribe(e => createdCalled = true);
+                    obsWatcher.Created.Subscribe(_ => createdCalled = true);
                     obsWatcher.Start();
-                    await Task.Delay(100);
+                    await Task.Delay(100).ConfigureAwait(false);
 
                     var testFile = GetTestFile(testDir);
                     testFile.Create().Dispose();
 
-                    await Task.Delay(100);
+                    await Task.Delay(100).ConfigureAwait(false);
                     Assert.IsTrue(createdCalled);
                 }
             }
@@ -82,7 +82,7 @@ namespace SJP.FsNotify.Tests
         }
 
         [Test]
-        public async Task Changed_WhenFileChanged_PublishesChange()
+        public static async Task Changed_WhenFileChanged_PublishesChange()
         {
             var testDir = GetTestDirectory();
             try
@@ -92,19 +92,19 @@ namespace SJP.FsNotify.Tests
                 using (var obsWatcher = new ObservableFileSystemWatcher(watcher))
                 {
                     var changedCalled = false;
-                    obsWatcher.Changed.Subscribe(e => changedCalled = true);
+                    obsWatcher.Changed.Subscribe(_ => changedCalled = true);
                     obsWatcher.Start();
-                    await Task.Delay(100);
+                    await Task.Delay(100).ConfigureAwait(false);
 
                     var testFile = GetTestFile(testDir);
                     testFile.Create().Dispose();
 
                     using (var writer = testFile.AppendText())
-                        writer.WriteLine("trigger change");
+                        await writer.WriteLineAsync("trigger change").ConfigureAwait(false);
                     testFile.LastWriteTime = new DateTime(2016, 1, 1);
                     testFile.Refresh();
 
-                    await Task.Delay(100);
+                    await Task.Delay(100).ConfigureAwait(false);
                     Assert.IsTrue(changedCalled);
                 }
             }
@@ -116,7 +116,7 @@ namespace SJP.FsNotify.Tests
         }
 
         [Test]
-        public async Task Renamed_WhenFileRenamed_PublishedRename()
+        public static async Task Renamed_WhenFileRenamed_PublishedRename()
         {
             var testDir = GetTestDirectory();
             try
@@ -126,16 +126,16 @@ namespace SJP.FsNotify.Tests
                 using (var obsWatcher = new ObservableFileSystemWatcher(watcher))
                 {
                     var renamedCalled = false;
-                    obsWatcher.Renamed.Subscribe(e => renamedCalled = true);
+                    obsWatcher.Renamed.Subscribe(_ => renamedCalled = true);
                     obsWatcher.Start();
-                    await Task.Delay(100);
+                    await Task.Delay(100).ConfigureAwait(false);
 
                     var testFile = GetTestFile(testDir);
                     var testFile2 = GetTestFile(testDir);
                     testFile.Create().Dispose();
                     File.Move(testFile.FullName, testFile2.FullName);
 
-                    await Task.Delay(100);
+                    await Task.Delay(100).ConfigureAwait(false);
                     Assert.IsTrue(renamedCalled);
                 }
             }
@@ -147,7 +147,7 @@ namespace SJP.FsNotify.Tests
         }
 
         [Test]
-        public async Task Deleted_WhenFileDeleted_PublishesDelete()
+        public static async Task Deleted_WhenFileDeleted_PublishesDelete()
         {
             var testDir = GetTestDirectory();
             try
@@ -157,15 +157,15 @@ namespace SJP.FsNotify.Tests
                 using (var obsWatcher = new ObservableFileSystemWatcher(watcher))
                 {
                     var deletedCalled = false;
-                    obsWatcher.Deleted.Subscribe(e => deletedCalled = true);
+                    obsWatcher.Deleted.Subscribe(_ => deletedCalled = true);
                     obsWatcher.Start();
-                    await Task.Delay(100);
+                    await Task.Delay(100).ConfigureAwait(false);
 
                     var testFile = GetTestFile(testDir);
                     testFile.Create().Dispose();
                     testFile.Delete();
 
-                    await Task.Delay(100);
+                    await Task.Delay(100).ConfigureAwait(false);
                     Assert.IsTrue(deletedCalled);
                 }
             }

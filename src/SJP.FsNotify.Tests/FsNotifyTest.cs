@@ -3,9 +3,9 @@ using System.IO;
 
 namespace SJP.FsNotify.Tests
 {
-    public abstract class FsNotifyTest
+    internal abstract class FsNotifyTest
     {
-        protected virtual DirectoryInfo GetTestDirectory()
+        protected static DirectoryInfo GetTestDirectory()
         {
             var tempPath = Path.GetTempPath();
             var tempDirName = Path.GetRandomFileName();
@@ -14,7 +14,7 @@ namespace SJP.FsNotify.Tests
             return Directory.CreateDirectory(tempDirPath);
         }
 
-        protected virtual FileInfo GetTestFile(DirectoryInfo testDir, string extension = "")
+        protected static FileInfo GetTestFile(DirectoryInfo testDir, string extension = "")
         {
             if (testDir == null)
                 throw new ArgumentNullException(nameof(testDir));

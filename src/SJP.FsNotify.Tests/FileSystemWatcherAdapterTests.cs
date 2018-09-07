@@ -7,16 +7,16 @@ using System.Threading.Tasks;
 namespace SJP.FsNotify.Tests
 {
     [TestFixture]
-    public class FileSystemWatcherAdapterTests : FsNotifyTest
+    internal sealed class FileSystemWatcherAdapterTests : FsNotifyTest
     {
         [Test]
-        public void Ctor_GivenNullFsWatcher_ThrowsArgNullException()
+        public static void Ctor_GivenNullFsWatcher_ThrowsArgNullException()
         {
             Assert.Throws<ArgumentNullException>(() => new FileSystemWatcherAdapter(null));
         }
 
         [Test]
-        public void ImplicitOp_GivenNullFsWatcher_ThrowsArgNullException()
+        public static void ImplicitOp_GivenNullFsWatcher_ThrowsArgNullException()
         {
             FileSystemWatcher watcher = null;
             Assert.Throws<ArgumentNullException>(() =>
@@ -26,7 +26,7 @@ namespace SJP.FsNotify.Tests
         }
 
         [Test]
-        public void Path_WhenSetInCtor_RetrievedFromPropertyUnchanged()
+        public static void Path_WhenSetInCtor_RetrievedFromPropertyUnchanged()
         {
             var testDir = GetTestDirectory();
 
@@ -42,7 +42,7 @@ namespace SJP.FsNotify.Tests
         }
 
         [Test]
-        public void Path_WhenSetInProperty_RetrievedFromPropertyCorrectly()
+        public static void Path_WhenSetInProperty_RetrievedFromPropertyCorrectly()
         {
             var testDir = GetTestDirectory();
             var testDir2 = GetTestDirectory();
@@ -61,7 +61,7 @@ namespace SJP.FsNotify.Tests
         }
 
         [Test]
-        public void IncludeSubdirectories_WhenSetInCtor_RetrievedFromPropertyUnchanged()
+        public static void IncludeSubdirectories_WhenSetInCtor_RetrievedFromPropertyUnchanged()
         {
             var watcher = new FileSystemWatcher() { IncludeSubdirectories = true };
             using (var adapter = new FileSystemWatcherAdapter(watcher))
@@ -75,7 +75,7 @@ namespace SJP.FsNotify.Tests
         }
 
         [Test]
-        public void IncludeSubdirectories_WhenSetInProperty_RetrievedFromPropertyCorrectly()
+        public static void IncludeSubdirectories_WhenSetInProperty_RetrievedFromPropertyCorrectly()
         {
             var watcher = new FileSystemWatcher();
             using (var adapter = new FileSystemWatcherAdapter(watcher))
@@ -91,7 +91,7 @@ namespace SJP.FsNotify.Tests
         }
 
         [Test]
-        public void Filter_WhenSetInCtor_RetrievedFromPropertyUnchanged()
+        public static void Filter_WhenSetInCtor_RetrievedFromPropertyUnchanged()
         {
             const string filter = "*.exe";
             var watcher = new FileSystemWatcher() { Filter = filter };
@@ -106,7 +106,7 @@ namespace SJP.FsNotify.Tests
         }
 
         [Test]
-        public void Filter_WhenSetInProperty_RetrievedFromPropertyCorrectly()
+        public static void Filter_WhenSetInProperty_RetrievedFromPropertyCorrectly()
         {
             const string filter = "*.exe";
             var watcher = new FileSystemWatcher();
@@ -123,7 +123,7 @@ namespace SJP.FsNotify.Tests
         }
 
         [Test]
-        public void NotifyFilter_WhenSetInCtor_RetrievedFromPropertyUnchanged()
+        public static void NotifyFilter_WhenSetInCtor_RetrievedFromPropertyUnchanged()
         {
             const NotifyFilters filter = NotifyFilters.Security | NotifyFilters.Attributes;
             var watcher = new FileSystemWatcher() { NotifyFilter = filter };
@@ -138,7 +138,7 @@ namespace SJP.FsNotify.Tests
         }
 
         [Test]
-        public void NotifyFilter_WhenSetInProperty_RetrievedFromPropertyCorrectly()
+        public static void NotifyFilter_WhenSetInProperty_RetrievedFromPropertyCorrectly()
         {
             const NotifyFilters filter = NotifyFilters.Security | NotifyFilters.Attributes;
             var watcher = new FileSystemWatcher();
@@ -155,7 +155,7 @@ namespace SJP.FsNotify.Tests
         }
 
         [Test]
-        public void EnableRaisingEvents_WhenSetInCtor_RetrievedFromPropertyUnchanged()
+        public static void EnableRaisingEvents_WhenSetInCtor_RetrievedFromPropertyUnchanged()
         {
             var testDir = GetTestDirectory();
             try
@@ -179,7 +179,7 @@ namespace SJP.FsNotify.Tests
         }
 
         [Test]
-        public void EnableRaisingEvents_WhenSetInProperty_RetrievedFromPropertyCorrectly()
+        public static void EnableRaisingEvents_WhenSetInProperty_RetrievedFromPropertyCorrectly()
         {
             var testDir = GetTestDirectory();
             try
@@ -205,7 +205,7 @@ namespace SJP.FsNotify.Tests
         }
 
         [Test]
-        public void NotifyFilters_WhenGivenInvalidEnum_ThrowsArgumentException()
+        public static void NotifyFilters_WhenGivenInvalidEnum_ThrowsArgumentException()
         {
             var watcher = new FileSystemWatcher();
             using (var adapter = new FileSystemWatcherAdapter(watcher))
@@ -216,7 +216,7 @@ namespace SJP.FsNotify.Tests
         }
 
         [Test]
-        public void WaitForChanged_WhenGivenInvalidEnum_ThrowsArgumentException()
+        public static void WaitForChanged_WhenGivenInvalidEnum_ThrowsArgumentException()
         {
             var watcher = new FileSystemWatcher();
             using (var adapter = new FileSystemWatcherAdapter(watcher))
@@ -227,7 +227,7 @@ namespace SJP.FsNotify.Tests
         }
 
         [Test]
-        public void WaitForChanged_WhenGivenInvalidEnumWithTimeout_ThrowsArgumentException()
+        public static void WaitForChanged_WhenGivenInvalidEnumWithTimeout_ThrowsArgumentException()
         {
             var watcher = new FileSystemWatcher();
             using (var adapter = new FileSystemWatcherAdapter(watcher))

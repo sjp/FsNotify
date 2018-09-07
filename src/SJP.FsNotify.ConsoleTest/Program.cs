@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using SJP.FsNotify;
 
 namespace SJP.FsNotify.ConsoleTest
 {
@@ -8,7 +7,7 @@ namespace SJP.FsNotify.ConsoleTest
     {
         private static int Main(string[] args)
         {
-            args = args ?? new string[0];
+            args = args ?? Array.Empty<string>();
             if (args.Length == 0)
             {
                 Console.Error.WriteLine("A path to a directory to watch must be provided.");
@@ -46,27 +45,27 @@ namespace SJP.FsNotify.ConsoleTest
             return ExitSuccess;
         }
 
-        private static void OnSizeChanged(object sender, FileSystemEventArgs e) => Console.WriteLine("Changed size " + e.FullPath);
+        private static void OnSizeChanged(object _, FileSystemEventArgs e) => Console.WriteLine("Changed size " + e.FullPath);
 
-        private static void OnSecurityChanged(object sender, FileSystemEventArgs e) => Console.WriteLine("Changed security " + e.FullPath);
+        private static void OnSecurityChanged(object _, FileSystemEventArgs e) => Console.WriteLine("Changed security " + e.FullPath);
 
-        private static void OnLastWriteChanged(object sender, FileSystemEventArgs e) => Console.WriteLine("Changed last write time " + e.FullPath);
+        private static void OnLastWriteChanged(object _, FileSystemEventArgs e) => Console.WriteLine("Changed last write time " + e.FullPath);
 
-        private static void OnLastAccessChanged(object sender, FileSystemEventArgs e) => Console.WriteLine("Changed last access time " + e.FullPath);
+        private static void OnLastAccessChanged(object _, FileSystemEventArgs e) => Console.WriteLine("Changed last access time " + e.FullPath);
 
-        private static void OnCreationTimeChanged(object sender, FileSystemEventArgs e) => Console.WriteLine("Changed creation time " + e.FullPath);
+        private static void OnCreationTimeChanged(object _, FileSystemEventArgs e) => Console.WriteLine("Changed creation time " + e.FullPath);
 
-        private static void OnAttributeChanged(object sender, FileSystemEventArgs e) => Console.WriteLine("Changed attribute " + e.FullPath);
+        private static void OnAttributeChanged(object _, FileSystemEventArgs e) => Console.WriteLine("Changed attribute " + e.FullPath);
 
-        private static void OnRenamed(object sender, RenamedEventArgs e) => Console.WriteLine($"Renamed from { e.OldFullPath } to { e.FullPath }");
+        private static void OnRenamed(object _, RenamedEventArgs e) => Console.WriteLine($"Renamed from { e.OldFullPath } to { e.FullPath }");
 
-        private static void OnDeleted(object sender, FileSystemEventArgs e) => Console.WriteLine("Deleted " + e.FullPath);
+        private static void OnDeleted(object _, FileSystemEventArgs e) => Console.WriteLine("Deleted " + e.FullPath);
 
-        private static void OnCreated(object sender, FileSystemEventArgs e) => Console.WriteLine("Created " + e.FullPath);
+        private static void OnCreated(object _, FileSystemEventArgs e) => Console.WriteLine("Created " + e.FullPath);
 
-        private static void OnChanged(object sender, FileSystemEventArgs e) => Console.WriteLine("Changed " + e.FullPath);
+        private static void OnChanged(object _, FileSystemEventArgs e) => Console.WriteLine("Changed " + e.FullPath);
 
-        private static void OnError(object sender, ErrorEventArgs e)
+        private static void OnError(object _, ErrorEventArgs e)
         {
             var exception = e.GetException();
             Console.WriteLine("An error has occurred.");

@@ -789,6 +789,7 @@ namespace SJP.FsNotify
         private readonly IDictionary<NotifyFilters, IFileSystemWatcher> _changeWatchers = new Dictionary<NotifyFilters, IFileSystemWatcher>();
 
         private readonly static IEnumerable<NotifyFilters> _ignoredNotifyFilterFlags = new[] { NotifyFilters.DirectoryName, NotifyFilters.FileName };
+
         private readonly static IReadOnlyDictionary<FileSystemEvent, NotifyFilters> _eventToFilterMap = new Dictionary<FileSystemEvent, NotifyFilters>
         {
             [FileSystemEvent.AttributeChange] = NotifyFilters.Attributes,
