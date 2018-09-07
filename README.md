@@ -1,8 +1,8 @@
 <h1 align="center">
-	<br>
-	<img width="256" height="144" src="fsnotify.png" alt="FsNotify">
-	<br>
-	<br>
+    <br>
+    <img width="256" height="144" src="fsnotify.png" alt="FsNotify">
+    <br>
+    <br>
 </h1>
 
 > Improved file system notification events for .NET.
@@ -13,7 +13,7 @@ Avoid some of the pitfalls of [`FileSystemWatcher`](https://docs.microsoft.com/e
 
 ## Highlights
 
-* Supports .NET Framework 4.5.1, .NET Core 1.1, .NET Standard 1.3.
+* Supports .NET Standard 2.0.
 * Avoids many of the pitfalls of `FileSystemWatcher`, in particular when it can exhaust its internal buffer.
 * Easy migration from `FileSystemWatcher`.
 * Handle more fine-grained events, such as an event which is only raised when a file attribute changes, and not just when *something* about a file has changed. See: `EnhancedFileSystemWatcher` and `EnhancedObservableFileSystemWatcher`.
