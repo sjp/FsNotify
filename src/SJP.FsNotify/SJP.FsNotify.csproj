@@ -9,15 +9,21 @@
     <Company />
     <Product />
     <Description>Improved file system notification events for .NET</Description>
-    <Copyright>Copyright © Simon Potter 2018</Copyright>
+    <Copyright>Copyright © Simon Potter 2019</Copyright>
     <PackageLicenseUrl>https://raw.github.com/sjp/FsNotify/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/sjp/FsNotify</PackageProjectUrl>
     <RepositoryUrl>https://github.com/sjp/FsNotify</RepositoryUrl>
     <PackageIconUrl>https://raw.github.com/sjp/FsNotify/master/fsnotify.svg</PackageIconUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Enums.NET" Version="2.3.2" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-18618-05">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="System.Reactive.Linq" Version="4.1.0" />
   </ItemGroup>
 
