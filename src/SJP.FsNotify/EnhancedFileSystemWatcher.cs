@@ -166,7 +166,7 @@ namespace SJP.FsNotify
             set
             {
                 if (!value.IsValid())
-                    throw new ArgumentException($"The { nameof(NotifyFilters) } provided must be a valid enum.", nameof(NotifyFilter));
+                    throw new ArgumentException($"The { nameof(NotifyFilters) } provided must be a valid enum.", nameof(value));
 
                 _watcher.NotifyFilter = value;
                 UpdateFilterWatchers();
@@ -463,7 +463,7 @@ namespace SJP.FsNotify
                             handler?.Invoke(this, fsEvent.EventArgs);
                             break;
                         default:
-                            throw new ArgumentOutOfRangeException(nameof(FileSystemEvent), $"Unknown or unexpected value for { nameof(FileSystemEvent) }.");
+                            throw new NotSupportedException($"Unknown or unexpected value for { nameof(FileSystemEvent) }.");
                     }
                 }
             });
@@ -702,7 +702,7 @@ namespace SJP.FsNotify
         protected EventHandler<FileSystemEventArgs> GetNotifyHandler(NotifyFilters filter)
         {
             if (!filter.IsValid())
-                throw new ArgumentException($"The { nameof(NotifyFilters) } provided must be a valid enum.", nameof(NotifyFilter));
+                throw new ArgumentException($"The { nameof(NotifyFilters) } provided must be a valid enum.", nameof(filter));
 
             switch (filter)
             {

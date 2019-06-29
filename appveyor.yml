@@ -15,8 +15,8 @@ build:
   verbosity: minimal
 
 test_script:
-  - dotnet test src/SJP.FsNotify.Tests/SJP.FsNotify.Tests.csproj --configuration Release --logger:trx;LogFileName=SJP.FsNotify.Tests.results.xml
-  - ps: build/uploadtests.ps1 "src/SJP.FsNotify.Tests/TestResults/SJP.FsNotify.Tests.results.xml"
+  - dotnet test src/SJP.FsNotify.Tests/SJP.FsNotify.Tests.csproj --configuration Release --logger "trx;LogFileName=SJP.FsNotify.Tests.results.xml"
+  - ps: build/uploadtests.ps1 src/SJP.FsNotify.Tests/TestResults/SJP.FsNotify.Tests.results*.xml
 
 notifications:
 - provider: Email

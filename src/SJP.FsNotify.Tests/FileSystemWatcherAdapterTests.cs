@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace SJP.FsNotify.Tests
 {
     [TestFixture]
-    internal sealed class FileSystemWatcherAdapterTests : FsNotifyTest
+    internal static class FileSystemWatcherAdapterTests
     {
         [Test]
         public static void Ctor_GivenNullFsWatcher_ThrowsArgNullException()
@@ -28,7 +28,7 @@ namespace SJP.FsNotify.Tests
         [Test]
         public static void Path_WhenSetInCtor_RetrievedFromPropertyUnchanged()
         {
-            var testDir = GetTestDirectory();
+            var testDir = FsNotifyTest.GetTestDirectory();
 
             var watcher = new FileSystemWatcher(testDir.FullName);
             using (var adapter = new FileSystemWatcherAdapter(watcher))
@@ -44,8 +44,8 @@ namespace SJP.FsNotify.Tests
         [Test]
         public static void Path_WhenSetInProperty_RetrievedFromPropertyCorrectly()
         {
-            var testDir = GetTestDirectory();
-            var testDir2 = GetTestDirectory();
+            var testDir = FsNotifyTest.GetTestDirectory();
+            var testDir2 = FsNotifyTest.GetTestDirectory();
 
             var watcher = new FileSystemWatcher(testDir.FullName);
             using (var adapter = new FileSystemWatcherAdapter(watcher))
@@ -157,7 +157,7 @@ namespace SJP.FsNotify.Tests
         [Test]
         public static void EnableRaisingEvents_WhenSetInCtor_RetrievedFromPropertyUnchanged()
         {
-            var testDir = GetTestDirectory();
+            var testDir = FsNotifyTest.GetTestDirectory();
             try
             {
                 testDir.Create();
@@ -181,7 +181,7 @@ namespace SJP.FsNotify.Tests
         [Test]
         public static void EnableRaisingEvents_WhenSetInProperty_RetrievedFromPropertyCorrectly()
         {
-            var testDir = GetTestDirectory();
+            var testDir = FsNotifyTest.GetTestDirectory();
             try
             {
                 testDir.Create();

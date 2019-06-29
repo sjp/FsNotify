@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace SJP.FsNotify.Tests
 {
     [TestFixture]
-    internal sealed class EnhancedObservableFileSystemWatcherTests : FsNotifyTest
+    internal static class EnhancedObservableFileSystemWatcherTests
     {
         [Test]
         public static void Ctor_GivenNullFileSystemWatcher_ThrowsArgNullException()
@@ -55,7 +55,7 @@ namespace SJP.FsNotify.Tests
         [Test]
         public static async Task Created_WhenFileCreated_PublishesCreate()
         {
-            var testDir = GetTestDirectory();
+            var testDir = FsNotifyTest.GetTestDirectory();
             try
             {
                 testDir.Create();
@@ -67,7 +67,7 @@ namespace SJP.FsNotify.Tests
                     obsWatcher.Start();
                     await Task.Delay(100).ConfigureAwait(false);
 
-                    var testFile = GetTestFile(testDir);
+                    var testFile = FsNotifyTest.GetTestFile(testDir);
                     testFile.Create().Dispose();
 
                     await Task.Delay(100).ConfigureAwait(false);
@@ -84,7 +84,7 @@ namespace SJP.FsNotify.Tests
         [Test]
         public static async Task Changed_WhenFileChanged_PublishesChange()
         {
-            var testDir = GetTestDirectory();
+            var testDir = FsNotifyTest.GetTestDirectory();
             try
             {
                 testDir.Create();
@@ -96,7 +96,7 @@ namespace SJP.FsNotify.Tests
                     obsWatcher.Start();
                     await Task.Delay(100).ConfigureAwait(false);
 
-                    var testFile = GetTestFile(testDir);
+                    var testFile = FsNotifyTest.GetTestFile(testDir);
                     testFile.Create().Dispose();
 
                     using (var writer = testFile.AppendText())
@@ -118,7 +118,7 @@ namespace SJP.FsNotify.Tests
         [Test]
         public static async Task Renamed_WhenFileRenamed_PublishedRename()
         {
-            var testDir = GetTestDirectory();
+            var testDir = FsNotifyTest.GetTestDirectory();
             try
             {
                 testDir.Create();
@@ -130,8 +130,8 @@ namespace SJP.FsNotify.Tests
                     obsWatcher.Start();
                     await Task.Delay(100).ConfigureAwait(false);
 
-                    var testFile = GetTestFile(testDir);
-                    var testFile2 = GetTestFile(testDir);
+                    var testFile = FsNotifyTest.GetTestFile(testDir);
+                    var testFile2 = FsNotifyTest.GetTestFile(testDir);
                     testFile.Create().Dispose();
                     File.Move(testFile.FullName, testFile2.FullName);
 
@@ -149,7 +149,7 @@ namespace SJP.FsNotify.Tests
         [Test]
         public static async Task Deleted_WhenFileDeleted_PublishesDelete()
         {
-            var testDir = GetTestDirectory();
+            var testDir = FsNotifyTest.GetTestDirectory();
             try
             {
                 testDir.Create();
@@ -161,7 +161,7 @@ namespace SJP.FsNotify.Tests
                     obsWatcher.Start();
                     await Task.Delay(100).ConfigureAwait(false);
 
-                    var testFile = GetTestFile(testDir);
+                    var testFile = FsNotifyTest.GetTestFile(testDir);
                     testFile.Create().Dispose();
                     testFile.Delete();
 
@@ -183,7 +183,7 @@ namespace SJP.FsNotify.Tests
         [Test]
         public async Task AttributeChanged_WhenFileAttributeModified_PublishesAttributeChange()
         {
-            var testDir = GetTestDirectory();
+            var testDir = FsNotifyTest.GetTestDirectory();
             try
             {
                 testDir.Create();
@@ -195,7 +195,7 @@ namespace SJP.FsNotify.Tests
                     obsWatcher.Start();
                     await Task.Delay(100);
 
-                    var testFile = GetTestFile(testDir);
+                    var testFile = FsNotifyTest.GetTestFile(testDir);
                     testFile.Create().Dispose();
                     testFile.Attributes = FileAttributes.Archive | FileAttributes.Normal | FileAttributes.Hidden;
 
@@ -213,7 +213,7 @@ namespace SJP.FsNotify.Tests
         [Test]
         public async Task CreationTimeChanged_WhenFileCreationTimeChanged_PublishesCreationTimeChange()
         {
-            var testDir = GetTestDirectory();
+            var testDir = FsNotifyTest.GetTestDirectory();
             try
             {
                 testDir.Create();
@@ -225,7 +225,7 @@ namespace SJP.FsNotify.Tests
                     obsWatcher.Start();
                     await Task.Delay(100);
 
-                    var testFile = GetTestFile(testDir);
+                    var testFile = FsNotifyTest.GetTestFile(testDir);
                     testFile.Create().Dispose();
 
                     using (var writer = testFile.AppendText())
@@ -247,7 +247,7 @@ namespace SJP.FsNotify.Tests
         [Test]
         public async Task LastAccessChanged_WhenFileAccessTimeChanged_PublishesLastAccessChange()
         {
-            var testDir = GetTestDirectory();
+            var testDir = FsNotifyTest.GetTestDirectory();
             try
             {
                 testDir.Create();
@@ -259,7 +259,7 @@ namespace SJP.FsNotify.Tests
                     obsWatcher.Start();
                     await Task.Delay(100);
 
-                    var testFile = GetTestFile(testDir);
+                    var testFile = FsNotifyTest.GetTestFile(testDir);
                     testFile.Create().Dispose();
 
                     using (var writer = testFile.AppendText())
@@ -281,7 +281,7 @@ namespace SJP.FsNotify.Tests
         [Test]
         public async Task LastWriteChanged_WhenFileWriteTimeChanged_PublishesLastWriteChange()
         {
-            var testDir = GetTestDirectory();
+            var testDir = FsNotifyTest.GetTestDirectory();
             try
             {
                 testDir.Create();
@@ -293,7 +293,7 @@ namespace SJP.FsNotify.Tests
                     obsWatcher.Start();
                     await Task.Delay(100);
 
-                    var testFile = GetTestFile(testDir);
+                    var testFile = FsNotifyTest.GetTestFile(testDir);
                     testFile.Create().Dispose();
 
                     using (var writer = testFile.AppendText())
@@ -315,7 +315,7 @@ namespace SJP.FsNotify.Tests
         [Test]
         public async Task SizeChanged_WhenFileSizeChanged_PublishesSizeChange()
         {
-            var testDir = GetTestDirectory();
+            var testDir = FsNotifyTest.GetTestDirectory();
             try
             {
                 testDir.Create();
@@ -327,7 +327,7 @@ namespace SJP.FsNotify.Tests
                     obsWatcher.Start();
                     await Task.Delay(100);
 
-                    var testFile = GetTestFile(testDir);
+                    var testFile = FsNotifyTest.GetTestFile(testDir);
                     testFile.Create().Dispose();
 
                     using (var writer = testFile.AppendText())

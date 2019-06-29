@@ -307,7 +307,7 @@ namespace SJP.FsNotify
                             _onRenamed?.Invoke(this, fsEvent as RenamedEventArgs);
                             break;
                         default:
-                            throw new ArgumentOutOfRangeException(nameof(WatcherChangeTypes), $"Unknown or unexpected value for { nameof(WatcherChangeTypes) }.");
+                            throw new NotSupportedException($"Unknown or unexpected value for { nameof(WatcherChangeTypes) }.");
                     }
                 }
             });

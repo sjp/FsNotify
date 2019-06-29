@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace SJP.FsNotify.Tests
 {
     [TestFixture]
-    internal sealed class EnhancedFileSystemWatcherTests : FsNotifyTest
+    internal static class EnhancedFileSystemWatcherTests
     {
         [Test]
         public static void Ctor_GivenNullFileSystemWatcher_ThrowsArgNullException()
@@ -69,7 +69,7 @@ namespace SJP.FsNotify.Tests
         [Test]
         public static void NotifyFilters_PropertyGet_HasAllFlags()
         {
-            var testDir = GetTestDirectory();
+            var testDir = FsNotifyTest.GetTestDirectory();
             try
             {
                 testDir.Create();
@@ -94,7 +94,7 @@ namespace SJP.FsNotify.Tests
         [Test]
         public static void Path_WhenSetInCtor_RetrievedFromPropertyUnchanged()
         {
-            var testDir = GetTestDirectory();
+            var testDir = FsNotifyTest.GetTestDirectory();
 
             var watcher = new FileSystemWatcher(testDir.FullName);
             using (var enhancedWatcher = new EnhancedFileSystemWatcher(watcher))
@@ -110,8 +110,8 @@ namespace SJP.FsNotify.Tests
         [Test]
         public static void Path_WhenSetInProperty_RetrievedFromPropertyCorrectly()
         {
-            var testDir = GetTestDirectory();
-            var testDir2 = GetTestDirectory();
+            var testDir = FsNotifyTest.GetTestDirectory();
+            var testDir2 = FsNotifyTest.GetTestDirectory();
 
             var watcher = new FileSystemWatcher(testDir.FullName);
             using (var enhancedWatcher = new EnhancedFileSystemWatcher(watcher))
@@ -129,7 +129,7 @@ namespace SJP.FsNotify.Tests
         [Test]
         public static void IncludeSubdirectories_WhenSetInCtor_RetrievedFromPropertyUnchanged()
         {
-            var testDir = GetTestDirectory();
+            var testDir = FsNotifyTest.GetTestDirectory();
             try
             {
                 var watcher = new FileSystemWatcher(testDir.FullName) { IncludeSubdirectories = true };
@@ -152,7 +152,7 @@ namespace SJP.FsNotify.Tests
         [Test]
         public static void IncludeSubdirectories_WhenSetInProperty_RetrievedFromPropertyCorrectly()
         {
-            var testDir = GetTestDirectory();
+            var testDir = FsNotifyTest.GetTestDirectory();
             try
             {
                 var watcher = new FileSystemWatcher(testDir.FullName);
@@ -177,7 +177,7 @@ namespace SJP.FsNotify.Tests
         [Test]
         public static void Filter_WhenSetInCtor_RetrievedFromPropertyUnchanged()
         {
-            var testDir = GetTestDirectory();
+            var testDir = FsNotifyTest.GetTestDirectory();
             try
             {
                 const string filter = "*.exe";
@@ -201,7 +201,7 @@ namespace SJP.FsNotify.Tests
         [Test]
         public static void Filter_WhenSetInProperty_RetrievedFromPropertyCorrectly()
         {
-            var testDir = GetTestDirectory();
+            var testDir = FsNotifyTest.GetTestDirectory();
             try
             {
                 const string filter = "*.exe";
@@ -227,7 +227,7 @@ namespace SJP.FsNotify.Tests
         [Test]
         public static void NotifyFilter_WhenSetInProperty_RetrievedFromPropertyCorrectly()
         {
-            var testDir = GetTestDirectory();
+            var testDir = FsNotifyTest.GetTestDirectory();
             try
             {
                 const NotifyFilters filter = NotifyFilters.Security | NotifyFilters.Attributes;
@@ -253,7 +253,7 @@ namespace SJP.FsNotify.Tests
         [Test]
         public static void EnableRaisingEvents_WhenSetInCtor_RetrievedFromPropertyUnchanged()
         {
-            var testDir = GetTestDirectory();
+            var testDir = FsNotifyTest.GetTestDirectory();
             try
             {
                 testDir.Create();
@@ -277,7 +277,7 @@ namespace SJP.FsNotify.Tests
         [Test]
         public static void EnableRaisingEvents_WhenSetInProperty_RetrievedFromPropertyCorrectly()
         {
-            var testDir = GetTestDirectory();
+            var testDir = FsNotifyTest.GetTestDirectory();
             try
             {
                 testDir.Create();
@@ -303,7 +303,7 @@ namespace SJP.FsNotify.Tests
         [Test]
         public static void NotifyFilters_WhenGivenInvalidEnum_ThrowsArgumentException()
         {
-            var testDir = GetTestDirectory();
+            var testDir = FsNotifyTest.GetTestDirectory();
             try
             {
                 var watcher = new FileSystemWatcher(testDir.FullName);
@@ -323,7 +323,7 @@ namespace SJP.FsNotify.Tests
         [Test]
         public static void WaitForChanged_WhenGivenInvalidEnum_ThrowsArgumentException()
         {
-            var testDir = GetTestDirectory();
+            var testDir = FsNotifyTest.GetTestDirectory();
             try
             {
                 var watcher = new FileSystemWatcher(testDir.FullName);
@@ -343,7 +343,7 @@ namespace SJP.FsNotify.Tests
         [Test]
         public static void WaitForChanged_WhenGivenInvalidEnumWithTimeout_ThrowsArgumentException()
         {
-            var testDir = GetTestDirectory();
+            var testDir = FsNotifyTest.GetTestDirectory();
             try
             {
                 var watcher = new FileSystemWatcher(testDir.FullName);
@@ -363,7 +363,7 @@ namespace SJP.FsNotify.Tests
         [Test]
         public static async Task OnCreated_WhenFileCreatedAndEventBound_CallsMethod()
         {
-            var testDir = GetTestDirectory();
+            var testDir = FsNotifyTest.GetTestDirectory();
             try
             {
                 testDir.Create();
@@ -374,7 +374,7 @@ namespace SJP.FsNotify.Tests
                     enhancedWatcher.EnableRaisingEvents = true;
                     await Task.Delay(100).ConfigureAwait(false);
 
-                    var testFile = GetTestFile(testDir);
+                    var testFile = FsNotifyTest.GetTestFile(testDir);
                     testFile.Create().Dispose();
 
                     await Task.Delay(10).ConfigureAwait(false);
@@ -391,7 +391,7 @@ namespace SJP.FsNotify.Tests
         [Test]
         public static async Task OnChanged_WhenFileChangedAndEventBound_CallsMethod()
         {
-            var testDir = GetTestDirectory();
+            var testDir = FsNotifyTest.GetTestDirectory();
             try
             {
                 testDir.Create();
@@ -402,7 +402,7 @@ namespace SJP.FsNotify.Tests
                     enhancedWatcher.EnableRaisingEvents = true;
                     await Task.Delay(100).ConfigureAwait(false);
 
-                    var testFile = GetTestFile(testDir);
+                    var testFile = FsNotifyTest.GetTestFile(testDir);
                     testFile.Create().Dispose();
 
                     using (var writer = testFile.AppendText())
@@ -423,7 +423,7 @@ namespace SJP.FsNotify.Tests
         [Test]
         public static async Task OnRenamed_WhenFileRenamedAndEventBound_CallsMethod()
         {
-            var testDir = GetTestDirectory();
+            var testDir = FsNotifyTest.GetTestDirectory();
             try
             {
                 testDir.Create();
@@ -434,8 +434,8 @@ namespace SJP.FsNotify.Tests
                     enhancedWatcher.EnableRaisingEvents = true;
                     await Task.Delay(100).ConfigureAwait(false);
 
-                    var testFile = GetTestFile(testDir);
-                    var testFile2 = GetTestFile(testDir);
+                    var testFile = FsNotifyTest.GetTestFile(testDir);
+                    var testFile2 = FsNotifyTest.GetTestFile(testDir);
                     testFile.Create().Dispose();
                     File.Move(testFile.FullName, testFile2.FullName);
 
@@ -453,7 +453,7 @@ namespace SJP.FsNotify.Tests
         [Test]
         public static async Task OnDeleted_WhenFileDeletedAndEventBound_CallsMethod()
         {
-            var testDir = GetTestDirectory();
+            var testDir = FsNotifyTest.GetTestDirectory();
             try
             {
                 testDir.Create();
@@ -464,7 +464,7 @@ namespace SJP.FsNotify.Tests
                     enhancedWatcher.EnableRaisingEvents = true;
                     await Task.Delay(100).ConfigureAwait(false);
 
-                    var testFile = GetTestFile(testDir);
+                    var testFile = FsNotifyTest.GetTestFile(testDir);
                     testFile.Create().Dispose();
                     testFile.Delete();
 
@@ -482,7 +482,7 @@ namespace SJP.FsNotify.Tests
         [Test]
         public static async Task OnError_WhenErrorOccursAndEventBound_CallsMethod()
         {
-            var testDir = GetTestDirectory();
+            var testDir = FsNotifyTest.GetTestDirectory();
             try
             {
                 testDir.Create();
@@ -494,9 +494,9 @@ namespace SJP.FsNotify.Tests
                     enhancedWatcher.EnableRaisingEvents = true;
                     await Task.Delay(100).ConfigureAwait(false);
 
-                    var testFile1 = GetTestFile(testDir);
-                    var testFile2 = GetTestFile(testDir);
-                    var testFile3 = GetTestFile(testDir);
+                    var testFile1 = FsNotifyTest.GetTestFile(testDir);
+                    var testFile2 = FsNotifyTest.GetTestFile(testDir);
+                    var testFile3 = FsNotifyTest.GetTestFile(testDir);
 
                     testFile1.Create().Dispose();
                     testFile2.Create().Dispose();
@@ -516,7 +516,7 @@ namespace SJP.FsNotify.Tests
         [Test]
         public static async Task OnBufferExceeded_WhenBufferExceeded_CallsMethod()
         {
-            var testDir = GetTestDirectory();
+            var testDir = FsNotifyTest.GetTestDirectory();
             try
             {
                 testDir.Create();
@@ -527,9 +527,9 @@ namespace SJP.FsNotify.Tests
                     enhancedWatcher.EnableRaisingEvents = true;
                     await Task.Delay(100).ConfigureAwait(false);
 
-                    var testFile1 = GetTestFile(testDir);
-                    var testFile2 = GetTestFile(testDir);
-                    var testFile3 = GetTestFile(testDir);
+                    var testFile1 = FsNotifyTest.GetTestFile(testDir);
+                    var testFile2 = FsNotifyTest.GetTestFile(testDir);
+                    var testFile3 = FsNotifyTest.GetTestFile(testDir);
 
                     testFile1.Create().Dispose();
                     testFile2.Create().Dispose();
@@ -549,7 +549,7 @@ namespace SJP.FsNotify.Tests
         [Test]
         public static async Task Create_WhenFileCreatedAndEventBound_RaisesEvent()
         {
-            var testDir = GetTestDirectory();
+            var testDir = FsNotifyTest.GetTestDirectory();
             try
             {
                 testDir.Create();
@@ -561,7 +561,7 @@ namespace SJP.FsNotify.Tests
                     enhancedWatcher.EnableRaisingEvents = true;
 
                     await Task.Delay(100).ConfigureAwait(false);
-                    var testFile = GetTestFile(testDir);
+                    var testFile = FsNotifyTest.GetTestFile(testDir);
                     testFile.Create().Dispose();
 
                     await Task.Delay(100).ConfigureAwait(false);
@@ -578,7 +578,7 @@ namespace SJP.FsNotify.Tests
         [Test]
         public static async Task Change_WhenFileChangedAndEventBound_RaisesEvent()
         {
-            var testDir = GetTestDirectory();
+            var testDir = FsNotifyTest.GetTestDirectory();
             try
             {
                 testDir.Create();
@@ -590,7 +590,7 @@ namespace SJP.FsNotify.Tests
                     enhancedWatcher.EnableRaisingEvents = true;
 
                     await Task.Delay(100).ConfigureAwait(false);
-                    var testFile = GetTestFile(testDir);
+                    var testFile = FsNotifyTest.GetTestFile(testDir);
                     testFile.Create().Dispose();
 
                     using (var writer = testFile.AppendText())
@@ -612,7 +612,7 @@ namespace SJP.FsNotify.Tests
         [Test]
         public static async Task Rename_WhenFileRenamedAndEventBound_RaisesEvent()
         {
-            var testDir = GetTestDirectory();
+            var testDir = FsNotifyTest.GetTestDirectory();
             try
             {
                 testDir.Create();
@@ -624,8 +624,8 @@ namespace SJP.FsNotify.Tests
                     enhancedWatcher.EnableRaisingEvents = true;
 
                     await Task.Delay(100).ConfigureAwait(false);
-                    var testFile = GetTestFile(testDir);
-                    var testFile2 = GetTestFile(testDir);
+                    var testFile = FsNotifyTest.GetTestFile(testDir);
+                    var testFile2 = FsNotifyTest.GetTestFile(testDir);
                     testFile.Create().Dispose();
                     await Task.Delay(10).ConfigureAwait(false);
                     File.Move(testFile.FullName, testFile2.FullName);
@@ -644,7 +644,7 @@ namespace SJP.FsNotify.Tests
         [Test]
         public static async Task Delete_WhenFileDeletedAndEventBound_RaisesEvent()
         {
-            var testDir = GetTestDirectory();
+            var testDir = FsNotifyTest.GetTestDirectory();
             try
             {
                 testDir.Create();
@@ -656,7 +656,7 @@ namespace SJP.FsNotify.Tests
                     enhancedWatcher.EnableRaisingEvents = true;
 
                     await Task.Delay(100).ConfigureAwait(false);
-                    var testFile = GetTestFile(testDir);
+                    var testFile = FsNotifyTest.GetTestFile(testDir);
                     testFile.Create().Dispose();
                     testFile.Delete();
 
@@ -674,7 +674,7 @@ namespace SJP.FsNotify.Tests
         [Test]
         public static async Task Error_WhenErrorOccursAndEventBound_RaisesEvent()
         {
-            var testDir = GetTestDirectory();
+            var testDir = FsNotifyTest.GetTestDirectory();
             try
             {
                 testDir.Create();
@@ -687,13 +687,13 @@ namespace SJP.FsNotify.Tests
                     enhancedWatcher.EnableRaisingEvents = true;
 
                     await Task.Delay(100).ConfigureAwait(false);
-                    var testFile1 = GetTestFile(testDir);
+                    var testFile1 = FsNotifyTest.GetTestFile(testDir);
                     await Task.Delay(100).ConfigureAwait(false);
 
-                    var testFile2 = GetTestFile(testDir);
+                    var testFile2 = FsNotifyTest.GetTestFile(testDir);
                     await Task.Delay(100).ConfigureAwait(false);
 
-                    var testFile3 = GetTestFile(testDir);
+                    var testFile3 = FsNotifyTest.GetTestFile(testDir);
                     await Task.Delay(100).ConfigureAwait(false);
 
                     testFile1.Create().Dispose();
@@ -714,7 +714,7 @@ namespace SJP.FsNotify.Tests
         [Test]
         public static async Task OnAttributeChanged_WhenFileAttributeChangedAndEventBound_CallsMethod()
         {
-            var testDir = GetTestDirectory();
+            var testDir = FsNotifyTest.GetTestDirectory();
             try
             {
                 testDir.Create();
@@ -725,7 +725,7 @@ namespace SJP.FsNotify.Tests
                     enhancedWatcher.EnableRaisingEvents = true;
                     await Task.Delay(100).ConfigureAwait(false);
 
-                    var testFile = GetTestFile(testDir);
+                    var testFile = FsNotifyTest.GetTestFile(testDir);
                     testFile.Create().Dispose();
                     await Task.Delay(100).ConfigureAwait(false);
                     testFile.Attributes = FileAttributes.Archive | FileAttributes.Hidden;
@@ -749,7 +749,7 @@ namespace SJP.FsNotify.Tests
         [Test]
         public static async Task OnCreationTimeChanged_WhenFileCreationChangedAndEventBound_CallsMethod()
         {
-            var testDir = GetTestDirectory();
+            var testDir = FsNotifyTest.GetTestDirectory();
             try
             {
                 testDir.Create();
@@ -759,7 +759,7 @@ namespace SJP.FsNotify.Tests
                     enhancedWatcher.CreationTimeChanged += (s, e) => { };
                     enhancedWatcher.EnableRaisingEvents = true;
 
-                    var testFile = GetTestFile(testDir);
+                    var testFile = FsNotifyTest.GetTestFile(testDir);
                     testFile.Create().Dispose();
                     await Task.Delay(100);
                     testFile.CreationTime = new DateTime(2016, 1, 1);
@@ -779,7 +779,7 @@ namespace SJP.FsNotify.Tests
         [Test]
         public static async Task OnLastAccessChanged_WhenFileAccessChangedAndEventBound_CallsMethod()
         {
-            var testDir = GetTestDirectory();
+            var testDir = FsNotifyTest.GetTestDirectory();
             try
             {
                 testDir.Create();
@@ -789,7 +789,7 @@ namespace SJP.FsNotify.Tests
                     enhancedWatcher.LastAccessChanged += (s, e) => { };
                     enhancedWatcher.EnableRaisingEvents = true;
 
-                    var testFile = GetTestFile(testDir);
+                    var testFile = FsNotifyTest.GetTestFile(testDir);
                     testFile.Create().Dispose();
                     await Task.Delay(100);
                     testFile.Refresh();
@@ -811,7 +811,7 @@ namespace SJP.FsNotify.Tests
         [Test]
         public static async Task OnLastWriteChanged_WhenFileLastWriteChangedAndEventBound_CallsMethod()
         {
-            var testDir = GetTestDirectory();
+            var testDir = FsNotifyTest.GetTestDirectory();
             try
             {
                 testDir.Create();
@@ -821,7 +821,7 @@ namespace SJP.FsNotify.Tests
                     enhancedWatcher.LastWriteChanged += (s, e) => { };
                     enhancedWatcher.EnableRaisingEvents = true;
 
-                    var testFile = GetTestFile(testDir);
+                    var testFile = FsNotifyTest.GetTestFile(testDir);
                     testFile.Create().Dispose();
                     await Task.Delay(100);
                     testFile.LastWriteTime = new DateTime(2016, 1, 1);
@@ -841,7 +841,7 @@ namespace SJP.FsNotify.Tests
         [Test]
         public static async Task OnSizeChanged_WhenSizeChangedAndEventBound_CallsMethod()
         {
-            var testDir = GetTestDirectory();
+            var testDir = FsNotifyTest.GetTestDirectory();
             try
             {
                 testDir.Create();
@@ -851,7 +851,7 @@ namespace SJP.FsNotify.Tests
                     enhancedWatcher.SizeChanged += (s, e) => { };
                     enhancedWatcher.EnableRaisingEvents = true;
 
-                    var testFile = GetTestFile(testDir);
+                    var testFile = FsNotifyTest.GetTestFile(testDir);
                     testFile.Create().Dispose();
                     await Task.Delay(100);
                     using (var writer = new StreamWriter(testFile.OpenWrite()))
@@ -871,7 +871,7 @@ namespace SJP.FsNotify.Tests
         [Test]
         public static async Task CreationTimeChanged_WhenFileCreationChangedAndEventBound_RaisesEvent()
         {
-            var testDir = GetTestDirectory();
+            var testDir = FsNotifyTest.GetTestDirectory();
             try
             {
                 testDir.Create();
@@ -882,7 +882,7 @@ namespace SJP.FsNotify.Tests
                     enhancedWatcher.CreationTimeChanged += (s, e) => creationTimeChanged = true;
                     enhancedWatcher.EnableRaisingEvents = true;
 
-                    var testFile = GetTestFile(testDir);
+                    var testFile = FsNotifyTest.GetTestFile(testDir);
                     testFile.Create().Dispose();
                     await Task.Delay(100);
                     testFile.CreationTime = new DateTime(2016, 1, 1);
@@ -902,7 +902,7 @@ namespace SJP.FsNotify.Tests
         [Test]
         public static async Task LastAccessChanged_WhenFileAccessChangedAndEventBound_RaisesEvent()
         {
-            var testDir = GetTestDirectory();
+            var testDir = FsNotifyTest.GetTestDirectory();
             try
             {
                 testDir.Create();
@@ -913,7 +913,7 @@ namespace SJP.FsNotify.Tests
                     enhancedWatcher.LastAccessChanged += (s, e) => lastAccessChanged = true;
                     enhancedWatcher.EnableRaisingEvents = true;
 
-                    var testFile = GetTestFile(testDir);
+                    var testFile = FsNotifyTest.GetTestFile(testDir);
                     testFile.Create().Dispose();
                     await Task.Delay(100);
                     testFile.Refresh();
@@ -935,7 +935,7 @@ namespace SJP.FsNotify.Tests
         [Test]
         public static async Task LastWriteChanged_WhenFileLastWriteChangedAndEventBound_RaisesEvent()
         {
-            var testDir = GetTestDirectory();
+            var testDir = FsNotifyTest.GetTestDirectory();
             try
             {
                 testDir.Create();
@@ -946,7 +946,7 @@ namespace SJP.FsNotify.Tests
                     enhancedWatcher.LastWriteChanged += (s, e) => lastWriteChanged = true;
                     enhancedWatcher.EnableRaisingEvents = true;
 
-                    var testFile = GetTestFile(testDir);
+                    var testFile = FsNotifyTest.GetTestFile(testDir);
                     testFile.Create().Dispose();
                     await Task.Delay(100);
                     testFile.LastWriteTime = new DateTime(2016, 1, 1);
@@ -966,7 +966,7 @@ namespace SJP.FsNotify.Tests
         [Test]
         public static async Task SizeChanged_WhenSizeChangedAndEventBound_RaisesEvent()
         {
-            var testDir = GetTestDirectory();
+            var testDir = FsNotifyTest.GetTestDirectory();
             try
             {
                 testDir.Create();
@@ -977,7 +977,7 @@ namespace SJP.FsNotify.Tests
                     enhancedWatcher.SizeChanged += (s, e) => sizeChanged = true;
                     enhancedWatcher.EnableRaisingEvents = true;
 
-                    var testFile = GetTestFile(testDir);
+                    var testFile = FsNotifyTest.GetTestFile(testDir);
                     testFile.Create().Dispose();
                     await Task.Delay(100);
                     using (var writer = new StreamWriter(testFile.OpenWrite()))

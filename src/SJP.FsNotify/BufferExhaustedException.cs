@@ -15,9 +15,6 @@ namespace SJP.FsNotify
         /// <exception cref="ArgumentNullException"><paramref name="message"/> is <c>null</c>, empty, or whitespace.</exception>
         public BufferExhaustedException(string message, int capacity) : base(message)
         {
-            if (string.IsNullOrWhiteSpace(message))
-                throw new ArgumentNullException(nameof(message));
-
             Capacity = capacity;
         }
 
