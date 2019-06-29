@@ -1,8 +1,6 @@
 using System;
 using System.IO;
 using NUnit.Framework;
-using Moq;
-using System.Threading.Tasks;
 
 namespace SJP.FsNotify.Tests
 {
