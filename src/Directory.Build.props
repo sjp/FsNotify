@@ -1,0 +1,12 @@
+<Project>
+    <PropertyGroup>
+        <LangVersion>latest</LangVersion>
+        <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+        <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+        <TreatSpecificWarningsAsErrors />
+        <Copyright>Copyright © Simon Potter 2019</Copyright>
+		<Authors>Simon Potter</Authors>
+        <Company />
+        <Product />
+    </PropertyGroup>
+</Project>

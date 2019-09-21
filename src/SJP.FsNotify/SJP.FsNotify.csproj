@@ -2,14 +2,8 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-    <TreatSpecificWarningsAsErrors />
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
-    <Authors>Simon Potter</Authors>
-    <Company />
-    <Product />
     <Description>Improved file system notification events for .NET</Description>
-    <Copyright>Copyright © Simon Potter 2019</Copyright>
     <PackageLicenseUrl>https://raw.github.com/sjp/FsNotify/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/sjp/FsNotify</PackageProjectUrl>
     <RepositoryUrl>https://github.com/sjp/FsNotify</RepositoryUrl>
