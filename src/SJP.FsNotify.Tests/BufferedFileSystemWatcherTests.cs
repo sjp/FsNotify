@@ -71,14 +71,12 @@ namespace SJP.FsNotify.Tests
             var testDir = FsNotifyTest.GetTestDirectory();
 
             var watcher = new FileSystemWatcher(testDir.FullName);
-            using (var bufferedWatcher = new BufferedFileSystemWatcher(watcher))
+            using var bufferedWatcher = new BufferedFileSystemWatcher(watcher);
+            Assert.Multiple(() =>
             {
-                Assert.Multiple(() =>
-                {
-                    Assert.AreEqual(testDir.FullName, bufferedWatcher.Path);
-                    Assert.AreEqual(testDir.FullName, watcher.Path);
-                });
-            }
+                Assert.AreEqual(testDir.FullName, bufferedWatcher.Path);
+                Assert.AreEqual(testDir.FullName, watcher.Path);
+            });
         }
 
         [Test]
@@ -88,46 +86,38 @@ namespace SJP.FsNotify.Tests
             var testDir2 = FsNotifyTest.GetTestDirectory();
 
             var watcher = new FileSystemWatcher(testDir.FullName);
-            using (var bufferedWatcher = new BufferedFileSystemWatcher(watcher))
-            {
-                bufferedWatcher.Path = testDir2.FullName;
+            using var bufferedWatcher = new BufferedFileSystemWatcher(watcher) { Path = testDir2.FullName };
 
-                Assert.Multiple(() =>
-                {
-                    Assert.AreEqual(testDir2.FullName, bufferedWatcher.Path);
-                    Assert.AreEqual(testDir2.FullName, watcher.Path);
-                });
-            }
+            Assert.Multiple(() =>
+            {
+                Assert.AreEqual(testDir2.FullName, bufferedWatcher.Path);
+                Assert.AreEqual(testDir2.FullName, watcher.Path);
+            });
         }
 
         [Test]
         public static void IncludeSubdirectories_WhenSetInCtor_RetrievedFromPropertyUnchanged()
         {
             var watcher = new FileSystemWatcher() { IncludeSubdirectories = true };
-            using (var bufferedWatcher = new BufferedFileSystemWatcher(watcher))
+            using var bufferedWatcher = new BufferedFileSystemWatcher(watcher);
+            Assert.Multiple(() =>
             {
-                Assert.Multiple(() =>
-                {
-                    Assert.IsTrue(watcher.IncludeSubdirectories);
-                    Assert.IsTrue(bufferedWatcher.IncludeSubdirectories);
-                });
-            }
+                Assert.IsTrue(watcher.IncludeSubdirectories);
+                Assert.IsTrue(bufferedWatcher.IncludeSubdirectories);
+            });
         }
 
         [Test]
         public static void IncludeSubdirectories_WhenSetInProperty_RetrievedFromPropertyCorrectly()
         {
             var watcher = new FileSystemWatcher();
-            using (var bufferedWatcher = new BufferedFileSystemWatcher(watcher))
-            {
-                bufferedWatcher.IncludeSubdirectories = true;
+            using var bufferedWatcher = new BufferedFileSystemWatcher(watcher) { IncludeSubdirectories = true };
 
-                Assert.Multiple(() =>
-                {
-                    Assert.IsTrue(watcher.IncludeSubdirectories);
-                    Assert.IsTrue(bufferedWatcher.IncludeSubdirectories);
-                });
-            }
+            Assert.Multiple(() =>
+            {
+                Assert.IsTrue(watcher.IncludeSubdirectories);
+                Assert.IsTrue(bufferedWatcher.IncludeSubdirectories);
+            });
         }
 
         [Test]
@@ -135,14 +125,12 @@ namespace SJP.FsNotify.Tests
         {
             const string filter = "*.exe";
             var watcher = new FileSystemWatcher() { Filter = filter };
-            using (var bufferedWatcher = new BufferedFileSystemWatcher(watcher))
+            using var bufferedWatcher = new BufferedFileSystemWatcher(watcher);
+            Assert.Multiple(() =>
             {
-                Assert.Multiple(() =>
-                {
-                    Assert.AreEqual(filter, watcher.Filter);
-                    Assert.AreEqual(filter, bufferedWatcher.Filter);
-                });
-            }
+                Assert.AreEqual(filter, watcher.Filter);
+                Assert.AreEqual(filter, bufferedWatcher.Filter);
+            });
         }
 
         [Test]
@@ -150,16 +138,13 @@ namespace SJP.FsNotify.Tests
         {
             const string filter = "*.exe";
             var watcher = new FileSystemWatcher();
-            using (var bufferedWatcher = new BufferedFileSystemWatcher(watcher))
-            {
-                bufferedWatcher.Filter = filter;
+            using var bufferedWatcher = new BufferedFileSystemWatcher(watcher) { Filter = filter };
 
-                Assert.Multiple(() =>
-                {
-                    Assert.AreEqual(filter, watcher.Filter);
-                    Assert.AreEqual(filter, bufferedWatcher.Filter);
-                });
-            }
+            Assert.Multiple(() =>
+            {
+                Assert.AreEqual(filter, watcher.Filter);
+                Assert.AreEqual(filter, bufferedWatcher.Filter);
+            });
         }
 
         [Test]
@@ -167,14 +152,12 @@ namespace SJP.FsNotify.Tests
         {
             const NotifyFilters filter = NotifyFilters.Security | NotifyFilters.Attributes;
             var watcher = new FileSystemWatcher() { NotifyFilter = filter };
-            using (var bufferedWatcher = new BufferedFileSystemWatcher(watcher))
+            using var bufferedWatcher = new BufferedFileSystemWatcher(watcher);
+            Assert.Multiple(() =>
             {
-                Assert.Multiple(() =>
-                {
-                    Assert.AreEqual(filter, watcher.NotifyFilter);
-                    Assert.AreEqual(filter, bufferedWatcher.NotifyFilter);
-                });
-            }
+                Assert.AreEqual(filter, watcher.NotifyFilter);
+                Assert.AreEqual(filter, bufferedWatcher.NotifyFilter);
+            });
         }
 
         [Test]
@@ -182,16 +165,13 @@ namespace SJP.FsNotify.Tests
         {
             const NotifyFilters filter = NotifyFilters.Security | NotifyFilters.Attributes;
             var watcher = new FileSystemWatcher();
-            using (var bufferedWatcher = new BufferedFileSystemWatcher(watcher))
-            {
-                bufferedWatcher.NotifyFilter = filter;
+            using var bufferedWatcher = new BufferedFileSystemWatcher(watcher) { NotifyFilter = filter };
 
-                Assert.Multiple(() =>
-                {
-                    Assert.AreEqual(filter, watcher.NotifyFilter);
-                    Assert.AreEqual(filter, bufferedWatcher.NotifyFilter);
-                });
-            }
+            Assert.Multiple(() =>
+            {
+                Assert.AreEqual(filter, watcher.NotifyFilter);
+                Assert.AreEqual(filter, bufferedWatcher.NotifyFilter);
+            });
         }
 
         [Test]
@@ -202,14 +182,12 @@ namespace SJP.FsNotify.Tests
             {
                 testDir.Create();
                 var watcher = new FileSystemWatcher(testDir.FullName) { EnableRaisingEvents = true };
-                using (var bufferedWatcher = new BufferedFileSystemWatcher(watcher))
+                using var bufferedWatcher = new BufferedFileSystemWatcher(watcher);
+                Assert.Multiple(() =>
                 {
-                    Assert.Multiple(() =>
-                    {
-                        Assert.IsTrue(watcher.EnableRaisingEvents);
-                        Assert.IsTrue(bufferedWatcher.EnableRaisingEvents);
-                    });
-                }
+                    Assert.IsTrue(watcher.EnableRaisingEvents);
+                    Assert.IsTrue(bufferedWatcher.EnableRaisingEvents);
+                });
             }
             finally
             {
@@ -226,16 +204,13 @@ namespace SJP.FsNotify.Tests
             {
                 testDir.Create();
                 var watcher = new FileSystemWatcher(testDir.FullName);
-                using (var bufferedWatcher = new BufferedFileSystemWatcher(watcher))
-                {
-                    bufferedWatcher.EnableRaisingEvents = true;
+                using var bufferedWatcher = new BufferedFileSystemWatcher(watcher) { EnableRaisingEvents = true };
 
-                    Assert.Multiple(() =>
-                    {
-                        Assert.IsTrue(watcher.EnableRaisingEvents);
-                        Assert.IsTrue(bufferedWatcher.EnableRaisingEvents);
-                    });
-                }
+                Assert.Multiple(() =>
+                {
+                    Assert.IsTrue(watcher.EnableRaisingEvents);
+                    Assert.IsTrue(bufferedWatcher.EnableRaisingEvents);
+                });
             }
             finally
             {
@@ -248,33 +223,27 @@ namespace SJP.FsNotify.Tests
         public static void NotifyFilters_WhenGivenInvalidEnum_ThrowsArgumentException()
         {
             var watcher = new FileSystemWatcher();
-            using (var bufferedWatcher = new BufferedFileSystemWatcher(watcher))
-            {
-                const NotifyFilters filter = (NotifyFilters)32908;
-                Assert.Throws<ArgumentException>(() => bufferedWatcher.NotifyFilter = filter);
-            }
+            using var bufferedWatcher = new BufferedFileSystemWatcher(watcher);
+            const NotifyFilters filter = (NotifyFilters)32908;
+            Assert.Throws<ArgumentException>(() => bufferedWatcher.NotifyFilter = filter);
         }
 
         [Test]
         public static void WaitForChanged_WhenGivenInvalidEnum_ThrowsArgumentException()
         {
             var watcher = new FileSystemWatcher();
-            using (var bufferedWatcher = new BufferedFileSystemWatcher(watcher))
-            {
-                const WatcherChangeTypes changeType = (WatcherChangeTypes)32908;
-                Assert.Throws<ArgumentException>(() => bufferedWatcher.WaitForChanged(changeType));
-            }
+            using var bufferedWatcher = new BufferedFileSystemWatcher(watcher);
+            const WatcherChangeTypes changeType = (WatcherChangeTypes)32908;
+            Assert.Throws<ArgumentException>(() => bufferedWatcher.WaitForChanged(changeType));
         }
 
         [Test]
         public static void WaitForChanged_WhenGivenInvalidEnumWithTimeout_ThrowsArgumentException()
         {
             var watcher = new FileSystemWatcher();
-            using (var bufferedWatcher = new BufferedFileSystemWatcher(watcher))
-            {
-                const WatcherChangeTypes changeType = (WatcherChangeTypes)32908;
-                Assert.Throws<ArgumentException>(() => bufferedWatcher.WaitForChanged(changeType, 123));
-            }
+            using var bufferedWatcher = new BufferedFileSystemWatcher(watcher);
+            const WatcherChangeTypes changeType = (WatcherChangeTypes)32908;
+            Assert.Throws<ArgumentException>(() => bufferedWatcher.WaitForChanged(changeType, 123));
         }
 
         [Test]
@@ -285,18 +254,16 @@ namespace SJP.FsNotify.Tests
             {
                 testDir.Create();
                 var watcher = new FileSystemWatcher(testDir.FullName);
-                using (var bufferedWatcher = new FakeBufferedFileSystemWatcher(watcher))
-                {
-                    bufferedWatcher.Created += (s, e) => { };
-                    bufferedWatcher.EnableRaisingEvents = true;
-                    await Task.Delay(100).ConfigureAwait(false);
+                using var bufferedWatcher = new FakeBufferedFileSystemWatcher(watcher);
+                bufferedWatcher.Created += (s, e) => { };
+                bufferedWatcher.EnableRaisingEvents = true;
+                await Task.Delay(100).ConfigureAwait(false);
 
-                    var testFile = FsNotifyTest.GetTestFile(testDir);
-                    testFile.Create().Dispose();
+                var testFile = FsNotifyTest.GetTestFile(testDir);
+                testFile.Create().Dispose();
 
-                    await Task.Delay(10).ConfigureAwait(false);
-                    Assert.IsTrue(bufferedWatcher.OnCreatedCalled);
-                }
+                await Task.Delay(10).ConfigureAwait(false);
+                Assert.IsTrue(bufferedWatcher.OnCreatedCalled);
             }
             finally
             {
@@ -313,22 +280,20 @@ namespace SJP.FsNotify.Tests
             {
                 testDir.Create();
                 var watcher = new FileSystemWatcher(testDir.FullName);
-                using (var bufferedWatcher = new FakeBufferedFileSystemWatcher(watcher))
-                {
-                    bufferedWatcher.Changed += (s, e) => { };
-                    bufferedWatcher.EnableRaisingEvents = true;
-                    await Task.Delay(100).ConfigureAwait(false);
+                using var bufferedWatcher = new FakeBufferedFileSystemWatcher(watcher);
+                bufferedWatcher.Changed += (s, e) => { };
+                bufferedWatcher.EnableRaisingEvents = true;
+                await Task.Delay(100).ConfigureAwait(false);
 
-                    var testFile = FsNotifyTest.GetTestFile(testDir);
-                    testFile.Create().Dispose();
+                var testFile = FsNotifyTest.GetTestFile(testDir);
+                testFile.Create().Dispose();
 
-                    using (var writer = testFile.AppendText())
-                        await writer.WriteLineAsync("trigger change").ConfigureAwait(false);
-                    testFile.LastWriteTime = new DateTime(2016, 1, 1);
+                using (var writer = testFile.AppendText())
+                    await writer.WriteLineAsync("trigger change").ConfigureAwait(false);
+                testFile.LastWriteTime = new DateTime(2016, 1, 1);
 
-                    await Task.Delay(10).ConfigureAwait(false);
-                    Assert.IsTrue(bufferedWatcher.OnChangedCalled);
-                }
+                await Task.Delay(10).ConfigureAwait(false);
+                Assert.IsTrue(bufferedWatcher.OnChangedCalled);
             }
             finally
             {
@@ -345,20 +310,18 @@ namespace SJP.FsNotify.Tests
             {
                 testDir.Create();
                 var watcher = new FileSystemWatcher(testDir.FullName);
-                using (var bufferedWatcher = new FakeBufferedFileSystemWatcher(watcher))
-                {
-                    bufferedWatcher.Renamed += (s, e) => { };
-                    bufferedWatcher.EnableRaisingEvents = true;
-                    await Task.Delay(100).ConfigureAwait(false);
+                using var bufferedWatcher = new FakeBufferedFileSystemWatcher(watcher);
+                bufferedWatcher.Renamed += (s, e) => { };
+                bufferedWatcher.EnableRaisingEvents = true;
+                await Task.Delay(100).ConfigureAwait(false);
 
-                    var testFile = FsNotifyTest.GetTestFile(testDir);
-                    var testFile2 = FsNotifyTest.GetTestFile(testDir);
-                    testFile.Create().Dispose();
-                    File.Move(testFile.FullName, testFile2.FullName);
+                var testFile = FsNotifyTest.GetTestFile(testDir);
+                var testFile2 = FsNotifyTest.GetTestFile(testDir);
+                testFile.Create().Dispose();
+                File.Move(testFile.FullName, testFile2.FullName);
 
-                    await Task.Delay(10).ConfigureAwait(false);
-                    Assert.IsTrue(bufferedWatcher.OnRenamedCalled);
-                }
+                await Task.Delay(10).ConfigureAwait(false);
+                Assert.IsTrue(bufferedWatcher.OnRenamedCalled);
             }
             finally
             {
@@ -375,19 +338,17 @@ namespace SJP.FsNotify.Tests
             {
                 testDir.Create();
                 var watcher = new FileSystemWatcher(testDir.FullName);
-                using (var bufferedWatcher = new FakeBufferedFileSystemWatcher(watcher))
-                {
-                    bufferedWatcher.Deleted += (s, e) => { };
-                    bufferedWatcher.EnableRaisingEvents = true;
-                    await Task.Delay(100).ConfigureAwait(false);
+                using var bufferedWatcher = new FakeBufferedFileSystemWatcher(watcher);
+                bufferedWatcher.Deleted += (s, e) => { };
+                bufferedWatcher.EnableRaisingEvents = true;
+                await Task.Delay(100).ConfigureAwait(false);
 
-                    var testFile = FsNotifyTest.GetTestFile(testDir);
-                    testFile.Create().Dispose();
-                    testFile.Delete();
+                var testFile = FsNotifyTest.GetTestFile(testDir);
+                testFile.Create().Dispose();
+                testFile.Delete();
 
-                    await Task.Delay(10).ConfigureAwait(false);
-                    Assert.IsTrue(bufferedWatcher.OnDeletedCalled);
-                }
+                await Task.Delay(10).ConfigureAwait(false);
+                Assert.IsTrue(bufferedWatcher.OnDeletedCalled);
             }
             finally
             {
@@ -404,24 +365,22 @@ namespace SJP.FsNotify.Tests
             {
                 testDir.Create();
                 var watcher = new FileSystemWatcher(testDir.FullName);
-                using (var bufferedWatcher = new ErrorHandlingBufferedFileSystemWatcher(watcher, 1))
-                {
-                    bufferedWatcher.Created += async (s, e) => await Task.Delay(100).ConfigureAwait(false);
-                    bufferedWatcher.Error += (s, e) => {};
-                    bufferedWatcher.EnableRaisingEvents = true;
-                    await Task.Delay(100).ConfigureAwait(false);
+                using var bufferedWatcher = new ErrorHandlingBufferedFileSystemWatcher(watcher, 1);
+                bufferedWatcher.Created += async (s, e) => await Task.Delay(100).ConfigureAwait(false);
+                bufferedWatcher.Error += (s, e) => { };
+                bufferedWatcher.EnableRaisingEvents = true;
+                await Task.Delay(100).ConfigureAwait(false);
 
-                    var testFile1 = FsNotifyTest.GetTestFile(testDir);
-                    var testFile2 = FsNotifyTest.GetTestFile(testDir);
-                    var testFile3 = FsNotifyTest.GetTestFile(testDir);
+                var testFile1 = FsNotifyTest.GetTestFile(testDir);
+                var testFile2 = FsNotifyTest.GetTestFile(testDir);
+                var testFile3 = FsNotifyTest.GetTestFile(testDir);
 
-                    testFile1.Create().Dispose();
-                    testFile2.Create().Dispose();
-                    testFile3.Create().Dispose();
+                testFile1.Create().Dispose();
+                testFile2.Create().Dispose();
+                testFile3.Create().Dispose();
 
-                    await Task.Delay(10).ConfigureAwait(false);
-                    Assert.IsTrue(bufferedWatcher.OnErrorCalled);
-                }
+                await Task.Delay(10).ConfigureAwait(false);
+                Assert.IsTrue(bufferedWatcher.OnErrorCalled);
             }
             finally
             {
@@ -438,23 +397,21 @@ namespace SJP.FsNotify.Tests
             {
                 testDir.Create();
                 var watcher = new FileSystemWatcher(testDir.FullName);
-                using (var bufferedWatcher = new ErrorHandlingBufferedFileSystemWatcher(watcher, 1))
-                {
-                    bufferedWatcher.Created += async (s, e) => await Task.Delay(100).ConfigureAwait(false);
-                    bufferedWatcher.EnableRaisingEvents = true;
-                    await Task.Delay(100).ConfigureAwait(false);
+                using var bufferedWatcher = new ErrorHandlingBufferedFileSystemWatcher(watcher, 1);
+                bufferedWatcher.Created += async (s, e) => await Task.Delay(100).ConfigureAwait(false);
+                bufferedWatcher.EnableRaisingEvents = true;
+                await Task.Delay(100).ConfigureAwait(false);
 
-                    var testFile1 = FsNotifyTest.GetTestFile(testDir);
-                    var testFile2 = FsNotifyTest.GetTestFile(testDir);
-                    var testFile3 = FsNotifyTest.GetTestFile(testDir);
+                var testFile1 = FsNotifyTest.GetTestFile(testDir);
+                var testFile2 = FsNotifyTest.GetTestFile(testDir);
+                var testFile3 = FsNotifyTest.GetTestFile(testDir);
 
-                    testFile1.Create().Dispose();
-                    testFile2.Create().Dispose();
-                    testFile3.Create().Dispose();
+                testFile1.Create().Dispose();
+                testFile2.Create().Dispose();
+                testFile3.Create().Dispose();
 
-                    await Task.Delay(10).ConfigureAwait(false);
-                    Assert.IsTrue(bufferedWatcher.OnBufferExceededCalled);
-                }
+                await Task.Delay(10).ConfigureAwait(false);
+                Assert.IsTrue(bufferedWatcher.OnBufferExceededCalled);
             }
             finally
             {
@@ -471,19 +428,17 @@ namespace SJP.FsNotify.Tests
             {
                 testDir.Create();
                 var watcher = new FileSystemWatcher(testDir.FullName);
-                using (var bufferedWatcher = new BufferedFileSystemWatcher(watcher))
-                {
-                    var createdCalled = false;
-                    bufferedWatcher.Created += (s, e) => createdCalled = true;
-                    bufferedWatcher.EnableRaisingEvents = true;
-                    await Task.Delay(100).ConfigureAwait(false);
+                using var bufferedWatcher = new BufferedFileSystemWatcher(watcher);
+                var createdCalled = false;
+                bufferedWatcher.Created += (s, e) => createdCalled = true;
+                bufferedWatcher.EnableRaisingEvents = true;
+                await Task.Delay(100).ConfigureAwait(false);
 
-                    var testFile = FsNotifyTest.GetTestFile(testDir);
-                    testFile.Create().Dispose();
+                var testFile = FsNotifyTest.GetTestFile(testDir);
+                testFile.Create().Dispose();
 
-                    await Task.Delay(10).ConfigureAwait(false);
-                    Assert.IsTrue(createdCalled);
-                }
+                await Task.Delay(10).ConfigureAwait(false);
+                Assert.IsTrue(createdCalled);
             }
             finally
             {
@@ -500,24 +455,22 @@ namespace SJP.FsNotify.Tests
             {
                 testDir.Create();
                 var watcher = new FileSystemWatcher(testDir.FullName);
-                using (var bufferedWatcher = new BufferedFileSystemWatcher(watcher))
-                {
-                    var changedCalled = false;
-                    bufferedWatcher.Changed += (s, e) => changedCalled = true;
-                    bufferedWatcher.EnableRaisingEvents = true;
-                    await Task.Delay(100).ConfigureAwait(false);
+                using var bufferedWatcher = new BufferedFileSystemWatcher(watcher);
+                var changedCalled = false;
+                bufferedWatcher.Changed += (s, e) => changedCalled = true;
+                bufferedWatcher.EnableRaisingEvents = true;
+                await Task.Delay(100).ConfigureAwait(false);
 
-                    var testFile = FsNotifyTest.GetTestFile(testDir);
-                    testFile.Create().Dispose();
+                var testFile = FsNotifyTest.GetTestFile(testDir);
+                testFile.Create().Dispose();
 
-                    using (var writer = testFile.AppendText())
-                        await writer.WriteLineAsync("trigger change").ConfigureAwait(false);
-                    testFile.LastWriteTime = new DateTime(2016, 1, 1);
-                    testFile.Refresh();
+                using (var writer = testFile.AppendText())
+                    await writer.WriteLineAsync("trigger change").ConfigureAwait(false);
+                testFile.LastWriteTime = new DateTime(2016, 1, 1);
+                testFile.Refresh();
 
-                    await Task.Delay(100).ConfigureAwait(false);
-                    Assert.IsTrue(changedCalled);
-                }
+                await Task.Delay(100).ConfigureAwait(false);
+                Assert.IsTrue(changedCalled);
             }
             finally
             {
@@ -534,21 +487,19 @@ namespace SJP.FsNotify.Tests
             {
                 testDir.Create();
                 var watcher = new FileSystemWatcher(testDir.FullName);
-                using (var bufferedWatcher = new BufferedFileSystemWatcher(watcher))
-                {
-                    var renamedCalled = false;
-                    bufferedWatcher.Renamed += (s, e) => renamedCalled = true;
-                    bufferedWatcher.EnableRaisingEvents = true;
-                    await Task.Delay(100).ConfigureAwait(false);
+                using var bufferedWatcher = new BufferedFileSystemWatcher(watcher);
+                var renamedCalled = false;
+                bufferedWatcher.Renamed += (s, e) => renamedCalled = true;
+                bufferedWatcher.EnableRaisingEvents = true;
+                await Task.Delay(100).ConfigureAwait(false);
 
-                    var testFile = FsNotifyTest.GetTestFile(testDir);
-                    var testFile2 = FsNotifyTest.GetTestFile(testDir);
-                    testFile.Create().Dispose();
-                    File.Move(testFile.FullName, testFile2.FullName);
+                var testFile = FsNotifyTest.GetTestFile(testDir);
+                var testFile2 = FsNotifyTest.GetTestFile(testDir);
+                testFile.Create().Dispose();
+                File.Move(testFile.FullName, testFile2.FullName);
 
-                    await Task.Delay(100).ConfigureAwait(false);
-                    Assert.IsTrue(renamedCalled);
-                }
+                await Task.Delay(100).ConfigureAwait(false);
+                Assert.IsTrue(renamedCalled);
             }
             finally
             {
@@ -565,20 +516,18 @@ namespace SJP.FsNotify.Tests
             {
                 testDir.Create();
                 var watcher = new FileSystemWatcher(testDir.FullName);
-                using (var bufferedWatcher = new BufferedFileSystemWatcher(watcher))
-                {
-                    var deletedCalled = false;
-                    bufferedWatcher.Deleted += (s, e) => deletedCalled = true;
-                    bufferedWatcher.EnableRaisingEvents = true;
-                    await Task.Delay(100).ConfigureAwait(false);
+                using var bufferedWatcher = new BufferedFileSystemWatcher(watcher);
+                var deletedCalled = false;
+                bufferedWatcher.Deleted += (s, e) => deletedCalled = true;
+                bufferedWatcher.EnableRaisingEvents = true;
+                await Task.Delay(100).ConfigureAwait(false);
 
-                    var testFile = FsNotifyTest.GetTestFile(testDir);
-                    testFile.Create().Dispose();
-                    testFile.Delete();
+                var testFile = FsNotifyTest.GetTestFile(testDir);
+                testFile.Create().Dispose();
+                testFile.Delete();
 
-                    await Task.Delay(10).ConfigureAwait(false);
-                    Assert.IsTrue(deletedCalled);
-                }
+                await Task.Delay(10).ConfigureAwait(false);
+                Assert.IsTrue(deletedCalled);
             }
             finally
             {
@@ -595,25 +544,23 @@ namespace SJP.FsNotify.Tests
             {
                 testDir.Create();
                 var watcher = new FileSystemWatcher(testDir.FullName);
-                using (var bufferedWatcher = new BufferedFileSystemWatcher(watcher, 1))
-                {
-                    var errorCalled = false;
-                    bufferedWatcher.Created += async (s, e) => await Task.Delay(10000).ConfigureAwait(false);
-                    bufferedWatcher.Error += (s, e) => errorCalled = true;
-                    bufferedWatcher.EnableRaisingEvents = true;
-                    await Task.Delay(100).ConfigureAwait(false);
+                using var bufferedWatcher = new BufferedFileSystemWatcher(watcher, 1);
+                var errorCalled = false;
+                bufferedWatcher.Created += async (s, e) => await Task.Delay(10000).ConfigureAwait(false);
+                bufferedWatcher.Error += (s, e) => errorCalled = true;
+                bufferedWatcher.EnableRaisingEvents = true;
+                await Task.Delay(100).ConfigureAwait(false);
 
-                    var testFile1 = FsNotifyTest.GetTestFile(testDir);
-                    var testFile2 = FsNotifyTest.GetTestFile(testDir);
-                    var testFile3 = FsNotifyTest.GetTestFile(testDir);
+                var testFile1 = FsNotifyTest.GetTestFile(testDir);
+                var testFile2 = FsNotifyTest.GetTestFile(testDir);
+                var testFile3 = FsNotifyTest.GetTestFile(testDir);
 
-                    testFile1.Create().Dispose();
-                    testFile2.Create().Dispose();
-                    testFile3.Create().Dispose();
+                testFile1.Create().Dispose();
+                testFile2.Create().Dispose();
+                testFile3.Create().Dispose();
 
-                    await Task.Delay(10).ConfigureAwait(false);
-                    Assert.IsTrue(errorCalled);
-                }
+                await Task.Delay(10).ConfigureAwait(false);
+                Assert.IsTrue(errorCalled);
             }
             finally
             {

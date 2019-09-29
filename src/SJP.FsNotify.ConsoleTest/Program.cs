@@ -7,7 +7,7 @@ namespace SJP.FsNotify.ConsoleTest
     {
         private static int Main(string[] args)
         {
-            args = args ?? Array.Empty<string>();
+            args ??= Array.Empty<string>();
             if (args.Length == 0)
             {
                 Console.Error.WriteLine("A path to a directory to watch must be provided.");

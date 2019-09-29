@@ -434,6 +434,9 @@ namespace SJP.FsNotify
         /// <exception cref="ArgumentOutOfRangeException">A <see cref="FileSystemEvent"/> that is not known to <see cref="EnhancedFileSystemWatcher"/> has been provided to the event buffer.</exception>
         protected void RaiseBufferedFileSystemEvents()
         {
+            if (_buffer == null || _cts == null)
+                return;
+
             Task.Run(() =>
             {
                 foreach (var fsEvent in _buffer.GetConsumingEnumerable(_cts.Token))
@@ -450,7 +453,8 @@ namespace SJP.FsNotify
                             _onDeleted?.Invoke(this, fsEvent.EventArgs);
                             break;
                         case FileSystemEvent.Rename:
-                            _onRenamed?.Invoke(this, fsEvent.EventArgs as RenamedEventArgs);
+                            if (fsEvent.EventArgs is RenamedEventArgs renamedArgs)
+                                _onRenamed?.Invoke(this, renamedArgs);
                             break;
                         case FileSystemEvent.AttributeChange:
                         case FileSystemEvent.CreationTimeChange:
@@ -501,6 +505,9 @@ namespace SJP.FsNotify
             if (e == null)
                 throw new ArgumentNullException(nameof(e));
 
+            if (_buffer == null)
+                return;
+
             var args = new EnhancedFileSystemEventArgs(FileSystemEvent.Create, e);
             if (!_buffer.TryAdd(args))
                 OnBufferExceeded();
@@ -515,6 +522,9 @@ namespace SJP.FsNotify
         {
             if (e == null)
                 throw new ArgumentNullException(nameof(e));
+
+            if (_buffer == null)
+                return;
 
             var args = new EnhancedFileSystemEventArgs(FileSystemEvent.Change, e);
             if (!_buffer.TryAdd(args))
@@ -531,6 +541,9 @@ namespace SJP.FsNotify
             if (e == null)
                 throw new ArgumentNullException(nameof(e));
 
+            if (_buffer == null)
+                return;
+
             var args = new EnhancedFileSystemEventArgs(FileSystemEvent.Delete, e);
             if (!_buffer.TryAdd(args))
                 OnBufferExceeded();
@@ -545,6 +558,9 @@ namespace SJP.FsNotify
         {
             if (e == null)
                 throw new ArgumentNullException(nameof(e));
+
+            if (_buffer == null)
+                return;
 
             var args = new EnhancedFileSystemEventArgs(FileSystemEvent.Rename, e);
             if (!_buffer.TryAdd(args))
@@ -561,6 +577,9 @@ namespace SJP.FsNotify
             if (e == null)
                 throw new ArgumentNullException(nameof(e));
 
+            if (_buffer == null)
+                return;
+
             var args = new EnhancedFileSystemEventArgs(FileSystemEvent.AttributeChange, e);
             if (!_buffer.TryAdd(args))
                 OnBufferExceeded();
@@ -575,6 +594,9 @@ namespace SJP.FsNotify
         {
             if (e == null)
                 throw new ArgumentNullException(nameof(e));
+
+            if (_buffer == null)
+                return;
 
             var args = new EnhancedFileSystemEventArgs(FileSystemEvent.CreationTimeChange, e);
             if (!_buffer.TryAdd(args))
@@ -591,6 +613,9 @@ namespace SJP.FsNotify
             if (e == null)
                 throw new ArgumentNullException(nameof(e));
 
+            if (_buffer == null)
+                return;
+
             var args = new EnhancedFileSystemEventArgs(FileSystemEvent.LastAccessChange, e);
             if (!_buffer.TryAdd(args))
                 OnBufferExceeded();
@@ -605,6 +630,9 @@ namespace SJP.FsNotify
         {
             if (e == null)
                 throw new ArgumentNullException(nameof(e));
+
+            if (_buffer == null)
+                return;
 
             var args = new EnhancedFileSystemEventArgs(FileSystemEvent.LastWriteChange, e);
             if (!_buffer.TryAdd(args))
@@ -621,6 +649,9 @@ namespace SJP.FsNotify
             if (e == null)
                 throw new ArgumentNullException(nameof(e));
 
+            if (_buffer == null)
+                return;
+
             var args = new EnhancedFileSystemEventArgs(FileSystemEvent.SecurityChange, e);
             if (!_buffer.TryAdd(args))
                 OnBufferExceeded();
@@ -635,6 +666,9 @@ namespace SJP.FsNotify
         {
             if (e == null)
                 throw new ArgumentNullException(nameof(e));
+
+            if (_buffer == null)
+                return;
 
             var args = new EnhancedFileSystemEventArgs(FileSystemEvent.SizeChange, e);
             if (!_buffer.TryAdd(args))
@@ -699,7 +733,7 @@ namespace SJP.FsNotify
         /// <returns>An <see cref="EventHandler{FileSystemEventArgs}"/> instance.</returns>
         /// <exception cref="ArgumentException"><paramref name="filter"/> is an invalid enum.</exception>
         /// <exception cref="ArgumentOutOfRangeException">The value of <paramref name="filter"/> is not known to <see cref="GetNotifyHandler(NotifyFilters)"/>.</exception>
-        protected EventHandler<FileSystemEventArgs> GetNotifyHandler(NotifyFilters filter)
+        protected EventHandler<FileSystemEventArgs>? GetNotifyHandler(NotifyFilters filter)
         {
             if (!filter.IsValid())
                 throw new ArgumentException($"The { nameof(NotifyFilters) } provided must be a valid enum.", nameof(filter));
@@ -731,6 +765,9 @@ namespace SJP.FsNotify
         /// </summary>
         protected virtual void OnBufferExceeded()
         {
+            if (_buffer == null)
+                return;
+
             var ex = new BufferExhaustedException($"File system event queue buffer exhausted. { _buffer.BoundedCapacity } events exceeded.", _buffer.BoundedCapacity);
             _onError?.Invoke(this, new ErrorEventArgs(ex));
         }
@@ -748,6 +785,7 @@ namespace SJP.FsNotify
                 return;
 
             _cts?.Dispose();
+            _buffer?.Dispose();
             _watcher.Dispose();
             foreach (var changeWatcher in _changeWatchers.Values)
                 changeWatcher.Dispose();
@@ -769,23 +807,23 @@ namespace SJP.FsNotify
         }
 
         private bool _disposed;
-        private CancellationTokenSource _cts;
+        private CancellationTokenSource? _cts;
 
-        private EventHandler<FileSystemEventArgs> _onCreated;
-        private EventHandler<FileSystemEventArgs> _onChanged;
-        private EventHandler<FileSystemEventArgs> _onDeleted;
-        private EventHandler<RenamedEventArgs> _onRenamed;
-        private EventHandler<ErrorEventArgs> _onError;
+        private EventHandler<FileSystemEventArgs>? _onCreated;
+        private EventHandler<FileSystemEventArgs>? _onChanged;
+        private EventHandler<FileSystemEventArgs>? _onDeleted;
+        private EventHandler<RenamedEventArgs>? _onRenamed;
+        private EventHandler<ErrorEventArgs>? _onError;
 
-        private EventHandler<FileSystemEventArgs> _onAttributeChanged;
-        private EventHandler<FileSystemEventArgs> _onCreationTimeChanged;
-        private EventHandler<FileSystemEventArgs> _onLastAccessChanged;
-        private EventHandler<FileSystemEventArgs> _onLastWriteChanged;
-        private EventHandler<FileSystemEventArgs> _onSecurityChanged;
-        private EventHandler<FileSystemEventArgs> _onSizeChanged;
+        private EventHandler<FileSystemEventArgs>? _onAttributeChanged;
+        private EventHandler<FileSystemEventArgs>? _onCreationTimeChanged;
+        private EventHandler<FileSystemEventArgs>? _onLastAccessChanged;
+        private EventHandler<FileSystemEventArgs>? _onLastWriteChanged;
+        private EventHandler<FileSystemEventArgs>? _onSecurityChanged;
+        private EventHandler<FileSystemEventArgs>? _onSizeChanged;
 
         private readonly IFileSystemWatcher _watcher;
-        private readonly BlockingCollection<EnhancedFileSystemEventArgs> _buffer;
+        private readonly BlockingCollection<EnhancedFileSystemEventArgs>? _buffer;
         private readonly IDictionary<NotifyFilters, IFileSystemWatcher> _changeWatchers = new Dictionary<NotifyFilters, IFileSystemWatcher>();
 
         private readonly static IEnumerable<NotifyFilters> _ignoredNotifyFilterFlags = new[] { NotifyFilters.DirectoryName, NotifyFilters.FileName };

@@ -60,19 +60,17 @@ namespace SJP.FsNotify.Tests
             {
                 testDir.Create();
                 var watcher = new FileSystemWatcher(testDir.FullName);
-                using (var obsWatcher = new EnhancedObservableFileSystemWatcher(watcher))
-                {
-                    var createdCalled = false;
-                    obsWatcher.Created.Subscribe(_ => createdCalled = true);
-                    obsWatcher.Start();
-                    await Task.Delay(100).ConfigureAwait(false);
+                using var obsWatcher = new EnhancedObservableFileSystemWatcher(watcher);
+                var createdCalled = false;
+                obsWatcher.Created.Subscribe(_ => createdCalled = true);
+                obsWatcher.Start();
+                await Task.Delay(100).ConfigureAwait(false);
 
-                    var testFile = FsNotifyTest.GetTestFile(testDir);
-                    testFile.Create().Dispose();
+                var testFile = FsNotifyTest.GetTestFile(testDir);
+                testFile.Create().Dispose();
 
-                    await Task.Delay(100).ConfigureAwait(false);
-                    Assert.IsTrue(createdCalled);
-                }
+                await Task.Delay(100).ConfigureAwait(false);
+                Assert.IsTrue(createdCalled);
             }
             finally
             {
@@ -89,24 +87,22 @@ namespace SJP.FsNotify.Tests
             {
                 testDir.Create();
                 var watcher = new FileSystemWatcher(testDir.FullName);
-                using (var obsWatcher = new EnhancedObservableFileSystemWatcher(watcher))
-                {
-                    var changedCalled = false;
-                    obsWatcher.Changed.Subscribe(_ => changedCalled = true);
-                    obsWatcher.Start();
-                    await Task.Delay(100).ConfigureAwait(false);
+                using var obsWatcher = new EnhancedObservableFileSystemWatcher(watcher);
+                var changedCalled = false;
+                obsWatcher.Changed.Subscribe(_ => changedCalled = true);
+                obsWatcher.Start();
+                await Task.Delay(100).ConfigureAwait(false);
 
-                    var testFile = FsNotifyTest.GetTestFile(testDir);
-                    testFile.Create().Dispose();
+                var testFile = FsNotifyTest.GetTestFile(testDir);
+                testFile.Create().Dispose();
 
-                    using (var writer = testFile.AppendText())
-                        await writer.WriteLineAsync("trigger change").ConfigureAwait(false);
-                    testFile.LastWriteTime = new DateTime(2016, 1, 1);
-                    testFile.Refresh();
+                using (var writer = testFile.AppendText())
+                    await writer.WriteLineAsync("trigger change").ConfigureAwait(false);
+                testFile.LastWriteTime = new DateTime(2016, 1, 1);
+                testFile.Refresh();
 
-                    await Task.Delay(100).ConfigureAwait(false);
-                    Assert.IsTrue(changedCalled);
-                }
+                await Task.Delay(100).ConfigureAwait(false);
+                Assert.IsTrue(changedCalled);
             }
             finally
             {
@@ -123,21 +119,19 @@ namespace SJP.FsNotify.Tests
             {
                 testDir.Create();
                 var watcher = new FileSystemWatcher(testDir.FullName);
-                using (var obsWatcher = new EnhancedObservableFileSystemWatcher(watcher))
-                {
-                    var renamedCalled = false;
-                    obsWatcher.Renamed.Subscribe(_ => renamedCalled = true);
-                    obsWatcher.Start();
-                    await Task.Delay(100).ConfigureAwait(false);
+                using var obsWatcher = new EnhancedObservableFileSystemWatcher(watcher);
+                var renamedCalled = false;
+                obsWatcher.Renamed.Subscribe(_ => renamedCalled = true);
+                obsWatcher.Start();
+                await Task.Delay(100).ConfigureAwait(false);
 
-                    var testFile = FsNotifyTest.GetTestFile(testDir);
-                    var testFile2 = FsNotifyTest.GetTestFile(testDir);
-                    testFile.Create().Dispose();
-                    File.Move(testFile.FullName, testFile2.FullName);
+                var testFile = FsNotifyTest.GetTestFile(testDir);
+                var testFile2 = FsNotifyTest.GetTestFile(testDir);
+                testFile.Create().Dispose();
+                File.Move(testFile.FullName, testFile2.FullName);
 
-                    await Task.Delay(100).ConfigureAwait(false);
-                    Assert.IsTrue(renamedCalled);
-                }
+                await Task.Delay(100).ConfigureAwait(false);
+                Assert.IsTrue(renamedCalled);
             }
             finally
             {
@@ -154,20 +148,18 @@ namespace SJP.FsNotify.Tests
             {
                 testDir.Create();
                 var watcher = new FileSystemWatcher(testDir.FullName);
-                using (var obsWatcher = new EnhancedObservableFileSystemWatcher(watcher))
-                {
-                    var deletedCalled = false;
-                    obsWatcher.Deleted.Subscribe(_ => deletedCalled = true);
-                    obsWatcher.Start();
-                    await Task.Delay(100).ConfigureAwait(false);
+                using var obsWatcher = new EnhancedObservableFileSystemWatcher(watcher);
+                var deletedCalled = false;
+                obsWatcher.Deleted.Subscribe(_ => deletedCalled = true);
+                obsWatcher.Start();
+                await Task.Delay(100).ConfigureAwait(false);
 
-                    var testFile = FsNotifyTest.GetTestFile(testDir);
-                    testFile.Create().Dispose();
-                    testFile.Delete();
+                var testFile = FsNotifyTest.GetTestFile(testDir);
+                testFile.Create().Dispose();
+                testFile.Delete();
 
-                    await Task.Delay(100).ConfigureAwait(false);
-                    Assert.IsTrue(deletedCalled);
-                }
+                await Task.Delay(100).ConfigureAwait(false);
+                Assert.IsTrue(deletedCalled);
             }
             finally
             {

@@ -5,7 +5,7 @@
         <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
         <TreatSpecificWarningsAsErrors />
         <Copyright>Copyright © Simon Potter 2019</Copyright>
-		<Authors>Simon Potter</Authors>
+        <Authors>Simon Potter</Authors>
         <Company />
         <Product />
     </PropertyGroup>

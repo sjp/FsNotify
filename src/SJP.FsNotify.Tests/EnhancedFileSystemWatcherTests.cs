@@ -97,14 +97,12 @@ namespace SJP.FsNotify.Tests
             var testDir = FsNotifyTest.GetTestDirectory();
 
             var watcher = new FileSystemWatcher(testDir.FullName);
-            using (var enhancedWatcher = new EnhancedFileSystemWatcher(watcher))
+            using var enhancedWatcher = new EnhancedFileSystemWatcher(watcher);
+            Assert.Multiple(() =>
             {
-                Assert.Multiple(() =>
-                {
-                    Assert.AreEqual(testDir.FullName, enhancedWatcher.Path);
-                    Assert.AreEqual(testDir.FullName, watcher.Path);
-                });
-            }
+                Assert.AreEqual(testDir.FullName, enhancedWatcher.Path);
+                Assert.AreEqual(testDir.FullName, watcher.Path);
+            });
         }
 
         [Test]
@@ -114,16 +112,13 @@ namespace SJP.FsNotify.Tests
             var testDir2 = FsNotifyTest.GetTestDirectory();
 
             var watcher = new FileSystemWatcher(testDir.FullName);
-            using (var enhancedWatcher = new EnhancedFileSystemWatcher(watcher))
-            {
-                enhancedWatcher.Path = testDir2.FullName;
+            using var enhancedWatcher = new EnhancedFileSystemWatcher(watcher) { Path = testDir2.FullName };
 
-                Assert.Multiple(() =>
-                {
-                    Assert.AreEqual(testDir2.FullName, enhancedWatcher.Path);
-                    Assert.AreEqual(testDir2.FullName, watcher.Path);
-                });
-            }
+            Assert.Multiple(() =>
+            {
+                Assert.AreEqual(testDir2.FullName, enhancedWatcher.Path);
+                Assert.AreEqual(testDir2.FullName, watcher.Path);
+            });
         }
 
         [Test]
@@ -133,14 +128,12 @@ namespace SJP.FsNotify.Tests
             try
             {
                 var watcher = new FileSystemWatcher(testDir.FullName) { IncludeSubdirectories = true };
-                using (var enhancedWatcher = new EnhancedFileSystemWatcher(watcher))
+                using var enhancedWatcher = new EnhancedFileSystemWatcher(watcher);
+                Assert.Multiple(() =>
                 {
-                    Assert.Multiple(() =>
-                    {
-                        Assert.IsTrue(watcher.IncludeSubdirectories);
-                        Assert.IsTrue(enhancedWatcher.IncludeSubdirectories);
-                    });
-                }
+                    Assert.IsTrue(watcher.IncludeSubdirectories);
+                    Assert.IsTrue(enhancedWatcher.IncludeSubdirectories);
+                });
             }
             finally
             {
@@ -156,16 +149,13 @@ namespace SJP.FsNotify.Tests
             try
             {
                 var watcher = new FileSystemWatcher(testDir.FullName);
-                using (var enhancedWatcher = new EnhancedFileSystemWatcher(watcher))
-                {
-                    enhancedWatcher.IncludeSubdirectories = true;
+                using var enhancedWatcher = new EnhancedFileSystemWatcher(watcher) { IncludeSubdirectories = true };
 
-                    Assert.Multiple(() =>
-                    {
-                        Assert.IsTrue(watcher.IncludeSubdirectories);
-                        Assert.IsTrue(enhancedWatcher.IncludeSubdirectories);
-                    });
-                }
+                Assert.Multiple(() =>
+                {
+                    Assert.IsTrue(watcher.IncludeSubdirectories);
+                    Assert.IsTrue(enhancedWatcher.IncludeSubdirectories);
+                });
             }
             finally
             {
@@ -182,14 +172,12 @@ namespace SJP.FsNotify.Tests
             {
                 const string filter = "*.exe";
                 var watcher = new FileSystemWatcher(testDir.FullName) { Filter = filter };
-                using (var enhancedWatcher = new EnhancedFileSystemWatcher(watcher))
+                using var enhancedWatcher = new EnhancedFileSystemWatcher(watcher);
+                Assert.Multiple(() =>
                 {
-                    Assert.Multiple(() =>
-                    {
-                        Assert.AreEqual(filter, watcher.Filter);
-                        Assert.AreEqual(filter, enhancedWatcher.Filter);
-                    });
-                }
+                    Assert.AreEqual(filter, watcher.Filter);
+                    Assert.AreEqual(filter, enhancedWatcher.Filter);
+                });
             }
             finally
             {
@@ -206,16 +194,13 @@ namespace SJP.FsNotify.Tests
             {
                 const string filter = "*.exe";
                 var watcher = new FileSystemWatcher(testDir.FullName);
-                using (var enhancedWatcher = new EnhancedFileSystemWatcher(watcher))
-                {
-                    enhancedWatcher.Filter = filter;
+                using var enhancedWatcher = new EnhancedFileSystemWatcher(watcher) { Filter = filter };
 
-                    Assert.Multiple(() =>
-                    {
-                        Assert.AreEqual(filter, watcher.Filter);
-                        Assert.AreEqual(filter, enhancedWatcher.Filter);
-                    });
-                }
+                Assert.Multiple(() =>
+                {
+                    Assert.AreEqual(filter, watcher.Filter);
+                    Assert.AreEqual(filter, enhancedWatcher.Filter);
+                });
             }
             finally
             {
@@ -232,16 +217,13 @@ namespace SJP.FsNotify.Tests
             {
                 const NotifyFilters filter = NotifyFilters.Security | NotifyFilters.Attributes;
                 var watcher = new FileSystemWatcher(testDir.FullName);
-                using (var enhancedWatcher = new EnhancedFileSystemWatcher(watcher))
-                {
-                    enhancedWatcher.NotifyFilter = filter;
+                using var enhancedWatcher = new EnhancedFileSystemWatcher(watcher) { NotifyFilter = filter };
 
-                    Assert.Multiple(() =>
-                    {
-                        Assert.AreEqual(filter, watcher.NotifyFilter);
-                        Assert.AreEqual(filter, enhancedWatcher.NotifyFilter);
-                    });
-                }
+                Assert.Multiple(() =>
+                {
+                    Assert.AreEqual(filter, watcher.NotifyFilter);
+                    Assert.AreEqual(filter, enhancedWatcher.NotifyFilter);
+                });
             }
             finally
             {
@@ -258,14 +240,12 @@ namespace SJP.FsNotify.Tests
             {
                 testDir.Create();
                 var watcher = new FileSystemWatcher(testDir.FullName) { EnableRaisingEvents = true };
-                using (var enhancedWatcher = new EnhancedFileSystemWatcher(watcher))
+                using var enhancedWatcher = new EnhancedFileSystemWatcher(watcher);
+                Assert.Multiple(() =>
                 {
-                    Assert.Multiple(() =>
-                    {
-                        Assert.IsTrue(watcher.EnableRaisingEvents);
-                        Assert.IsTrue(enhancedWatcher.EnableRaisingEvents);
-                    });
-                }
+                    Assert.IsTrue(watcher.EnableRaisingEvents);
+                    Assert.IsTrue(enhancedWatcher.EnableRaisingEvents);
+                });
             }
             finally
             {
@@ -282,16 +262,13 @@ namespace SJP.FsNotify.Tests
             {
                 testDir.Create();
                 var watcher = new FileSystemWatcher(testDir.FullName);
-                using (var enhancedWatcher = new EnhancedFileSystemWatcher(watcher))
-                {
-                    enhancedWatcher.EnableRaisingEvents = true;
+                using var enhancedWatcher = new EnhancedFileSystemWatcher(watcher) { EnableRaisingEvents = true };
 
-                    Assert.Multiple(() =>
-                    {
-                        Assert.IsTrue(watcher.EnableRaisingEvents);
-                        Assert.IsTrue(enhancedWatcher.EnableRaisingEvents);
-                    });
-                }
+                Assert.Multiple(() =>
+                {
+                    Assert.IsTrue(watcher.EnableRaisingEvents);
+                    Assert.IsTrue(enhancedWatcher.EnableRaisingEvents);
+                });
             }
             finally
             {
@@ -307,11 +284,9 @@ namespace SJP.FsNotify.Tests
             try
             {
                 var watcher = new FileSystemWatcher(testDir.FullName);
-                using (var enhancedWatcher = new EnhancedFileSystemWatcher(watcher))
-                {
-                    const NotifyFilters filter = (NotifyFilters)32908;
-                    Assert.Throws<ArgumentException>(() => enhancedWatcher.NotifyFilter = filter);
-                }
+                using var enhancedWatcher = new EnhancedFileSystemWatcher(watcher);
+                const NotifyFilters filter = (NotifyFilters)32908;
+                Assert.Throws<ArgumentException>(() => enhancedWatcher.NotifyFilter = filter);
             }
             finally
             {
@@ -327,11 +302,9 @@ namespace SJP.FsNotify.Tests
             try
             {
                 var watcher = new FileSystemWatcher(testDir.FullName);
-                using (var enhancedWatcher = new EnhancedFileSystemWatcher(watcher))
-                {
-                    const WatcherChangeTypes changeType = (WatcherChangeTypes)32908;
-                    Assert.Throws<ArgumentException>(() => enhancedWatcher.WaitForChanged(changeType));
-                }
+                using var enhancedWatcher = new EnhancedFileSystemWatcher(watcher);
+                const WatcherChangeTypes changeType = (WatcherChangeTypes)32908;
+                Assert.Throws<ArgumentException>(() => enhancedWatcher.WaitForChanged(changeType));
             }
             finally
             {
@@ -347,11 +320,9 @@ namespace SJP.FsNotify.Tests
             try
             {
                 var watcher = new FileSystemWatcher(testDir.FullName);
-                using (var enhancedWatcher = new EnhancedFileSystemWatcher(watcher))
-                {
-                    const WatcherChangeTypes changeType = (WatcherChangeTypes)32908;
-                    Assert.Throws<ArgumentException>(() => enhancedWatcher.WaitForChanged(changeType, 123));
-                }
+                using var enhancedWatcher = new EnhancedFileSystemWatcher(watcher);
+                const WatcherChangeTypes changeType = (WatcherChangeTypes)32908;
+                Assert.Throws<ArgumentException>(() => enhancedWatcher.WaitForChanged(changeType, 123));
             }
             finally
             {
@@ -368,18 +339,16 @@ namespace SJP.FsNotify.Tests
             {
                 testDir.Create();
                 var watcher = new FileSystemWatcher(testDir.FullName);
-                using (var enhancedWatcher = new FakeEnhancedFileSystemWatcher(watcher))
-                {
-                    enhancedWatcher.Created += (s, e) => { };
-                    enhancedWatcher.EnableRaisingEvents = true;
-                    await Task.Delay(100).ConfigureAwait(false);
+                using var enhancedWatcher = new FakeEnhancedFileSystemWatcher(watcher);
+                enhancedWatcher.Created += (s, e) => { };
+                enhancedWatcher.EnableRaisingEvents = true;
+                await Task.Delay(100).ConfigureAwait(false);
 
-                    var testFile = FsNotifyTest.GetTestFile(testDir);
-                    testFile.Create().Dispose();
+                var testFile = FsNotifyTest.GetTestFile(testDir);
+                testFile.Create().Dispose();
 
-                    await Task.Delay(10).ConfigureAwait(false);
-                    Assert.IsTrue(enhancedWatcher.OnCreatedCalled);
-                }
+                await Task.Delay(10).ConfigureAwait(false);
+                Assert.IsTrue(enhancedWatcher.OnCreatedCalled);
             }
             finally
             {
@@ -396,22 +365,20 @@ namespace SJP.FsNotify.Tests
             {
                 testDir.Create();
                 var watcher = new FileSystemWatcher(testDir.FullName);
-                using (var enhancedWatcher = new FakeEnhancedFileSystemWatcher(watcher))
-                {
-                    enhancedWatcher.Changed += (s, e) => { };
-                    enhancedWatcher.EnableRaisingEvents = true;
-                    await Task.Delay(100).ConfigureAwait(false);
+                using var enhancedWatcher = new FakeEnhancedFileSystemWatcher(watcher);
+                enhancedWatcher.Changed += (s, e) => { };
+                enhancedWatcher.EnableRaisingEvents = true;
+                await Task.Delay(100).ConfigureAwait(false);
 
-                    var testFile = FsNotifyTest.GetTestFile(testDir);
-                    testFile.Create().Dispose();
+                var testFile = FsNotifyTest.GetTestFile(testDir);
+                testFile.Create().Dispose();
 
-                    using (var writer = testFile.AppendText())
-                        await writer.WriteLineAsync("trigger change").ConfigureAwait(false);
-                    testFile.LastWriteTime = new DateTime(2016, 1, 1);
+                using (var writer = testFile.AppendText())
+                    await writer.WriteLineAsync("trigger change").ConfigureAwait(false);
+                testFile.LastWriteTime = new DateTime(2016, 1, 1);
 
-                    await Task.Delay(10).ConfigureAwait(false);
-                    Assert.IsTrue(enhancedWatcher.OnChangedCalled);
-                }
+                await Task.Delay(10).ConfigureAwait(false);
+                Assert.IsTrue(enhancedWatcher.OnChangedCalled);
             }
             finally
             {
@@ -428,20 +395,18 @@ namespace SJP.FsNotify.Tests
             {
                 testDir.Create();
                 var watcher = new FileSystemWatcher(testDir.FullName);
-                using (var enhancedWatcher = new FakeEnhancedFileSystemWatcher(watcher))
-                {
-                    enhancedWatcher.Renamed += (s, e) => { };
-                    enhancedWatcher.EnableRaisingEvents = true;
-                    await Task.Delay(100).ConfigureAwait(false);
+                using var enhancedWatcher = new FakeEnhancedFileSystemWatcher(watcher);
+                enhancedWatcher.Renamed += (s, e) => { };
+                enhancedWatcher.EnableRaisingEvents = true;
+                await Task.Delay(100).ConfigureAwait(false);
 
-                    var testFile = FsNotifyTest.GetTestFile(testDir);
-                    var testFile2 = FsNotifyTest.GetTestFile(testDir);
-                    testFile.Create().Dispose();
-                    File.Move(testFile.FullName, testFile2.FullName);
+                var testFile = FsNotifyTest.GetTestFile(testDir);
+                var testFile2 = FsNotifyTest.GetTestFile(testDir);
+                testFile.Create().Dispose();
+                File.Move(testFile.FullName, testFile2.FullName);
 
-                    await Task.Delay(10).ConfigureAwait(false);
-                    Assert.IsTrue(enhancedWatcher.OnRenamedCalled);
-                }
+                await Task.Delay(10).ConfigureAwait(false);
+                Assert.IsTrue(enhancedWatcher.OnRenamedCalled);
             }
             finally
             {
@@ -458,19 +423,17 @@ namespace SJP.FsNotify.Tests
             {
                 testDir.Create();
                 var watcher = new FileSystemWatcher(testDir.FullName);
-                using (var enhancedWatcher = new FakeEnhancedFileSystemWatcher(watcher))
-                {
-                    enhancedWatcher.Deleted += (s, e) => { };
-                    enhancedWatcher.EnableRaisingEvents = true;
-                    await Task.Delay(100).ConfigureAwait(false);
+                using var enhancedWatcher = new FakeEnhancedFileSystemWatcher(watcher);
+                enhancedWatcher.Deleted += (s, e) => { };
+                enhancedWatcher.EnableRaisingEvents = true;
+                await Task.Delay(100).ConfigureAwait(false);
 
-                    var testFile = FsNotifyTest.GetTestFile(testDir);
-                    testFile.Create().Dispose();
-                    testFile.Delete();
+                var testFile = FsNotifyTest.GetTestFile(testDir);
+                testFile.Create().Dispose();
+                testFile.Delete();
 
-                    await Task.Delay(10).ConfigureAwait(false);
-                    Assert.IsTrue(enhancedWatcher.OnDeletedCalled);
-                }
+                await Task.Delay(10).ConfigureAwait(false);
+                Assert.IsTrue(enhancedWatcher.OnDeletedCalled);
             }
             finally
             {
@@ -487,24 +450,22 @@ namespace SJP.FsNotify.Tests
             {
                 testDir.Create();
                 var watcher = new FileSystemWatcher(testDir.FullName);
-                using (var enhancedWatcher = new ErrorHandlingEnhancedFileSystemWatcher(watcher, 1))
-                {
-                    enhancedWatcher.Created += async (s, e) => await Task.Delay(100).ConfigureAwait(false);
-                    enhancedWatcher.Error += (s, e) => { };
-                    enhancedWatcher.EnableRaisingEvents = true;
-                    await Task.Delay(100).ConfigureAwait(false);
+                using var enhancedWatcher = new ErrorHandlingEnhancedFileSystemWatcher(watcher, 1);
+                enhancedWatcher.Created += async (s, e) => await Task.Delay(100).ConfigureAwait(false);
+                enhancedWatcher.Error += (s, e) => { };
+                enhancedWatcher.EnableRaisingEvents = true;
+                await Task.Delay(100).ConfigureAwait(false);
 
-                    var testFile1 = FsNotifyTest.GetTestFile(testDir);
-                    var testFile2 = FsNotifyTest.GetTestFile(testDir);
-                    var testFile3 = FsNotifyTest.GetTestFile(testDir);
+                var testFile1 = FsNotifyTest.GetTestFile(testDir);
+                var testFile2 = FsNotifyTest.GetTestFile(testDir);
+                var testFile3 = FsNotifyTest.GetTestFile(testDir);
 
-                    testFile1.Create().Dispose();
-                    testFile2.Create().Dispose();
-                    testFile3.Create().Dispose();
+                testFile1.Create().Dispose();
+                testFile2.Create().Dispose();
+                testFile3.Create().Dispose();
 
-                    await Task.Delay(1000).ConfigureAwait(false);
-                    Assert.IsTrue(enhancedWatcher.OnErrorCalled);
-                }
+                await Task.Delay(1000).ConfigureAwait(false);
+                Assert.IsTrue(enhancedWatcher.OnErrorCalled);
             }
             finally
             {
@@ -521,23 +482,21 @@ namespace SJP.FsNotify.Tests
             {
                 testDir.Create();
                 var watcher = new FileSystemWatcher(testDir.FullName);
-                using (var enhancedWatcher = new ErrorHandlingEnhancedFileSystemWatcher(watcher, 1))
-                {
-                    enhancedWatcher.Created += async (s, e) => await Task.Delay(100).ConfigureAwait(false);
-                    enhancedWatcher.EnableRaisingEvents = true;
-                    await Task.Delay(100).ConfigureAwait(false);
+                using var enhancedWatcher = new ErrorHandlingEnhancedFileSystemWatcher(watcher, 1);
+                enhancedWatcher.Created += async (s, e) => await Task.Delay(100).ConfigureAwait(false);
+                enhancedWatcher.EnableRaisingEvents = true;
+                await Task.Delay(100).ConfigureAwait(false);
 
-                    var testFile1 = FsNotifyTest.GetTestFile(testDir);
-                    var testFile2 = FsNotifyTest.GetTestFile(testDir);
-                    var testFile3 = FsNotifyTest.GetTestFile(testDir);
+                var testFile1 = FsNotifyTest.GetTestFile(testDir);
+                var testFile2 = FsNotifyTest.GetTestFile(testDir);
+                var testFile3 = FsNotifyTest.GetTestFile(testDir);
 
-                    testFile1.Create().Dispose();
-                    testFile2.Create().Dispose();
-                    testFile3.Create().Dispose();
+                testFile1.Create().Dispose();
+                testFile2.Create().Dispose();
+                testFile3.Create().Dispose();
 
-                    await Task.Delay(1000).ConfigureAwait(false);
-                    Assert.IsTrue(enhancedWatcher.OnBufferExceededCalled);
-                }
+                await Task.Delay(1000).ConfigureAwait(false);
+                Assert.IsTrue(enhancedWatcher.OnBufferExceededCalled);
             }
             finally
             {
@@ -554,19 +513,17 @@ namespace SJP.FsNotify.Tests
             {
                 testDir.Create();
                 var watcher = new FileSystemWatcher(testDir.FullName);
-                using (var enhancedWatcher = new EnhancedFileSystemWatcher(watcher))
-                {
-                    var createdCalled = false;
-                    enhancedWatcher.Created += (s, e) => createdCalled = true;
-                    enhancedWatcher.EnableRaisingEvents = true;
+                using var enhancedWatcher = new EnhancedFileSystemWatcher(watcher);
+                var createdCalled = false;
+                enhancedWatcher.Created += (s, e) => createdCalled = true;
+                enhancedWatcher.EnableRaisingEvents = true;
 
-                    await Task.Delay(100).ConfigureAwait(false);
-                    var testFile = FsNotifyTest.GetTestFile(testDir);
-                    testFile.Create().Dispose();
+                await Task.Delay(100).ConfigureAwait(false);
+                var testFile = FsNotifyTest.GetTestFile(testDir);
+                testFile.Create().Dispose();
 
-                    await Task.Delay(100).ConfigureAwait(false);
-                    Assert.IsTrue(createdCalled);
-                }
+                await Task.Delay(100).ConfigureAwait(false);
+                Assert.IsTrue(createdCalled);
             }
             finally
             {
@@ -583,24 +540,22 @@ namespace SJP.FsNotify.Tests
             {
                 testDir.Create();
                 var watcher = new FileSystemWatcher(testDir.FullName);
-                using (var enhancedWatcher = new EnhancedFileSystemWatcher(watcher))
-                {
-                    var changedCalled = false;
-                    enhancedWatcher.Changed += (s, e) => changedCalled = true;
-                    enhancedWatcher.EnableRaisingEvents = true;
+                using var enhancedWatcher = new EnhancedFileSystemWatcher(watcher);
+                var changedCalled = false;
+                enhancedWatcher.Changed += (s, e) => changedCalled = true;
+                enhancedWatcher.EnableRaisingEvents = true;
 
-                    await Task.Delay(100).ConfigureAwait(false);
-                    var testFile = FsNotifyTest.GetTestFile(testDir);
-                    testFile.Create().Dispose();
+                await Task.Delay(100).ConfigureAwait(false);
+                var testFile = FsNotifyTest.GetTestFile(testDir);
+                testFile.Create().Dispose();
 
-                    using (var writer = testFile.AppendText())
-                        await writer.WriteLineAsync("trigger change").ConfigureAwait(false);
-                    testFile.LastWriteTime = new DateTime(2016, 1, 1);
-                    testFile.Refresh();
+                using (var writer = testFile.AppendText())
+                    await writer.WriteLineAsync("trigger change").ConfigureAwait(false);
+                testFile.LastWriteTime = new DateTime(2016, 1, 1);
+                testFile.Refresh();
 
-                    await Task.Delay(100).ConfigureAwait(false);
-                    Assert.IsTrue(changedCalled);
-                }
+                await Task.Delay(100).ConfigureAwait(false);
+                Assert.IsTrue(changedCalled);
             }
             finally
             {
@@ -617,22 +572,20 @@ namespace SJP.FsNotify.Tests
             {
                 testDir.Create();
                 var watcher = new FileSystemWatcher(testDir.FullName);
-                using (var enhancedWatcher = new EnhancedFileSystemWatcher(watcher))
-                {
-                    var renamedCalled = false;
-                    enhancedWatcher.Renamed += (s, e) => renamedCalled = true;
-                    enhancedWatcher.EnableRaisingEvents = true;
+                using var enhancedWatcher = new EnhancedFileSystemWatcher(watcher);
+                var renamedCalled = false;
+                enhancedWatcher.Renamed += (s, e) => renamedCalled = true;
+                enhancedWatcher.EnableRaisingEvents = true;
 
-                    await Task.Delay(100).ConfigureAwait(false);
-                    var testFile = FsNotifyTest.GetTestFile(testDir);
-                    var testFile2 = FsNotifyTest.GetTestFile(testDir);
-                    testFile.Create().Dispose();
-                    await Task.Delay(10).ConfigureAwait(false);
-                    File.Move(testFile.FullName, testFile2.FullName);
+                await Task.Delay(100).ConfigureAwait(false);
+                var testFile = FsNotifyTest.GetTestFile(testDir);
+                var testFile2 = FsNotifyTest.GetTestFile(testDir);
+                testFile.Create().Dispose();
+                await Task.Delay(10).ConfigureAwait(false);
+                File.Move(testFile.FullName, testFile2.FullName);
 
-                    await Task.Delay(100).ConfigureAwait(false);
-                    Assert.IsTrue(renamedCalled);
-                }
+                await Task.Delay(100).ConfigureAwait(false);
+                Assert.IsTrue(renamedCalled);
             }
             finally
             {
@@ -649,20 +602,18 @@ namespace SJP.FsNotify.Tests
             {
                 testDir.Create();
                 var watcher = new FileSystemWatcher(testDir.FullName);
-                using (var enhancedWatcher = new EnhancedFileSystemWatcher(watcher))
-                {
-                    var deletedCalled = false;
-                    enhancedWatcher.Deleted += (s, e) => deletedCalled = true;
-                    enhancedWatcher.EnableRaisingEvents = true;
+                using var enhancedWatcher = new EnhancedFileSystemWatcher(watcher);
+                var deletedCalled = false;
+                enhancedWatcher.Deleted += (s, e) => deletedCalled = true;
+                enhancedWatcher.EnableRaisingEvents = true;
 
-                    await Task.Delay(100).ConfigureAwait(false);
-                    var testFile = FsNotifyTest.GetTestFile(testDir);
-                    testFile.Create().Dispose();
-                    testFile.Delete();
+                await Task.Delay(100).ConfigureAwait(false);
+                var testFile = FsNotifyTest.GetTestFile(testDir);
+                testFile.Create().Dispose();
+                testFile.Delete();
 
-                    await Task.Delay(100).ConfigureAwait(false);
-                    Assert.IsTrue(deletedCalled);
-                }
+                await Task.Delay(100).ConfigureAwait(false);
+                Assert.IsTrue(deletedCalled);
             }
             finally
             {
@@ -679,30 +630,28 @@ namespace SJP.FsNotify.Tests
             {
                 testDir.Create();
                 var watcher = new FileSystemWatcher(testDir.FullName);
-                using (var enhancedWatcher = new EnhancedFileSystemWatcher(watcher, 1))
-                {
-                    var errorCalled = false;
-                    enhancedWatcher.Created += async (s, e) => await Task.Delay(10000).ConfigureAwait(false);
-                    enhancedWatcher.Error += (s, e) => errorCalled = true;
-                    enhancedWatcher.EnableRaisingEvents = true;
+                using var enhancedWatcher = new EnhancedFileSystemWatcher(watcher, 1);
+                var errorCalled = false;
+                enhancedWatcher.Created += async (s, e) => await Task.Delay(10000).ConfigureAwait(false);
+                enhancedWatcher.Error += (s, e) => errorCalled = true;
+                enhancedWatcher.EnableRaisingEvents = true;
 
-                    await Task.Delay(100).ConfigureAwait(false);
-                    var testFile1 = FsNotifyTest.GetTestFile(testDir);
-                    await Task.Delay(100).ConfigureAwait(false);
+                await Task.Delay(100).ConfigureAwait(false);
+                var testFile1 = FsNotifyTest.GetTestFile(testDir);
+                await Task.Delay(100).ConfigureAwait(false);
 
-                    var testFile2 = FsNotifyTest.GetTestFile(testDir);
-                    await Task.Delay(100).ConfigureAwait(false);
+                var testFile2 = FsNotifyTest.GetTestFile(testDir);
+                await Task.Delay(100).ConfigureAwait(false);
 
-                    var testFile3 = FsNotifyTest.GetTestFile(testDir);
-                    await Task.Delay(100).ConfigureAwait(false);
+                var testFile3 = FsNotifyTest.GetTestFile(testDir);
+                await Task.Delay(100).ConfigureAwait(false);
 
-                    testFile1.Create().Dispose();
-                    testFile2.Create().Dispose();
-                    testFile3.Create().Dispose();
+                testFile1.Create().Dispose();
+                testFile2.Create().Dispose();
+                testFile3.Create().Dispose();
 
-                    await Task.Delay(100).ConfigureAwait(false);
-                    Assert.IsTrue(errorCalled);
-                }
+                await Task.Delay(100).ConfigureAwait(false);
+                Assert.IsTrue(errorCalled);
             }
             finally
             {
@@ -719,21 +668,19 @@ namespace SJP.FsNotify.Tests
             {
                 testDir.Create();
                 var watcher = new FileSystemWatcher(testDir.FullName);
-                using (var enhancedWatcher = new FakeEnhancedFileSystemWatcher(watcher))
-                {
-                    enhancedWatcher.AttributeChanged += (s, e) => { };
-                    enhancedWatcher.EnableRaisingEvents = true;
-                    await Task.Delay(100).ConfigureAwait(false);
+                using var enhancedWatcher = new FakeEnhancedFileSystemWatcher(watcher);
+                enhancedWatcher.AttributeChanged += (s, e) => { };
+                enhancedWatcher.EnableRaisingEvents = true;
+                await Task.Delay(100).ConfigureAwait(false);
 
-                    var testFile = FsNotifyTest.GetTestFile(testDir);
-                    testFile.Create().Dispose();
-                    await Task.Delay(100).ConfigureAwait(false);
-                    testFile.Attributes = FileAttributes.Archive | FileAttributes.Hidden;
-                    testFile.Refresh();
+                var testFile = FsNotifyTest.GetTestFile(testDir);
+                testFile.Create().Dispose();
+                await Task.Delay(100).ConfigureAwait(false);
+                testFile.Attributes = FileAttributes.Archive | FileAttributes.Hidden;
+                testFile.Refresh();
 
-                    await Task.Delay(100).ConfigureAwait(false);
-                    Assert.IsTrue(enhancedWatcher.OnAttributeChangedCalled);
-                }
+                await Task.Delay(100).ConfigureAwait(false);
+                Assert.IsTrue(enhancedWatcher.OnAttributeChangedCalled);
             }
             finally
             {

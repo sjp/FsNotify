@@ -13,7 +13,7 @@ Avoid some of the pitfalls of [`FileSystemWatcher`](https://docs.microsoft.com/e
 
 ## Highlights
 
-* Supports .NET Standard 2.0.
+* Supports .NET Standard 2.1.
 * Avoids many of the pitfalls of `FileSystemWatcher`, in particular when it can exhaust its internal buffer.
 * Easy migration from `FileSystemWatcher`.
 * Handle more fine-grained events, such as an event which is only raised when a file attribute changes, and not just when *something* about a file has changed. See: `EnhancedFileSystemWatcher` and `EnhancedObservableFileSystemWatcher`.

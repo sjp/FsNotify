@@ -288,29 +288,33 @@ namespace SJP.FsNotify
         /// </summary>
         protected void RaiseBufferedFileSystemEvents()
         {
-            Task.Run(() =>
-            {
-                foreach (var fsEvent in _buffer.GetConsumingEnumerable(_cts.Token))
-                {
-                    switch (fsEvent.ChangeType)
-                    {
-                        case WatcherChangeTypes.Created:
-                            _onCreated?.Invoke(this, fsEvent);
-                            break;
-                        case WatcherChangeTypes.Changed:
-                            _onChanged?.Invoke(this, fsEvent);
-                            break;
-                        case WatcherChangeTypes.Deleted:
-                            _onDeleted?.Invoke(this, fsEvent);
-                            break;
-                        case WatcherChangeTypes.Renamed:
-                            _onRenamed?.Invoke(this, fsEvent as RenamedEventArgs);
-                            break;
-                        default:
-                            throw new NotSupportedException($"Unknown or unexpected value for { nameof(WatcherChangeTypes) }.");
-                    }
-                }
-            });
+            if (_buffer == null || _cts == null)
+                return;
+
+            _ = Task.Run(() =>
+              {
+                  foreach (var fsEvent in _buffer.GetConsumingEnumerable(_cts.Token))
+                  {
+                      switch (fsEvent.ChangeType)
+                      {
+                          case WatcherChangeTypes.Created:
+                              _onCreated?.Invoke(this, fsEvent);
+                              break;
+                          case WatcherChangeTypes.Changed:
+                              _onChanged?.Invoke(this, fsEvent);
+                              break;
+                          case WatcherChangeTypes.Deleted:
+                              _onDeleted?.Invoke(this, fsEvent);
+                              break;
+                          case WatcherChangeTypes.Renamed:
+                              if (fsEvent is RenamedEventArgs renamedArgs)
+                                  _onRenamed?.Invoke(this, renamedArgs);
+                              break;
+                          default:
+                              throw new NotSupportedException($"Unknown or unexpected value for { nameof(WatcherChangeTypes) }.");
+                      }
+                  }
+              });
         }
 
         private void OnCreated(object sender, FileSystemEventArgs e) => OnCreated(e);
@@ -333,6 +337,9 @@ namespace SJP.FsNotify
             if (e == null)
                 throw new ArgumentNullException(nameof(e));
 
+            if (_buffer == null)
+                return;
+
             if (!_buffer.TryAdd(e))
                 OnBufferExceeded();
         }
@@ -346,6 +353,9 @@ namespace SJP.FsNotify
         {
             if (e == null)
                 throw new ArgumentNullException(nameof(e));
+
+            if (_buffer == null)
+                return;
 
             if (!_buffer.TryAdd(e))
                 OnBufferExceeded();
@@ -361,6 +371,9 @@ namespace SJP.FsNotify
             if (e == null)
                 throw new ArgumentNullException(nameof(e));
 
+            if (_buffer == null)
+                return;
+
             if (!_buffer.TryAdd(e))
                 OnBufferExceeded();
         }
@@ -374,6 +387,9 @@ namespace SJP.FsNotify
         {
             if (e == null)
                 throw new ArgumentNullException(nameof(e));
+
+            if (_buffer == null)
+                return;
 
             if (!_buffer.TryAdd(e))
                 OnBufferExceeded();
@@ -397,6 +413,9 @@ namespace SJP.FsNotify
         /// </summary>
         protected virtual void OnBufferExceeded()
         {
+            if (_buffer == null)
+                return;
+
             var ex = new BufferExhaustedException($"File system event queue buffer exhausted. { _buffer.BoundedCapacity } events exceeded.", _buffer.BoundedCapacity);
             _onError?.Invoke(this, new ErrorEventArgs(ex));
         }
@@ -414,6 +433,7 @@ namespace SJP.FsNotify
                 return;
 
             _cts?.Dispose();
+            _buffer?.Dispose();
             _watcher.Dispose();
 
             _onCreated = null;
@@ -426,15 +446,15 @@ namespace SJP.FsNotify
         }
 
         private bool _disposed;
-        private CancellationTokenSource _cts;
+        private CancellationTokenSource? _cts;
 
-        private EventHandler<FileSystemEventArgs> _onCreated;
-        private EventHandler<FileSystemEventArgs> _onChanged;
-        private EventHandler<FileSystemEventArgs> _onDeleted;
-        private EventHandler<RenamedEventArgs> _onRenamed;
-        private EventHandler<ErrorEventArgs> _onError;
+        private EventHandler<FileSystemEventArgs>? _onCreated;
+        private EventHandler<FileSystemEventArgs>? _onChanged;
+        private EventHandler<FileSystemEventArgs>? _onDeleted;
+        private EventHandler<RenamedEventArgs>? _onRenamed;
+        private EventHandler<ErrorEventArgs>? _onError;
 
         private readonly IFileSystemWatcher _watcher;
-        private readonly BlockingCollection<FileSystemEventArgs> _buffer;
+        private readonly BlockingCollection<FileSystemEventArgs>? _buffer;
     }
 }

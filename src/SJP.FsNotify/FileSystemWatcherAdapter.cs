@@ -108,7 +108,7 @@ namespace SJP.FsNotify
             set
             {
                 if (!value.IsValid())
-                    throw new ArgumentException($"The { nameof(NotifyFilters) } provided must be a valid enum.", nameof(NotifyFilter));
+                    throw new ArgumentException($"The { nameof(NotifyFilters) } provided must be a valid enum.", nameof(value));
 
                 _watcher.NotifyFilter = value;
             }
