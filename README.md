@@ -9,15 +9,13 @@
 
 [![License (MIT)](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT) [![Build status](https://ci.appveyor.com/api/projects/status/pp70s691wpbxqidp?svg=true)](https://ci.appveyor.com/project/sjp/fsnotify)
 
-Avoid some of the pitfalls of [`FileSystemWatcher`](https://docs.microsoft.com/en-gb/dotnet/api/system.io.filesystemwatcher) and subscribe to more fine-grained events with `SJP.FsNotify`.
+Avoid some of the pitfalls of [`FileSystemWatcher`](https://docs.microsoft.com/en-us/dotnet/api/system.io.filesystemwatcher) and subscribe to more fine-grained events with `SJP.FsNotify`.
 
 ## Highlights
 
-* Supports .NET Standard 2.1.
+* Supports .NET 5.0.
 * Avoids many of the pitfalls of `FileSystemWatcher`, in particular when it can exhaust its internal buffer.
-* Easy migration from `FileSystemWatcher`.
-* Handle more fine-grained events, such as an event which is only raised when a file attribute changes, and not just when *something* about a file has changed. See: `EnhancedFileSystemWatcher` and `EnhancedObservableFileSystemWatcher`.
-* [Reactively](http://reactivex.io/) observe asynchronous streams of file system events with `ObservableFileSystemWatcher` and `EnhancedObservableFileSystemWatcher`.
+* Asynchronously read from a [`Channel`](https://docs.microsoft.com/en-us/dotnet/api/system.threading.channels.channel) to observe file system events.
 
 ## Installation
 
@@ -33,104 +31,54 @@ dotnet add package SJP.FsNotify
 
 ## Usage
 
-Avoid exhausting `FileSystemWatcher`'s internal buffer by using the `BufferedFileSystemWatcher`. It enables for more events to be buffered in memory.
+Avoid exhausting `FileSystemWatcher`'s internal buffer by using the `ChannelFileSystemWatcher`. It avoids relying upon the internal buffer by immediately shifting the reponsiblity of managing the buffer to the consumer.
+
+You can create either a bounded (recommended) or an unbounded channel to process events. The bounded example follows:
 
 ```csharp
-using (var watcher = new BufferedFileSystemWatcher(@"C:\Temp"))
+var channel = Channel.CreateBounded<FileSystemEventArgs>(1024);
+var options = new ChannelFileSystemWatcherOptions(@"C:\Temp");
+using var watcher = new ChannelFileSystemWatcher(options);
+
+await foreach (var fsEventArgs in channel.Reader.ReadAllAsync())
 {
-    watcher.Created += (s, e) => Console.WriteLine(e.FullPath + " was created.");
-    watcher.EnableRaisingEvents = true;
-    Console.ReadKey();
-}
-```
-
-You can also subscribe to specific events that are normally tracked as part of `FileSystemWatcher`'s `Changed` event. Use `EnhancedFileSystemWatcher` to subscribe to these extra events.
-
-```csharp
-using (var watcher = new EnhancedFileSystemWatcher(@"C:\Temp"))
-{
-    watcher.AttributeChanged += (s, e) => Console.WriteLine(e.FullPath + " has had an attribute change.");
-    watcher.EnableRaisingEvents = true;
-
-    var testFile = new FileInfo("C:\Temp\TestFile.txt"); // assume the file exists
-    testFile.IsReadOnly = !testFile.IsReadOnly; // toggle read-only attribute
-
-    Console.ReadKey();
-}
-```
-
-Finally, for those familiar with [reactive](http://reactivex.io/) asynchronous programming, the `ObservableFileSystemWatcher` and `EnhancedObservableFileSystemWatcher` classes are available. The former wraps the events that `FileSystemWatcher` and `BufferedFileSystemWatcher` provide, while the latter wraps the events that `EnhancedFileSystemWatcher` provides.
-
-```csharp
-using (var watcher = new EnhancedObservableFileSystemWatcher(@"C:\Temp"))
-{
-    watcher.LastWriteChanged.Subscribe(e => Console.WriteLine(e.FullPath + " has a new last write time."));
-    watcher.Start();
-
-    var testFile = new FileInfo(@"C:\Temp\TestFile.txt"); // assume the file exists
-    testFile.LastWriteTime = new DateTime(2017, 1, 1); // update last write time
-
-    Console.ReadKey();
+    Console.WriteLine($"{fsEventArgs.ChangeType} {fsEventArgs.FullPath}");
 }
 ```
 
 ## API
 
-### `BufferedFileSystemWatcher`
+### `ChannelFileSystemWatcher`
 
-The `BufferedFileSystemWatcher` can be created with an optional argument that specifies the size of the buffer. Most of the time this can be left as the default.
+The `ChannelFileSystemWatcher` can be created with both a channel, and options which define the file watching behaviour.
 
-There are five events that are exposed:
+There are two key methods that are exposed:
 
-* `Changed`
-* `Created`
-* `Deleted`
-* `Renamed`
-* `Error`
+* `Start()`
+* `Stop()`
 
-These events are rather self-explanatory and further information can be obtained at [`FileSystemWatcher`](https://docs.microsoft.com/en-gb/dotnet/api/system.io.filesystemwatcher). Be aware that the file system watcher will not throw exceptions when it is unable to process file system events, it will raise an `Error` event. This means that if you are not subscribing to the `Error` event you will not find out if file system events are not processing correctly.
+These are rather self-explanatory in terms of behaviour. `Start()` begins writing available file system events to the provided channel. This will continue indefinitely until `Stop()` is called. At that point, the watcher cannot be restarted, all writing to the channel is now closed. There is no restart behaviour, a new instance of the watcher is required to perform this type of task.
 
-### `EnhancedFileSystemWatcher`
+There is an additional overload for constructing a `ChannelFileSystemWatcher` that also enables writing file system error messages. This is recommended but not required. No other behaviour is impacted.
 
-Like `BufferedFileSystemWatcher`, `EnhancedFileSystemWatcher` can be created with an optional argument that specifies the size of the buffer.
+### `ChannelFileSystemWatcherOptions`
 
-In addition to the events that `BufferedFileSystemWatcher` exposes, `EnhancedFileSystemWatcher` provides six further events:
+The `ChannelFileSystemWatcherOptions` class is the key component which configures the behaviour of the `ChannelFileSystemWatcher` class.
 
-* `AttributeChanged`
-* `CreationTimeChanged`
-* `LastAccessChanged`
-* `LastWriteChanged`
-* `SecurityChanged`
-* `SizeChanged`
+There is a single constructor parameter `path`, which is a path to a directory that will be monitored. This is required and not optional. All other options can be provided during object initialisation and largely follow those from `FileSystemWatcher`. 
 
-### `ObservableFileSystemWatcher`
+These options are:
 
-This watcher wraps the behavior of the `BufferedFileSystemWatcher` as observable collections. This means that each event is exposed as an `IObservable<T>` instead of a regular .NET event.
+* `Filter`: Sets the filter string used to determine what files are monitored in a directory. Default is `*.*`.
+* `Filters`: The collection of all the filters used to determine what files are monitored in a directory.
+* `IncludeSubdirectories`: Sets a value indicating whether subdirectories within the specified path should be monitored. Defaults to `false`.
+* `NotifyFilter`: Sets the type of changes to watch for when a file has changed.
+* `ChangedEnabled`: Whether file system change events should be written to the channel. Defaults to `true`.
+* `CreatedEnabled`: Whether file system creation events should be written to the channel. Defaults to `true`.
+* `DeletedEnabled`: Whether file system deleted events should be written to the channel. Defaults to `true`.
+* `RenamedEnabled`: Whether file system rename events should be written to the channel. Defaults to `true`.
 
-The observables that are provided are:
-
-* `Changed`
-* `Created`
-* `Deleted`
-* `Renamed`
-* `Errors`
-
-Additionally, rather than the watcher being started and stopped by an `EnableRaisingEvents` property, this is instead done by `Start()` and `Stop()` methods.
-
-### `EnhancedObservableFileSystemWatcher`
-
-Like `EnhancedFileSystemWatcher` to `BufferedFileSystemWatcher`, `EnhancedObservableFileSystemWatcher` provides further observable collections on top of what `ObservableFileSystemWatcher` provides.
-
-The additional observables that are provided are:
-
-* `AttributeChanged`
-* `CreationTimeChanged`
-* `LastAccessChanged`
-* `LastWriteChanged`
-* `SecurityChanged`
-* `SizeChanged`
-
-These additional observables are analogues of the additional events that `EnhancedFileSystemWatcher` provides.
+There are also two convenience properties that are available which can be used to configure the `NotifyFilter` value. `AllNotifyFilters`, which enables the most verbose triggering of file system change events. Additionally there is `DefaultNotifyFilters`, which simply contains the default value for `NotifyFilter`.
 
 ## Icon
 
