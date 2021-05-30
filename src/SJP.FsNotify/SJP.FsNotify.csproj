@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.1</TargetFrameworks>
+    <TargetFrameworks>net5.0</TargetFrameworks>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
     <Description>Improved file system notification events for .NET</Description>
     <PackageLicenseUrl>https://raw.github.com/sjp/FsNotify/master/LICENSE</PackageLicenseUrl>
@@ -19,7 +19,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="System.Reactive.Linq" Version="5.0.0" />
+    <PackageReference Include="System.Threading.Channels" Version="4.7.0" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using NUnit.Framework;
 
@@ -10,46 +9,46 @@ namespace SJP.FsNotify.Tests
         [Test]
         public static void Ctor_GivenNullFsWatcher_ThrowsArgNullException()
         {
-            Assert.Throws<ArgumentNullException>(() => new FileSystemWatcherAdapter(null));
+            Assert.That(() => new FileSystemWatcherAdapter(default!), Throws.ArgumentNullException);
         }
 
         [Test]
         public static void ImplicitOp_GivenNullFsWatcher_ThrowsArgNullException()
         {
-            FileSystemWatcher watcher = null;
-            Assert.Throws<ArgumentNullException>(() =>
+            FileSystemWatcher watcher = default!;
+            Assert.That(() =>
             {
                 FileSystemWatcherAdapter adapter = watcher;
-            });
+            }, Throws.ArgumentNullException);
         }
 
         [Test]
         public static void Path_WhenSetInCtor_RetrievedFromPropertyUnchanged()
         {
-            var testDir = FsNotifyTest.GetTestDirectory();
+            using var tempDir = new TemporaryDirectory();
 
-            var watcher = new FileSystemWatcher(testDir.FullName);
+            var watcher = new FileSystemWatcher(tempDir.DirectoryPath);
             using var adapter = new FileSystemWatcherAdapter(watcher);
             Assert.Multiple(() =>
             {
-                Assert.AreEqual(testDir.FullName, adapter.Path);
-                Assert.AreEqual(testDir.FullName, watcher.Path);
+                Assert.That(adapter.Path, Is.EqualTo(tempDir.DirectoryPath));
+                Assert.That(watcher.Path, Is.EqualTo(tempDir.DirectoryPath));
             });
         }
 
         [Test]
         public static void Path_WhenSetInProperty_RetrievedFromPropertyCorrectly()
         {
-            var testDir = FsNotifyTest.GetTestDirectory();
-            var testDir2 = FsNotifyTest.GetTestDirectory();
+            using var tempDir = new TemporaryDirectory();
+            using var tempDir2 = new TemporaryDirectory();
 
-            var watcher = new FileSystemWatcher(testDir.FullName);
-            using var adapter = new FileSystemWatcherAdapter(watcher) { Path = testDir2.FullName };
+            var watcher = new FileSystemWatcher(tempDir.DirectoryPath);
+            using var adapter = new FileSystemWatcherAdapter(watcher) { Path = tempDir2.DirectoryPath };
 
             Assert.Multiple(() =>
             {
-                Assert.AreEqual(testDir2.FullName, adapter.Path);
-                Assert.AreEqual(testDir2.FullName, watcher.Path);
+                Assert.That(adapter.Path, Is.EqualTo(tempDir2.DirectoryPath));
+                Assert.That(watcher.Path, Is.EqualTo(tempDir2.DirectoryPath));
             });
         }
 
@@ -60,8 +59,8 @@ namespace SJP.FsNotify.Tests
             using var adapter = new FileSystemWatcherAdapter(watcher);
             Assert.Multiple(() =>
             {
-                Assert.IsTrue(watcher.IncludeSubdirectories);
-                Assert.IsTrue(adapter.IncludeSubdirectories);
+                Assert.That(watcher.IncludeSubdirectories, Is.True);
+                Assert.That(adapter.IncludeSubdirectories, Is.True);
             });
         }
 
@@ -73,8 +72,8 @@ namespace SJP.FsNotify.Tests
 
             Assert.Multiple(() =>
             {
-                Assert.IsTrue(watcher.IncludeSubdirectories);
-                Assert.IsTrue(adapter.IncludeSubdirectories);
+                Assert.That(watcher.IncludeSubdirectories, Is.True);
+                Assert.That(adapter.IncludeSubdirectories, Is.True);
             });
         }
 
@@ -84,10 +83,11 @@ namespace SJP.FsNotify.Tests
             const string filter = "*.exe";
             var watcher = new FileSystemWatcher() { Filter = filter };
             using var adapter = new FileSystemWatcherAdapter(watcher);
+
             Assert.Multiple(() =>
             {
-                Assert.AreEqual(filter, watcher.Filter);
-                Assert.AreEqual(filter, adapter.Filter);
+                Assert.That(watcher.Filter, Is.EqualTo(filter));
+                Assert.That(adapter.Filter, Is.EqualTo(filter));
             });
         }
 
@@ -100,9 +100,20 @@ namespace SJP.FsNotify.Tests
 
             Assert.Multiple(() =>
             {
-                Assert.AreEqual(filter, watcher.Filter);
-                Assert.AreEqual(filter, adapter.Filter);
+                Assert.That(watcher.Filter, Is.EqualTo(filter));
+                Assert.That(adapter.Filter, Is.EqualTo(filter));
             });
+        }
+
+        [Test]
+        public static void Filters_WhenSetInCtor_RetrievedFromPropertyUnchanged()
+        {
+            const string filter = "*.exe";
+            var watcher = new FileSystemWatcher();
+            watcher.Filters.Add(filter);
+            using var adapter = new FileSystemWatcherAdapter(watcher);
+
+            Assert.That(adapter.Filters, Is.EquivalentTo(watcher.Filters));
         }
 
         [Test]
@@ -111,10 +122,11 @@ namespace SJP.FsNotify.Tests
             const NotifyFilters filter = NotifyFilters.Security | NotifyFilters.Attributes;
             var watcher = new FileSystemWatcher() { NotifyFilter = filter };
             using var adapter = new FileSystemWatcherAdapter(watcher);
+
             Assert.Multiple(() =>
             {
-                Assert.AreEqual(filter, watcher.NotifyFilter);
-                Assert.AreEqual(filter, adapter.NotifyFilter);
+                Assert.That(watcher.NotifyFilter, Is.EqualTo(filter));
+                Assert.That(adapter.NotifyFilter, Is.EqualTo(filter));
             });
         }
 
@@ -127,54 +139,39 @@ namespace SJP.FsNotify.Tests
 
             Assert.Multiple(() =>
             {
-                Assert.AreEqual(filter, watcher.NotifyFilter);
-                Assert.AreEqual(filter, adapter.NotifyFilter);
+                Assert.That(watcher.NotifyFilter, Is.EqualTo(filter));
+                Assert.That(adapter.NotifyFilter, Is.EqualTo(filter));
             });
         }
 
         [Test]
         public static void EnableRaisingEvents_WhenSetInCtor_RetrievedFromPropertyUnchanged()
         {
-            var testDir = FsNotifyTest.GetTestDirectory();
-            try
+            using var tempDir = new TemporaryDirectory();
+
+            var watcher = new FileSystemWatcher(tempDir.DirectoryPath) { EnableRaisingEvents = true };
+            using var adapter = new FileSystemWatcherAdapter(watcher);
+
+            Assert.Multiple(() =>
             {
-                testDir.Create();
-                var watcher = new FileSystemWatcher(testDir.FullName) { EnableRaisingEvents = true };
-                using var adapter = new FileSystemWatcherAdapter(watcher);
-                Assert.Multiple(() =>
-                {
-                    Assert.IsTrue(watcher.EnableRaisingEvents);
-                    Assert.IsTrue(adapter.EnableRaisingEvents);
-                });
-            }
-            finally
-            {
-                if (testDir.Exists)
-                    testDir.Delete(true);
-            }
+                Assert.That(watcher.EnableRaisingEvents, Is.True);
+                Assert.That(adapter.EnableRaisingEvents, Is.True);
+            });
         }
 
         [Test]
         public static void EnableRaisingEvents_WhenSetInProperty_RetrievedFromPropertyCorrectly()
         {
-            var testDir = FsNotifyTest.GetTestDirectory();
-            try
-            {
-                testDir.Create();
-                var watcher = new FileSystemWatcher(testDir.FullName);
-                using var adapter = new FileSystemWatcherAdapter(watcher) { EnableRaisingEvents = true };
+            using var tempDir = new TemporaryDirectory();
 
-                Assert.Multiple(() =>
-                {
-                    Assert.IsTrue(watcher.EnableRaisingEvents);
-                    Assert.IsTrue(adapter.EnableRaisingEvents);
-                });
-            }
-            finally
+            var watcher = new FileSystemWatcher(tempDir.DirectoryPath);
+            using var adapter = new FileSystemWatcherAdapter(watcher) { EnableRaisingEvents = true };
+
+            Assert.Multiple(() =>
             {
-                if (testDir.Exists)
-                    testDir.Delete(true);
-            }
+                Assert.That(watcher.EnableRaisingEvents, Is.True);
+                Assert.That(adapter.EnableRaisingEvents, Is.True);
+            });
         }
 
         [Test]
@@ -183,7 +180,8 @@ namespace SJP.FsNotify.Tests
             var watcher = new FileSystemWatcher();
             using var adapter = new FileSystemWatcherAdapter(watcher);
             const NotifyFilters filter = (NotifyFilters)32908;
-            Assert.Throws<ArgumentException>(() => adapter.NotifyFilter = filter);
+
+            Assert.That(() => adapter.NotifyFilter = filter, Throws.ArgumentException);
         }
 
         [Test]
@@ -192,7 +190,9 @@ namespace SJP.FsNotify.Tests
             var watcher = new FileSystemWatcher();
             using var adapter = new FileSystemWatcherAdapter(watcher);
             const WatcherChangeTypes changeType = (WatcherChangeTypes)32908;
-            Assert.Throws<ArgumentException>(() => adapter.WaitForChanged(changeType));
+
+            Assert.That(() => adapter.WaitForChanged(changeType), Throws.ArgumentException);
+
         }
 
         [Test]
@@ -201,7 +201,8 @@ namespace SJP.FsNotify.Tests
             var watcher = new FileSystemWatcher();
             using var adapter = new FileSystemWatcherAdapter(watcher);
             const WatcherChangeTypes changeType = (WatcherChangeTypes)32908;
-            Assert.Throws<ArgumentException>(() => adapter.WaitForChanged(changeType, 123));
+
+            Assert.That(() => adapter.WaitForChanged(changeType, 123), Throws.ArgumentException);
         }
     }
 }

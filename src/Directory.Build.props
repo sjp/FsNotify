@@ -8,5 +8,6 @@
         <Authors>Simon Potter</Authors>
         <Company />
         <Product />
+        <Nullable>enable</Nullable>
     </PropertyGroup>
 </Project>

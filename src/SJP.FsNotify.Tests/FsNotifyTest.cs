@@ -5,15 +5,6 @@ namespace SJP.FsNotify.Tests
 {
     internal static class FsNotifyTest
     {
-        public static DirectoryInfo GetTestDirectory()
-        {
-            var tempPath = Path.GetTempPath();
-            var tempDirName = Path.GetRandomFileName();
-
-            var tempDirPath = Path.Combine(tempPath, tempDirName);
-            return Directory.CreateDirectory(tempDirPath);
-        }
-
         public static FileInfo GetTestFile(DirectoryInfo testDir, string extension = "")
         {
             if (testDir == null)

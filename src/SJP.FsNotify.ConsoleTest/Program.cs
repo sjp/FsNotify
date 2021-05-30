@@ -1,11 +1,13 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Channels;
+using System.Threading.Tasks;
 
 namespace SJP.FsNotify.ConsoleTest
 {
     internal static class Program
     {
-        private static int Main(string[] args)
+        public static async Task<int> Main(string[] args)
         {
             args ??= Array.Empty<string>();
             if (args.Length == 0)
@@ -22,55 +24,53 @@ namespace SJP.FsNotify.ConsoleTest
                 return ExitFailure;
             }
 
-            using (var watcher = new EnhancedFileSystemWatcher(dirPath) { IncludeSubdirectories = true })
+            var options = new ChannelFileSystemWatcherOptions(dirPath)
             {
-                watcher.AttributeChanged += OnAttributeChanged;
-                watcher.CreationTimeChanged += OnCreationTimeChanged;
-                watcher.LastAccessChanged += OnLastAccessChanged;
-                watcher.LastWriteChanged += OnLastWriteChanged;
-                watcher.SecurityChanged += OnSecurityChanged;
-                watcher.SizeChanged += OnSizeChanged;
-                watcher.Changed += OnChanged;
-                watcher.Created += OnCreated;
-                watcher.Deleted += OnDeleted;
-                watcher.Renamed += OnRenamed;
-                watcher.Error += OnError;
+                NotifyFilter = ChannelFileSystemWatcherOptions.AllNotifyFilters,
+                IncludeSubdirectories = true
+            };
 
-                watcher.EnableRaisingEvents = true;
+            var channel = Channel.CreateBounded<FileSystemEventArgs>(1024);
 
-                Console.WriteLine("Press any key to exit...");
-                Console.ReadKey();
+            using var watcher = new ChannelFileSystemWatcher(channel.Writer, options);
+            watcher.Start();
+
+            await foreach (var fsEventArgs in channel.Reader.ReadAllAsync())
+            {
+                WriteColoredChangeType(fsEventArgs);
+                if (fsEventArgs is RenamedEventArgs renamedEventArgs)
+                {
+                    Console.WriteLine(renamedEventArgs.OldFullPath + " to " + renamedEventArgs.FullPath);
+                }
+                else
+                {
+                    Console.WriteLine(fsEventArgs.FullPath);
+                }
             }
 
             return ExitSuccess;
         }
 
-        private static void OnSizeChanged(object _, FileSystemEventArgs e) => Console.WriteLine("Changed size " + e.FullPath);
-
-        private static void OnSecurityChanged(object _, FileSystemEventArgs e) => Console.WriteLine("Changed security " + e.FullPath);
-
-        private static void OnLastWriteChanged(object _, FileSystemEventArgs e) => Console.WriteLine("Changed last write time " + e.FullPath);
-
-        private static void OnLastAccessChanged(object _, FileSystemEventArgs e) => Console.WriteLine("Changed last access time " + e.FullPath);
-
-        private static void OnCreationTimeChanged(object _, FileSystemEventArgs e) => Console.WriteLine("Changed creation time " + e.FullPath);
-
-        private static void OnAttributeChanged(object _, FileSystemEventArgs e) => Console.WriteLine("Changed attribute " + e.FullPath);
-
-        private static void OnRenamed(object _, RenamedEventArgs e) => Console.WriteLine($"Renamed from { e.OldFullPath } to { e.FullPath }");
-
-        private static void OnDeleted(object _, FileSystemEventArgs e) => Console.WriteLine("Deleted " + e.FullPath);
-
-        private static void OnCreated(object _, FileSystemEventArgs e) => Console.WriteLine("Created " + e.FullPath);
-
-        private static void OnChanged(object _, FileSystemEventArgs e) => Console.WriteLine("Changed " + e.FullPath);
-
-        private static void OnError(object _, ErrorEventArgs e)
+        private static void WriteColoredChangeType(FileSystemEventArgs fsEventArgs)
         {
-            var exception = e.GetException();
-            Console.WriteLine("An error has occurred.");
-            Console.WriteLine("Message: " + exception.Message);
-            Console.WriteLine("Stack trace: " + exception.StackTrace);
+            Console.Write("[");
+
+            var originalColor = Console.ForegroundColor;
+
+            var color = fsEventArgs.ChangeType switch
+            {
+                WatcherChangeTypes.Changed => ConsoleColor.Yellow,
+                WatcherChangeTypes.Created => ConsoleColor.Green,
+                WatcherChangeTypes.Deleted => ConsoleColor.Red,
+                WatcherChangeTypes.Renamed => ConsoleColor.White,
+                _ => ConsoleColor.White
+            };
+
+            Console.ForegroundColor = color;
+            Console.Write(fsEventArgs.ChangeType.ToString().ToUpperInvariant());
+            Console.ForegroundColor = originalColor;
+
+            Console.Write("] ");
         }
 
         private const int ExitFailure = 1;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.IO;
 
 namespace SJP.FsNotify
@@ -6,7 +7,7 @@ namespace SJP.FsNotify
     /// <summary>
     /// Represents a file system watcher whose behavior matches those provided by <see cref="FileSystemWatcher"/>.
     /// </summary>
-    public interface IFileSystemWatcher : IDisposable
+    public interface IFileSystemWatcher
     {
         /// <summary>
         /// Gets or sets a value indicating whether the file system watcher is monitoring file system events.
@@ -17,6 +18,11 @@ namespace SJP.FsNotify
         /// Gets or sets the filter string used to determine what files are monitored in a directory.
         /// </summary>
         string Filter { get; set; }
+
+        /// <summary>
+        /// Gets the collection of all the filters used to determine what files are monitored in a directory.
+        /// </summary>
+        Collection<string> Filters { get; }
 
         /// <summary>
         /// Gets or sets a value indicating whether subdirectories within the specified path should be monitored.

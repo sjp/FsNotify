@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.IO;
 using EnumsNET;
 
@@ -7,7 +8,7 @@ namespace SJP.FsNotify
     /// <summary>
     /// Listens to the file system change notifications and raises events when a directory, or file in a directory, changes. Intended to wrap an instance of <see cref="FileSystemWatcher"/> in order to expose as an <see cref="IFileSystemWatcher"/>.
     /// </summary>
-    public class FileSystemWatcherAdapter : IFileSystemWatcher
+    public class FileSystemWatcherAdapter : IFileSystemWatcher, IDisposable
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="FileSystemWatcherAdapter"/> class, given a <see cref="FileSystemWatcher"/> to derive information from.
@@ -88,6 +89,11 @@ namespace SJP.FsNotify
             get => _watcher.Filter;
             set => _watcher.Filter = value;
         }
+
+        /// <summary>
+        /// Gets the collection of all the filters used to determine what files are monitored in a directory.
+        /// </summary>
+        public Collection<string> Filters => _watcher.Filters;
 
         /// <summary>
         /// Gets or sets a value indicating whether subdirectories within the specified path should be monitored.
