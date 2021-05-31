@@ -7,7 +7,7 @@
 
 > Improved file system notification events for .NET.
 
-[![License (MIT)](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT) [![Build status](https://ci.appveyor.com/api/projects/status/pp70s691wpbxqidp?svg=true)](https://ci.appveyor.com/project/sjp/fsnotify)
+[![License (MIT)](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT) ![Build Status](https://github.com/sjp/FsNotify/workflows/CI/badge.svg?branch=master)
 
 Avoid some of the pitfalls of [`FileSystemWatcher`](https://docs.microsoft.com/en-us/dotnet/api/system.io.filesystemwatcher) and subscribe to more fine-grained events with `SJP.FsNotify`.
 
@@ -75,7 +75,7 @@ These options are:
 * `NotifyFilter`: Sets the type of changes to watch for when a file has changed.
 * `ChangedEnabled`: Whether file system change events should be written to the channel. Defaults to `true`.
 * `CreatedEnabled`: Whether file system creation events should be written to the channel. Defaults to `true`.
-* `DeletedEnabled`: Whether file system deleted events should be written to the channel. Defaults to `true`.
+* `DeletedEnabled`: Whether file system deletion events should be written to the channel. Defaults to `true`.
 * `RenamedEnabled`: Whether file system rename events should be written to the channel. Defaults to `true`.
 
 There are also two convenience properties that are available which can be used to configure the `NotifyFilter` value. `AllNotifyFilters`, which enables the most verbose triggering of file system change events. Additionally there is `DefaultNotifyFilters`, which simply contains the default value for `NotifyFilter`.
