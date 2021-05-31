@@ -38,7 +38,7 @@ You can create either a bounded (recommended) or an unbounded channel to process
 ```csharp
 var channel = Channel.CreateBounded<FileSystemEventArgs>(1024);
 var options = new ChannelFileSystemWatcherOptions(@"C:\Temp");
-using var watcher = new ChannelFileSystemWatcher(options);
+using var watcher = new ChannelFileSystemWatcher(channel.Writer, options);
 
 await foreach (var fsEventArgs in channel.Reader.ReadAllAsync())
 {
