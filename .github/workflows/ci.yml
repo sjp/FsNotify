@@ -25,5 +25,9 @@ jobs:
       run: dotnet build --configuration Release --no-restore
       working-directory: src
     - name: Test
-      run: dotnet test --no-restore --verbosity normal
+      run: dotnet test --no-restore --verbosity normal --collect "XPlat Code Coverage" --results-directory TestResults/
       working-directory: src
+    - name: Codecov
+      uses: codecov/codecov-action@v1.5.0
+      with:
+        directory: src/TestResults/
