@@ -192,7 +192,6 @@ namespace SJP.FsNotify.Tests
             const WatcherChangeTypes changeType = (WatcherChangeTypes)32908;
 
             Assert.That(() => adapter.WaitForChanged(changeType), Throws.ArgumentException);
-
         }
 
         [Test]

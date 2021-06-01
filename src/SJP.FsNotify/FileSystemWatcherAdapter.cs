@@ -25,7 +25,7 @@ namespace SJP.FsNotify
         /// </summary>
         /// <param name="watcher">A file system watcher to derive events from. A regular <see cref="FileSystemWatcher"/> can be provided.</param>
         /// <returns>A new instance of <see cref="FileSystemWatcherAdapter"/> that wraps <see cref="FileSystemWatcher"/> as an <see cref="IFileSystemWatcher"/>.</returns>
-        public static implicit operator FileSystemWatcherAdapter(FileSystemWatcher watcher) => new FileSystemWatcherAdapter(watcher);
+        public static implicit operator FileSystemWatcherAdapter(FileSystemWatcher watcher) => new(watcher);
 
         /// <summary>
         /// Occurs when a file or directory in the specified <see cref="Path"/> is changed.

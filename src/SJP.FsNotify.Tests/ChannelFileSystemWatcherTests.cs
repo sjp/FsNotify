@@ -89,10 +89,10 @@ namespace SJP.FsNotify.Tests
 
             _watcher.Start();
             testFile.Create().Dispose();
-            await Task.Delay(FsEventTimeout); // wait for watcher to notify to channel before closing
+            await Task.Delay(FsEventTimeout).ConfigureAwait(false); // wait for watcher to notify to channel before closing
             _watcher.Stop();
 
-            var containsFile = await _channel.Reader.ReadAllAsync().AnyAsync(evt => evt.Name == testFile.Name);
+            var containsFile = await _channel.Reader.ReadAllAsync().AnyAsync(evt => evt.Name == testFile.Name).ConfigureAwait(false);
             Assert.That(containsFile, Is.True);
         }
 
@@ -115,10 +115,10 @@ namespace SJP.FsNotify.Tests
             using (var writer = testFile.AppendText())
                 await writer.WriteLineAsync("trigger change").ConfigureAwait(false);
             testFile.LastWriteTime = new DateTime(2016, 1, 1);
-            await Task.Delay(FsEventTimeout); // wait for watcher to notify to channel before closing
+            await Task.Delay(FsEventTimeout).ConfigureAwait(false); // wait for watcher to notify to channel before closing
             _watcher.Stop();
 
-            var containsFile = await _channel.Reader.ReadAllAsync().AnyAsync(evt => evt.Name == testFile.Name);
+            var containsFile = await _channel.Reader.ReadAllAsync().AnyAsync(evt => evt.Name == testFile.Name).ConfigureAwait(false);
             Assert.That(containsFile, Is.True);
         }
 
@@ -139,10 +139,10 @@ namespace SJP.FsNotify.Tests
 
             _watcher.Start();
             testFile.Delete();
-            await Task.Delay(FsEventTimeout); // wait for watcher to notify to channel before closing
+            await Task.Delay(FsEventTimeout).ConfigureAwait(false); // wait for watcher to notify to channel before closing
             _watcher.Stop();
 
-            var containsFile = await _channel.Reader.ReadAllAsync().AnyAsync(evt => evt.Name == testFile.Name);
+            var containsFile = await _channel.Reader.ReadAllAsync().AnyAsync(evt => evt.Name == testFile.Name).ConfigureAwait(false);
             Assert.That(containsFile, Is.True);
         }
 
@@ -164,13 +164,14 @@ namespace SJP.FsNotify.Tests
 
             _watcher.Start();
             File.Move(testFile.FullName, testFile2.FullName);
-            await Task.Delay(FsEventTimeout); // wait for watcher to notify to channel before closing
+            await Task.Delay(FsEventTimeout).ConfigureAwait(false); // wait for watcher to notify to channel before closing
             _watcher.Stop();
 
             var containsFile = await _channel.Reader
                 .ReadAllAsync()
                 .OfType<RenamedEventArgs>()
-                .AnyAsync(evt => evt.OldFullPath == testFile.FullName && evt.FullPath == testFile2.FullName);
+                .AnyAsync(evt => evt.OldFullPath == testFile.FullName && evt.FullPath == testFile2.FullName)
+                .ConfigureAwait(false);
             Assert.That(containsFile, Is.True);
         }
 
@@ -183,10 +184,10 @@ namespace SJP.FsNotify.Tests
             _watcher.Start();
 
             fsWatcher.Raise(w => w.Error += null, new ErrorEventArgs(new Exception("test_message")));
-            await Task.Delay(FsEventTimeout); // wait for watcher to notify to channel before closing
+            await Task.Delay(FsEventTimeout).ConfigureAwait(false); // wait for watcher to notify to channel before closing
             _watcher.Stop();
 
-            var containsError = await _errorChannel.Reader.ReadAllAsync().AnyAsync(e => e.GetException().Message == "test_message");
+            var containsError = await _errorChannel.Reader.ReadAllAsync().AnyAsync(e => e.GetException().Message == "test_message").ConfigureAwait(false);
             Assert.That(containsError, Is.True);
         }
 

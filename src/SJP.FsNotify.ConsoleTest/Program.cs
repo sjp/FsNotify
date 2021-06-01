@@ -12,19 +12,19 @@ namespace SJP.FsNotify.ConsoleTest
             args ??= Array.Empty<string>();
             if (args.Length == 0)
             {
-                await Console.Error.WriteLineAsync("A path to a directory to watch must be provided.");
+                await Console.Error.WriteLineAsync("A path to a directory to watch must be provided.").ConfigureAwait(false);
                 return ExitFailure;
             }
 
             var dirPath = args[0];
             if (!Directory.Exists(dirPath))
             {
-                await Console.Error.WriteLineAsync("A valid path to a directory to watch must be provided.");
-                await Console.Error.WriteLineAsync("Given path: " + dirPath);
+                await Console.Error.WriteLineAsync("A valid path to a directory to watch must be provided.").ConfigureAwait(false);
+                await Console.Error.WriteLineAsync("Given path: " + dirPath).ConfigureAwait(false);
                 return ExitFailure;
             }
 
-            await Console.Out.WriteLineAsync("Press any key to exit.");
+            await Console.Out.WriteLineAsync("Press any key to exit.").ConfigureAwait(false);
 
             var channel = Channel.CreateBounded<FileSystemEventArgs>(1024);
             var options = new ChannelFileSystemWatcherOptions(dirPath)
@@ -43,7 +43,7 @@ namespace SJP.FsNotify.ConsoleTest
                     if (Console.KeyAvailable)
                         watcher.Stop();
 
-                    await Task.Delay(100);
+                    await Task.Delay(100).ConfigureAwait(false);
                 }
             });
 
@@ -52,15 +52,15 @@ namespace SJP.FsNotify.ConsoleTest
                 WriteColoredChangeType(fsEventArgs);
                 if (fsEventArgs is RenamedEventArgs renamedEventArgs)
                 {
-                    await Console.Out.WriteLineAsync(renamedEventArgs.OldFullPath + " to " + renamedEventArgs.FullPath);
+                    await Console.Out.WriteLineAsync(renamedEventArgs.OldFullPath + " to " + renamedEventArgs.FullPath).ConfigureAwait(false);
                 }
                 else
                 {
-                    await Console.Out.WriteLineAsync(fsEventArgs.FullPath);
+                    await Console.Out.WriteLineAsync(fsEventArgs.FullPath).ConfigureAwait(false);
                 }
             }
 
-            await Console.Out.WriteLineAsync("Exited...");
+            await Console.Out.WriteLineAsync("Exited...").ConfigureAwait(false);
             return ExitSuccess;
         }
 
