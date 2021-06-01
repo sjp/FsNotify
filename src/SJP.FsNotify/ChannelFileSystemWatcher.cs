@@ -57,12 +57,15 @@ namespace SJP.FsNotify
             _watcher = watcher ?? throw new ArgumentNullException(nameof(watcher));
 
             ErrorWriter = errorWriter;
+            if (errorWriter != null)
+            {
+                _watcher.Error += OnError;
+            }
 
             _watcher.Created += OnCreated;
             _watcher.Changed += OnChanged;
             _watcher.Renamed += OnRenamed;
             _watcher.Deleted += OnDeleted;
-            _watcher.Error += OnError;
         }
 
         /// <summary>

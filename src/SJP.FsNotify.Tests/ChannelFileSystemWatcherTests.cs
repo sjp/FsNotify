@@ -192,6 +192,108 @@ namespace SJP.FsNotify.Tests
         }
 
         [Test]
+        public async Task OnCreated_WhenFileCreatedButDisabled_DoesNotPublish()
+        {
+            // Disable everything but create
+            _sourceOptions = new ChannelFileSystemWatcherOptions(_tempDir.DirectoryPath)
+            {
+                CreatedEnabled = false,
+                ChangedEnabled = false,
+                DeletedEnabled = false,
+                RenamedEnabled = false
+            };
+
+            var testFile = FsNotifyTest.GetTestFile(new DirectoryInfo(_tempDir.DirectoryPath));
+
+            _watcher.Start();
+            testFile.Create().Dispose();
+            await Task.Delay(FsEventTimeout).ConfigureAwait(false); // wait for watcher to notify to channel before closing
+            _watcher.Stop();
+
+            var containsFile = await _channel.Reader.ReadAllAsync().AnyAsync(evt => evt.Name == testFile.Name).ConfigureAwait(false);
+            Assert.That(containsFile, Is.False);
+        }
+
+        [Test]
+        public async Task OnChanged_WhenFileChangedButDisabled_DoesNotPublish()
+        {
+            // Disable everything but create
+            _sourceOptions = new ChannelFileSystemWatcherOptions(_tempDir.DirectoryPath)
+            {
+                CreatedEnabled = false,
+                ChangedEnabled = false,
+                DeletedEnabled = false,
+                RenamedEnabled = false
+            };
+
+            var testFile = FsNotifyTest.GetTestFile(new DirectoryInfo(_tempDir.DirectoryPath));
+            testFile.Create().Dispose();
+
+            _watcher.Start();
+            using (var writer = testFile.AppendText())
+                await writer.WriteLineAsync("trigger change").ConfigureAwait(false);
+            testFile.LastWriteTime = new DateTime(2016, 1, 1);
+            await Task.Delay(FsEventTimeout).ConfigureAwait(false); // wait for watcher to notify to channel before closing
+            _watcher.Stop();
+
+            var containsFile = await _channel.Reader.ReadAllAsync().AnyAsync(evt => evt.Name == testFile.Name).ConfigureAwait(false);
+            Assert.That(containsFile, Is.False);
+        }
+
+        [Test]
+        public async Task OnDeleted_WhenFileDeletedButDisabled_DoesNotPublish()
+        {
+            // Disable everything but create
+            _sourceOptions = new ChannelFileSystemWatcherOptions(_tempDir.DirectoryPath)
+            {
+                CreatedEnabled = false,
+                ChangedEnabled = false,
+                DeletedEnabled = false,
+                RenamedEnabled = false
+            };
+
+            var testFile = FsNotifyTest.GetTestFile(new DirectoryInfo(_tempDir.DirectoryPath));
+            testFile.Create().Dispose();
+
+            _watcher.Start();
+            testFile.Delete();
+            await Task.Delay(FsEventTimeout).ConfigureAwait(false); // wait for watcher to notify to channel before closing
+            _watcher.Stop();
+
+            var containsFile = await _channel.Reader.ReadAllAsync().AnyAsync(evt => evt.Name == testFile.Name).ConfigureAwait(false);
+            Assert.That(containsFile, Is.False);
+        }
+
+        [Test]
+        public async Task OnRenamed_WhenFileRenamedButDisabled_DoesNotPublish()
+        {
+            // Disable everything but create
+            _sourceOptions = new ChannelFileSystemWatcherOptions(_tempDir.DirectoryPath)
+            {
+                CreatedEnabled = false,
+                ChangedEnabled = false,
+                DeletedEnabled = false,
+                RenamedEnabled = false
+            };
+
+            var testFile = FsNotifyTest.GetTestFile(new DirectoryInfo(_tempDir.DirectoryPath));
+            var testFile2 = FsNotifyTest.GetTestFile(new DirectoryInfo(_tempDir.DirectoryPath));
+            testFile.Create().Dispose();
+
+            _watcher.Start();
+            File.Move(testFile.FullName, testFile2.FullName);
+            await Task.Delay(FsEventTimeout).ConfigureAwait(false); // wait for watcher to notify to channel before closing
+            _watcher.Stop();
+
+            var containsFile = await _channel.Reader
+                .ReadAllAsync()
+                .OfType<RenamedEventArgs>()
+                .AnyAsync(evt => evt.OldFullPath == testFile.FullName && evt.FullPath == testFile2.FullName)
+                .ConfigureAwait(false);
+            Assert.That(containsFile, Is.False);
+        }
+
+        [Test]
         public void Start_WhenRestartingAfterStopping_ThrowsError()
         {
             _watcher.Start();
