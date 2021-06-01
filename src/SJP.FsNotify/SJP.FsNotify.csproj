@@ -4,12 +4,12 @@
     <TargetFrameworks>net5.0</TargetFrameworks>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
     <Description>Improved file system notification events for .NET</Description>
-    <PackageLicenseUrl>https://raw.github.com/sjp/FsNotify/master/LICENSE</PackageLicenseUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/sjp/FsNotify</PackageProjectUrl>
     <RepositoryUrl>https://github.com/sjp/FsNotify</RepositoryUrl>
-    <PackageIconUrl>https://raw.github.com/sjp/FsNotify/master/fsnotify.svg</PackageIconUrl>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
