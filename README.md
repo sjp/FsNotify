@@ -7,7 +7,7 @@
 
 > Improved file system notification events for .NET.
 
-[![License (MIT)](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT) ![Build Status](https://github.com/sjp/FsNotify/workflows/CI/badge.svg?branch=master)
+[![License (MIT)](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT) ![Build Status](https://github.com/sjp/FsNotify/workflows/CI/badge.svg?branch=master) [![Code coverage](https://img.shields.io/codecov/c/gh/sjp/FsNotify/master?logo=codecov)](https://codecov.io/gh/sjp/FsNotify)
 
 Avoid some of the pitfalls of [`FileSystemWatcher`](https://docs.microsoft.com/en-us/dotnet/api/system.io.filesystemwatcher) and subscribe to more fine-grained events with `SJP.FsNotify`.
 
