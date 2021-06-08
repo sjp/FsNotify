@@ -127,7 +127,7 @@ namespace SJP.FsNotify.ConsoleTest
             };
 
             Console.ForegroundColor = color;
-            Console.Write(fsEventArgs.ChangeType.ToString().ToUpperInvariant());
+            Console.Write(fsEventArgs.ChangeType.ToString());
             Console.ForegroundColor = originalColor;
 
             Console.Write("] ");
@@ -149,7 +149,7 @@ namespace SJP.FsNotify.ConsoleTest
             };
 
             Console.ForegroundColor = color;
-            Console.Write(fsEventArgs.ChangeReason.ToString().ToUpperInvariant());
+            Console.Write(fsEventArgs.ChangeReason.ToString());
             Console.ForegroundColor = originalColor;
 
             Console.Write("] ");
