@@ -270,7 +270,7 @@ namespace SJP.FsNotify.Tests
             _tempFile.FileInfo.Create().Dispose();
 
             _watcher.Start();
-            _tempFile.FileInfo.Attributes |= FileAttributes.Temporary;
+            _tempFile.FileInfo.Attributes |= FileAttributes.ReadOnly;
             _tempFile.FileInfo.Refresh();
             await Task.Delay(FsEventTimeout).ConfigureAwait(false); // wait for watcher to notify to channel before closing
             _watcher.Stop();
@@ -288,8 +288,7 @@ namespace SJP.FsNotify.Tests
                 CreatedEnabled = false,
                 ChangedEnabled = false,
                 DeletedEnabled = false,
-                RenamedEnabled = false,
-                NotifyFilter = NotifyFilters.CreationTime
+                RenamedEnabled = false
             };
             _watcher.Dispose();
             _watcher = new EnhancedChannelFileSystemWatcher(
