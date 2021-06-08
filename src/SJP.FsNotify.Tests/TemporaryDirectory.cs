@@ -47,7 +47,13 @@ namespace SJP.FsNotify.Tests
                 return;
 
             if (Directory.Exists(DirectoryPath))
-                Directory.Delete(DirectoryPath, true);
+            {
+                try
+                {
+                    Directory.Delete(DirectoryPath, true);
+                }
+                catch {}
+            }
 
             _disposed = true;
         }

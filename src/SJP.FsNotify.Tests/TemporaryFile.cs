@@ -36,7 +36,15 @@ namespace SJP.FsNotify.Tests
                 return;
 
             if (File.Exists(FilePath))
-                File.Delete(FilePath);
+            {
+                try
+                {
+                    if (FileInfo.Attributes.HasFlag(FileAttributes.ReadOnly))
+                        FileInfo.Attributes &= ~FileAttributes.ReadOnly;
+                    File.Delete(FilePath);
+                }
+                catch {}
+            }
 
             _disposed = true;
         }
