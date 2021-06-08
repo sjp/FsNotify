@@ -16,6 +16,7 @@ Avoid some of the pitfalls of [`FileSystemWatcher`](https://docs.microsoft.com/e
 * Supports .NET 5.0.
 * Avoids many of the pitfalls of `FileSystemWatcher`, in particular when it can exhaust its internal buffer.
 * Asynchronously read from a [`Channel`](https://docs.microsoft.com/en-us/dotnet/api/system.threading.channels.channel) to observe file system events.
+* Determine *why* a file change event was emitted with an `EnhancedChannelFileSystemWatcher`.
 
 ## Installation
 
@@ -79,6 +80,28 @@ These options are:
 * `RenamedEnabled`: Whether file system rename events should be written to the channel. Defaults to `true`.
 
 There are also two convenience properties that are available which can be used to configure the `NotifyFilter` value. `AllNotifyFilters`, which enables the most verbose triggering of file system change events. Additionally there is `DefaultNotifyFilters`, which simply contains the default value for `NotifyFilter`.
+
+### `EnhancedChannelFileSystemWatcher`
+
+The `EnhancedChannelFileSystemWatcher` can be created with both a channel, and options which define the file watching behaviour. It behaves identically to the `ChannelFileSystemWatcher`, except that when specific `NotifyFilters` values are provided, it also publishes which value in the filter triggered a given change. For example, when the `NotifyFilters.Size` value is provide, it emits when the size has changed *and* informs that the size via a change reason.
+
+There are two key methods that are exposed:
+
+* `Start()`
+* `Stop()`
+
+The key difference is in the event arguments provides to the channel. There are both `EnhancedFileSystemEventArgs` and `EnhancedRenamedEventArgs` which only differ from the common `FileSystemEventArgs` and `RenamedEventArgs` in that they provide a new value:
+
+```csharp
+/// <summary>
+/// The reason that the event has been triggered.
+/// </summary>
+public FileSystemChangeType ChangeReason { get; set; }
+```
+
+This change type is an `enum` containing values such as `Created`, `LastAccessChanged`, `AttributeChanged`, etc. In short, this one property is the key reason why you would prefer an `EnhancedChannelFileSystemWatcher` over a regular `EnhancedChannelFileSystemWatcher`.
+
+Additionally, bear in mind that the change reason will only ever emit values that are enabled by the `ChannelFileSystemWatcherOptions.NotifyFilter` value. In other words, the `ChangeReason` property can only exposes what the provided options enable.
 
 ## Icon
 
