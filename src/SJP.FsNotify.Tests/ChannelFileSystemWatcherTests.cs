@@ -14,6 +14,7 @@ namespace SJP.FsNotify.Tests
         private const int FsEventTimeout = 50; // ms
 
         private TemporaryDirectory _tempDir = default!;
+        private TemporaryFile _tempFile = default!;
         private Channel<FileSystemEventArgs> _channel = default!;
         private Channel<ErrorEventArgs> _errorChannel = default!;
         private Mock<IChannelFileSystemWatcherOptions> _options = default!;
@@ -25,6 +26,7 @@ namespace SJP.FsNotify.Tests
         public void Setup()
         {
             _tempDir = new TemporaryDirectory();
+            _tempFile = new TemporaryFile(_tempDir.DirectoryInfo);
 
             _channel = Channel.CreateUnbounded<FileSystemEventArgs>();
             _errorChannel = Channel.CreateUnbounded<ErrorEventArgs>();
@@ -48,6 +50,7 @@ namespace SJP.FsNotify.Tests
         public void Teardown()
         {
             _watcher.Dispose();
+            _tempFile.Dispose();
             _tempDir.Dispose();
         }
 
@@ -85,21 +88,19 @@ namespace SJP.FsNotify.Tests
                 RenamedEnabled = false
             };
 
-            var testFile = FsNotifyTest.GetTestFile(new DirectoryInfo(_tempDir.DirectoryPath));
-
             _watcher.Start();
-            testFile.Create().Dispose();
+            _tempFile.FileInfo.Create().Dispose();
             await Task.Delay(FsEventTimeout).ConfigureAwait(false); // wait for watcher to notify to channel before closing
             _watcher.Stop();
 
-            var containsFile = await _channel.Reader.ReadAllAsync().AnyAsync(evt => evt.Name == testFile.Name).ConfigureAwait(false);
+            var containsFile = await _channel.Reader.ReadAllAsync().AnyAsync(evt => evt.Name == _tempFile.FileInfo.Name).ConfigureAwait(false);
             Assert.That(containsFile, Is.True);
         }
 
         [Test]
         public async Task OnChanged_WhenFileChanged_PublishesToChannel()
         {
-            // Disable everything but create
+            // Disable everything but change
             _sourceOptions = new ChannelFileSystemWatcherOptions(_tempDir.DirectoryPath)
             {
                 CreatedEnabled = false,
@@ -108,24 +109,23 @@ namespace SJP.FsNotify.Tests
                 RenamedEnabled = false
             };
 
-            var testFile = FsNotifyTest.GetTestFile(new DirectoryInfo(_tempDir.DirectoryPath));
-            testFile.Create().Dispose();
+            _tempFile.FileInfo.Create().Dispose();
 
             _watcher.Start();
-            using (var writer = testFile.AppendText())
+            using (var writer = _tempFile.FileInfo.AppendText())
                 await writer.WriteLineAsync("trigger change").ConfigureAwait(false);
-            testFile.LastWriteTime = new DateTime(2016, 1, 1);
+            _tempFile.FileInfo.LastWriteTime = new DateTime(2016, 1, 1);
             await Task.Delay(FsEventTimeout).ConfigureAwait(false); // wait for watcher to notify to channel before closing
             _watcher.Stop();
 
-            var containsFile = await _channel.Reader.ReadAllAsync().AnyAsync(evt => evt.Name == testFile.Name).ConfigureAwait(false);
+            var containsFile = await _channel.Reader.ReadAllAsync().AnyAsync(evt => evt.Name == _tempFile.FileInfo.Name).ConfigureAwait(false);
             Assert.That(containsFile, Is.True);
         }
 
         [Test]
         public async Task OnDeleted_WhenFileDeleted_PublishesToChannel()
         {
-            // Disable everything but create
+            // Disable everything but delete
             _sourceOptions = new ChannelFileSystemWatcherOptions(_tempDir.DirectoryPath)
             {
                 CreatedEnabled = false,
@@ -134,22 +134,21 @@ namespace SJP.FsNotify.Tests
                 RenamedEnabled = false
             };
 
-            var testFile = FsNotifyTest.GetTestFile(new DirectoryInfo(_tempDir.DirectoryPath));
-            testFile.Create().Dispose();
+            _tempFile.FileInfo.Create().Dispose();
 
             _watcher.Start();
-            testFile.Delete();
+            _tempFile.FileInfo.Delete();
             await Task.Delay(FsEventTimeout).ConfigureAwait(false); // wait for watcher to notify to channel before closing
             _watcher.Stop();
 
-            var containsFile = await _channel.Reader.ReadAllAsync().AnyAsync(evt => evt.Name == testFile.Name).ConfigureAwait(false);
+            var containsFile = await _channel.Reader.ReadAllAsync().AnyAsync(evt => evt.Name == _tempFile.FileInfo.Name).ConfigureAwait(false);
             Assert.That(containsFile, Is.True);
         }
 
         [Test]
         public async Task OnRenamed_WhenFileRenamed_PublishesToChannel()
         {
-            // Disable everything but create
+            // Disable everything but rename
             _sourceOptions = new ChannelFileSystemWatcherOptions(_tempDir.DirectoryPath)
             {
                 CreatedEnabled = false,
@@ -158,19 +157,18 @@ namespace SJP.FsNotify.Tests
                 RenamedEnabled = true
             };
 
-            var testFile = FsNotifyTest.GetTestFile(new DirectoryInfo(_tempDir.DirectoryPath));
-            var testFile2 = FsNotifyTest.GetTestFile(new DirectoryInfo(_tempDir.DirectoryPath));
-            testFile.Create().Dispose();
+            using var tempFile2 = new TemporaryFile(_tempDir.DirectoryInfo);
+            _tempFile.FileInfo.Create().Dispose();
 
             _watcher.Start();
-            File.Move(testFile.FullName, testFile2.FullName);
+            File.Move(_tempFile.FilePath, tempFile2.FilePath);
             await Task.Delay(FsEventTimeout).ConfigureAwait(false); // wait for watcher to notify to channel before closing
             _watcher.Stop();
 
             var containsFile = await _channel.Reader
                 .ReadAllAsync()
                 .OfType<RenamedEventArgs>()
-                .AnyAsync(evt => evt.OldFullPath == testFile.FullName && evt.FullPath == testFile2.FullName)
+                .AnyAsync(evt => evt.OldFullPath == _tempFile.FilePath && evt.FullPath == tempFile2.FilePath)
                 .ConfigureAwait(false);
             Assert.That(containsFile, Is.True);
         }
@@ -180,6 +178,7 @@ namespace SJP.FsNotify.Tests
         {
             var fsWatcher = new Mock<IFileSystemWatcher>(MockBehavior.Loose);
 
+            _watcher.Dispose();
             _watcher = new ChannelFileSystemWatcher(_channel, _errorChannel, _options.Object, fsWatcher.Object);
             _watcher.Start();
 
@@ -203,21 +202,19 @@ namespace SJP.FsNotify.Tests
                 RenamedEnabled = false
             };
 
-            var testFile = FsNotifyTest.GetTestFile(new DirectoryInfo(_tempDir.DirectoryPath));
-
             _watcher.Start();
-            testFile.Create().Dispose();
+            _tempFile.FileInfo.Create().Dispose();
             await Task.Delay(FsEventTimeout).ConfigureAwait(false); // wait for watcher to notify to channel before closing
             _watcher.Stop();
 
-            var containsFile = await _channel.Reader.ReadAllAsync().AnyAsync(evt => evt.Name == testFile.Name).ConfigureAwait(false);
+            var containsFile = await _channel.Reader.ReadAllAsync().AnyAsync(evt => evt.Name == _tempFile.FileInfo.Name).ConfigureAwait(false);
             Assert.That(containsFile, Is.False);
         }
 
         [Test]
         public async Task OnChanged_WhenFileChangedButDisabled_DoesNotPublish()
         {
-            // Disable everything but create
+            // Disable everything but change
             _sourceOptions = new ChannelFileSystemWatcherOptions(_tempDir.DirectoryPath)
             {
                 CreatedEnabled = false,
@@ -226,24 +223,23 @@ namespace SJP.FsNotify.Tests
                 RenamedEnabled = false
             };
 
-            var testFile = FsNotifyTest.GetTestFile(new DirectoryInfo(_tempDir.DirectoryPath));
-            testFile.Create().Dispose();
+            _tempFile.FileInfo.Create().Dispose();
 
             _watcher.Start();
-            using (var writer = testFile.AppendText())
+            using (var writer = _tempFile.FileInfo.AppendText())
                 await writer.WriteLineAsync("trigger change").ConfigureAwait(false);
-            testFile.LastWriteTime = new DateTime(2016, 1, 1);
+            _tempFile.FileInfo.LastWriteTime = new DateTime(2016, 1, 1);
             await Task.Delay(FsEventTimeout).ConfigureAwait(false); // wait for watcher to notify to channel before closing
             _watcher.Stop();
 
-            var containsFile = await _channel.Reader.ReadAllAsync().AnyAsync(evt => evt.Name == testFile.Name).ConfigureAwait(false);
+            var containsFile = await _channel.Reader.ReadAllAsync().AnyAsync(evt => evt.Name == _tempFile.FileInfo.Name).ConfigureAwait(false);
             Assert.That(containsFile, Is.False);
         }
 
         [Test]
         public async Task OnDeleted_WhenFileDeletedButDisabled_DoesNotPublish()
         {
-            // Disable everything but create
+            // Disable everything but delete
             _sourceOptions = new ChannelFileSystemWatcherOptions(_tempDir.DirectoryPath)
             {
                 CreatedEnabled = false,
@@ -252,22 +248,21 @@ namespace SJP.FsNotify.Tests
                 RenamedEnabled = false
             };
 
-            var testFile = FsNotifyTest.GetTestFile(new DirectoryInfo(_tempDir.DirectoryPath));
-            testFile.Create().Dispose();
+            _tempFile.FileInfo.Create().Dispose();
 
             _watcher.Start();
-            testFile.Delete();
+            _tempFile.FileInfo.Delete();
             await Task.Delay(FsEventTimeout).ConfigureAwait(false); // wait for watcher to notify to channel before closing
             _watcher.Stop();
 
-            var containsFile = await _channel.Reader.ReadAllAsync().AnyAsync(evt => evt.Name == testFile.Name).ConfigureAwait(false);
+            var containsFile = await _channel.Reader.ReadAllAsync().AnyAsync(evt => evt.Name == _tempFile.FileInfo.Name).ConfigureAwait(false);
             Assert.That(containsFile, Is.False);
         }
 
         [Test]
         public async Task OnRenamed_WhenFileRenamedButDisabled_DoesNotPublish()
         {
-            // Disable everything but create
+            // Disable everything but rename
             _sourceOptions = new ChannelFileSystemWatcherOptions(_tempDir.DirectoryPath)
             {
                 CreatedEnabled = false,
@@ -276,19 +271,18 @@ namespace SJP.FsNotify.Tests
                 RenamedEnabled = false
             };
 
-            var testFile = FsNotifyTest.GetTestFile(new DirectoryInfo(_tempDir.DirectoryPath));
-            var testFile2 = FsNotifyTest.GetTestFile(new DirectoryInfo(_tempDir.DirectoryPath));
-            testFile.Create().Dispose();
+            using var tempFile2 = new TemporaryFile(_tempDir.DirectoryInfo);
+            _tempFile.FileInfo.Create().Dispose();
 
             _watcher.Start();
-            File.Move(testFile.FullName, testFile2.FullName);
+            File.Move(_tempFile.FilePath, tempFile2.FilePath);
             await Task.Delay(FsEventTimeout).ConfigureAwait(false); // wait for watcher to notify to channel before closing
             _watcher.Stop();
 
             var containsFile = await _channel.Reader
                 .ReadAllAsync()
                 .OfType<RenamedEventArgs>()
-                .AnyAsync(evt => evt.OldFullPath == testFile.FullName && evt.FullPath == testFile2.FullName)
+                .AnyAsync(evt => evt.OldFullPath == _tempFile.FilePath && evt.FullPath == tempFile2.FilePath)
                 .ConfigureAwait(false);
             Assert.That(containsFile, Is.False);
         }

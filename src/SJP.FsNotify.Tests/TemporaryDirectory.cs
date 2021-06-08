@@ -15,6 +15,7 @@ namespace SJP.FsNotify.Tests
         public TemporaryDirectory()
         {
             DirectoryPath = GetTempDirectoryPath();
+            DirectoryInfo = new DirectoryInfo(DirectoryPath);
             Directory.CreateDirectory(DirectoryPath);
         }
 
@@ -23,6 +24,11 @@ namespace SJP.FsNotify.Tests
         /// </summary>
         /// <value>The directory path.</value>
         public string DirectoryPath { get; }
+
+        /// <summary>
+        /// A <see cref="DirectoryInfo"/> instance that refers to the temporary directory, always a random location.
+        /// </summary>
+        public DirectoryInfo DirectoryInfo { get; }
 
         private static string GetTempDirectoryPath()
         {
@@ -40,7 +46,9 @@ namespace SJP.FsNotify.Tests
             if (_disposed)
                 return;
 
-            Directory.Delete(DirectoryPath, true);
+            if (Directory.Exists(DirectoryPath))
+                Directory.Delete(DirectoryPath, true);
+
             _disposed = true;
         }
 
