@@ -22,7 +22,7 @@ namespace SJP.FsNotify
         }
 
         /// <summary>
-        /// asd
+        /// The reason that the event has been triggered.
         /// </summary>
         public FileSystemChangeType ChangeReason { get; set; }
     }

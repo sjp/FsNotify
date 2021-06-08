@@ -11,17 +11,17 @@
         Unknown = 0,
 
         /// <summary>
-        /// asd
+        /// File or directory created.
         /// </summary>
         Created = 1,
 
         /// <summary>
-        /// asd
+        /// File or directory deleted.
         /// </summary>
         Deleted = 2,
 
         /// <summary>
-        /// asd
+        /// File or directory renamed.
         /// </summary>
         Renamed = 3,
 
