@@ -83,7 +83,7 @@ There are also two convenience properties that are available which can be used t
 
 ### `EnhancedChannelFileSystemWatcher`
 
-The `EnhancedChannelFileSystemWatcher` can be created with both a channel, and options which define the file watching behaviour. It behaves identically to the `ChannelFileSystemWatcher`, except that when specific `NotifyFilters` values are provided, it also publishes which value in the filter triggered a given change. For example, when the `NotifyFilters.Size` value is provide, it emits when the size has changed *and* informs that the size via a change reason.
+The `EnhancedChannelFileSystemWatcher` can be created with both a channel, and options which define the file watching behaviour. It behaves identically to the `ChannelFileSystemWatcher`, except that when specific `NotifyFilters` values are provided, it also publishes which value in the filter triggered a given change. For example, when the `NotifyFilters.Size` value is provide, it emits when the size has changed *and* informs that the size changing was the reason for the file notification event.
 
 There are two key methods that are exposed:
 
