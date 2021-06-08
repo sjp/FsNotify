@@ -4,32 +4,32 @@ using System.IO;
 namespace SJP.FsNotify
 {
     /// <summary>
-    /// asd
+    /// Options used to configure file system watch behaviour for a channel-based watcher.
     /// </summary>
     public interface IChannelFileSystemWatcherOptions
     {
         /// <summary>
-        /// adsd
+        /// Whether an event should be raised whenever an underlying <see cref="FileSystemWatcher"/> detects a file or directory has changed.
         /// </summary>
         bool ChangedEnabled { get; init; }
 
         /// <summary>
-        /// asd
+        /// Whether an event should be raised whenever an underlying <see cref="FileSystemWatcher"/> detects a create operation.
         /// </summary>
         bool CreatedEnabled { get; init; }
 
         /// <summary>
-        /// asd
+        /// Whether an event should be raised whenever an underlying <see cref="FileSystemWatcher"/> detects a rename.
         /// </summary>
         bool DeletedEnabled { get; init; }
 
         /// <summary>
-        /// asd
+        /// Gets or sets the filter string used to determine what files are monitored in a directory.
         /// </summary>
         string Filter { get; init; }
 
         /// <summary>
-        /// asd
+        /// Gets the collection of all the filters used to determine what files are monitored in a directory.
         /// </summary>
         Collection<string> Filters { get; init; }
 
@@ -39,17 +39,17 @@ namespace SJP.FsNotify
         bool IncludeSubdirectories { get; init; }
 
         /// <summary>
-        /// asd
+        /// Gets or sets the type of changes to watch for.
         /// </summary>
         NotifyFilters NotifyFilter { get; init; }
 
         /// <summary>
-        /// asd
+        /// Gets the path of the directory to watch.
         /// </summary>
         string Path { get; }
 
         /// <summary>
-        /// asd
+        /// Whether an event should be raised whenever an underlying <see cref="FileSystemWatcher"/> detects a rename.
         /// </summary>
         bool RenamedEnabled { get; init; }
     }

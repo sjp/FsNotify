@@ -27,8 +27,8 @@ namespace SJP.FsNotify.ConsoleTest
             await Console.Out.WriteLineAsync("Press any key to exit.").ConfigureAwait(false);
 
             // Uncomment to run the standard watcher
-            // return await RunStandardFsWatcher(dirPath);
-            return await RunEnhancedFsWatcher(dirPath);
+            // return await RunStandardFsWatcher(dirPath).ConfigureAwait(false);
+            return await RunEnhancedFsWatcher(dirPath).ConfigureAwait(false);
         }
 
         private static async Task<int> RunStandardFsWatcher(string dirPath)
