@@ -13,7 +13,7 @@ Avoid some of the pitfalls of [`FileSystemWatcher`](https://docs.microsoft.com/e
 
 ## Highlights
 
-* Supports .NET 5.0.
+* Supports .NET 6.0.
 * Avoids many of the pitfalls of `FileSystemWatcher`, in particular when it can exhaust its internal buffer.
 * Asynchronously read from a [`Channel`](https://docs.microsoft.com/en-us/dotnet/api/system.threading.channels.channel) to observe file system events.
 * Determine *why* a file change event was emitted with an `EnhancedChannelFileSystemWatcher`.
