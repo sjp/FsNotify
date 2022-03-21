@@ -52,7 +52,7 @@ public sealed class TemporaryDirectory : IDisposable
             {
                 Directory.Delete(DirectoryPath, true);
             }
-            catch {}
+            catch { }
         }
 
         _disposed = true;

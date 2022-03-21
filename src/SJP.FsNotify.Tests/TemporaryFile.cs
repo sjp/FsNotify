@@ -43,7 +43,7 @@ public sealed class TemporaryFile : IDisposable
                     FileInfo.Attributes &= ~FileAttributes.ReadOnly;
                 File.Delete(FilePath);
             }
-            catch {}
+            catch { }
         }
 
         _disposed = true;
