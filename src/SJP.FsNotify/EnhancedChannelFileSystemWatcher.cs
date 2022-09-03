@@ -34,8 +34,7 @@ public class EnhancedChannelFileSystemWatcher : IChannelFileSystemWatcher, IDisp
         IChannelFileSystemWatcherOptions options
     ) : this(writer, errorWriter, options, new FileSystemWatcherAdapter(new FileSystemWatcher()), ConstructChangeWatchers(options))
     {
-        if (errorWriter == null)
-            throw new ArgumentNullException(nameof(errorWriter));
+        ArgumentNullException.ThrowIfNull(errorWriter);
     }
 
     /// <summary>
@@ -197,8 +196,7 @@ public class EnhancedChannelFileSystemWatcher : IChannelFileSystemWatcher, IDisp
     /// <exception cref="ArgumentNullException"><paramref name="e"/> is <c>null</c>.</exception>
     protected virtual void OnCreated(FileSystemEventArgs e)
     {
-        if (e == null)
-            throw new ArgumentNullException(nameof(e));
+        ArgumentNullException.ThrowIfNull(e);
         if (!Options.CreatedEnabled)
             return;
 
@@ -213,8 +211,7 @@ public class EnhancedChannelFileSystemWatcher : IChannelFileSystemWatcher, IDisp
     /// <exception cref="ArgumentNullException"><paramref name="e"/> is <c>null</c>.</exception>
     protected virtual void OnDeleted(FileSystemEventArgs e)
     {
-        if (e == null)
-            throw new ArgumentNullException(nameof(e));
+        ArgumentNullException.ThrowIfNull(e);
         if (!Options.DeletedEnabled)
             return;
 
@@ -229,8 +226,7 @@ public class EnhancedChannelFileSystemWatcher : IChannelFileSystemWatcher, IDisp
     /// <exception cref="ArgumentNullException"><paramref name="e"/> is <c>null</c>.</exception>
     protected virtual void OnRenamed(RenamedEventArgs e)
     {
-        if (e == null)
-            throw new ArgumentNullException(nameof(e));
+        ArgumentNullException.ThrowIfNull(e);
         if (!Options.RenamedEnabled)
             return;
 
@@ -245,8 +241,7 @@ public class EnhancedChannelFileSystemWatcher : IChannelFileSystemWatcher, IDisp
     /// <exception cref="ArgumentNullException"><paramref name="e"/> is <c>null</c>.</exception>
     protected virtual void OnError(ErrorEventArgs e)
     {
-        if (e == null)
-            throw new ArgumentNullException(nameof(e));
+        ArgumentNullException.ThrowIfNull(e);
 
         ErrorWriter?.TryWrite(e);
     }
@@ -258,8 +253,7 @@ public class EnhancedChannelFileSystemWatcher : IChannelFileSystemWatcher, IDisp
     /// <exception cref="ArgumentNullException"><paramref name="e"/> is <c>null</c>.</exception>
     protected virtual void OnAttributesChanged(FileSystemEventArgs e)
     {
-        if (e == null)
-            throw new ArgumentNullException(nameof(e));
+        ArgumentNullException.ThrowIfNull(e);
         if (!Options.ChangedEnabled || !_changeWatchers.ContainsKey(NotifyFilters.Attributes))
             return;
 
@@ -274,8 +268,7 @@ public class EnhancedChannelFileSystemWatcher : IChannelFileSystemWatcher, IDisp
     /// <exception cref="ArgumentNullException"><paramref name="e"/> is <c>null</c>.</exception>
     protected virtual void OnSizeChanged(FileSystemEventArgs e)
     {
-        if (e == null)
-            throw new ArgumentNullException(nameof(e));
+        ArgumentNullException.ThrowIfNull(e);
         if (!Options.ChangedEnabled || !_changeWatchers.ContainsKey(NotifyFilters.Size))
             return;
 
@@ -290,8 +283,7 @@ public class EnhancedChannelFileSystemWatcher : IChannelFileSystemWatcher, IDisp
     /// <exception cref="ArgumentNullException"><paramref name="e"/> is <c>null</c>.</exception>
     protected virtual void OnLastWriteChanged(FileSystemEventArgs e)
     {
-        if (e == null)
-            throw new ArgumentNullException(nameof(e));
+        ArgumentNullException.ThrowIfNull(e);
         if (!Options.ChangedEnabled || !_changeWatchers.ContainsKey(NotifyFilters.LastWrite))
             return;
 
@@ -306,8 +298,7 @@ public class EnhancedChannelFileSystemWatcher : IChannelFileSystemWatcher, IDisp
     /// <exception cref="ArgumentNullException"><paramref name="e"/> is <c>null</c>.</exception>
     protected virtual void OnLastAccessChanged(FileSystemEventArgs e)
     {
-        if (e == null)
-            throw new ArgumentNullException(nameof(e));
+        ArgumentNullException.ThrowIfNull(e);
         if (!Options.ChangedEnabled || !_changeWatchers.ContainsKey(NotifyFilters.LastAccess))
             return;
 
@@ -322,8 +313,7 @@ public class EnhancedChannelFileSystemWatcher : IChannelFileSystemWatcher, IDisp
     /// <exception cref="ArgumentNullException"><paramref name="e"/> is <c>null</c>.</exception>
     protected virtual void OnCreationTimeChanged(FileSystemEventArgs e)
     {
-        if (e == null)
-            throw new ArgumentNullException(nameof(e));
+        ArgumentNullException.ThrowIfNull(e);
         if (!Options.ChangedEnabled || !_changeWatchers.ContainsKey(NotifyFilters.CreationTime))
             return;
 
@@ -338,8 +328,7 @@ public class EnhancedChannelFileSystemWatcher : IChannelFileSystemWatcher, IDisp
     /// <exception cref="ArgumentNullException"><paramref name="e"/> is <c>null</c>.</exception>
     protected virtual void OnSecurityChanged(FileSystemEventArgs e)
     {
-        if (e == null)
-            throw new ArgumentNullException(nameof(e));
+        ArgumentNullException.ThrowIfNull(e);
         if (!Options.ChangedEnabled || !_changeWatchers.ContainsKey(NotifyFilters.Security))
             return;
 

@@ -33,8 +33,7 @@ public class ChannelFileSystemWatcher : IChannelFileSystemWatcher, IDisposable
         IChannelFileSystemWatcherOptions options
     ) : this(writer, errorWriter, options, new FileSystemWatcherAdapter(new FileSystemWatcher()))
     {
-        if (errorWriter == null)
-            throw new ArgumentNullException(nameof(errorWriter));
+        ArgumentNullException.ThrowIfNull(errorWriter);
     }
 
     /// <summary>
@@ -147,8 +146,7 @@ public class ChannelFileSystemWatcher : IChannelFileSystemWatcher, IDisposable
     /// <exception cref="ArgumentNullException"><paramref name="e"/> is <c>null</c>.</exception>
     protected virtual void OnCreated(FileSystemEventArgs e)
     {
-        if (e == null)
-            throw new ArgumentNullException(nameof(e));
+        ArgumentNullException.ThrowIfNull(e);
         if (!Options.CreatedEnabled)
             return;
 
@@ -162,8 +160,7 @@ public class ChannelFileSystemWatcher : IChannelFileSystemWatcher, IDisposable
     /// <exception cref="ArgumentNullException"><paramref name="e"/> is <c>null</c>.</exception>
     protected virtual void OnChanged(FileSystemEventArgs e)
     {
-        if (e == null)
-            throw new ArgumentNullException(nameof(e));
+        ArgumentNullException.ThrowIfNull(e);
         if (!Options.ChangedEnabled)
             return;
 
@@ -177,8 +174,7 @@ public class ChannelFileSystemWatcher : IChannelFileSystemWatcher, IDisposable
     /// <exception cref="ArgumentNullException"><paramref name="e"/> is <c>null</c>.</exception>
     protected virtual void OnDeleted(FileSystemEventArgs e)
     {
-        if (e == null)
-            throw new ArgumentNullException(nameof(e));
+        ArgumentNullException.ThrowIfNull(e);
         if (!Options.DeletedEnabled)
             return;
 
@@ -192,8 +188,7 @@ public class ChannelFileSystemWatcher : IChannelFileSystemWatcher, IDisposable
     /// <exception cref="ArgumentNullException"><paramref name="e"/> is <c>null</c>.</exception>
     protected virtual void OnRenamed(RenamedEventArgs e)
     {
-        if (e == null)
-            throw new ArgumentNullException(nameof(e));
+        ArgumentNullException.ThrowIfNull(e);
         if (!Options.RenamedEnabled)
             return;
 
@@ -207,8 +202,7 @@ public class ChannelFileSystemWatcher : IChannelFileSystemWatcher, IDisposable
     /// <exception cref="ArgumentNullException"><paramref name="e"/> is <c>null</c>.</exception>
     protected virtual void OnError(ErrorEventArgs e)
     {
-        if (e == null)
-            throw new ArgumentNullException(nameof(e));
+        ArgumentNullException.ThrowIfNull(e);
 
         ErrorWriter?.TryWrite(e);
     }
