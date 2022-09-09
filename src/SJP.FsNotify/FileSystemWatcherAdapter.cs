@@ -114,7 +114,7 @@ public class FileSystemWatcherAdapter : IFileSystemWatcher, IDisposable
         set
         {
             if (!value.IsValid())
-                throw new ArgumentException($"The { nameof(NotifyFilters) } provided must be a valid enum.", nameof(value));
+                throw new ArgumentException($"The {nameof(NotifyFilters)} provided must be a valid enum.", nameof(value));
 
             _watcher.NotifyFilter = value;
         }
@@ -138,7 +138,7 @@ public class FileSystemWatcherAdapter : IFileSystemWatcher, IDisposable
     public WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType)
     {
         if (!changeType.IsValid())
-            throw new ArgumentException($"The { nameof(WatcherChangeTypes) } provided must be a valid enum.", nameof(changeType));
+            throw new ArgumentException($"The {nameof(WatcherChangeTypes)} provided must be a valid enum.", nameof(changeType));
 
         return _watcher.WaitForChanged(changeType);
     }
@@ -153,7 +153,7 @@ public class FileSystemWatcherAdapter : IFileSystemWatcher, IDisposable
     public WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType, int timeout)
     {
         if (!changeType.IsValid())
-            throw new ArgumentException($"The { nameof(WatcherChangeTypes) } provided must be a valid enum.", nameof(changeType));
+            throw new ArgumentException($"The {nameof(WatcherChangeTypes)} provided must be a valid enum.", nameof(changeType));
 
         return _watcher.WaitForChanged(changeType, timeout);
     }

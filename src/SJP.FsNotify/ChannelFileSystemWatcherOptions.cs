@@ -53,7 +53,7 @@ public sealed class ChannelFileSystemWatcherOptions : IChannelFileSystemWatcherO
         init
         {
             if (!value.IsValid())
-                throw new ArgumentException($"The { nameof(NotifyFilters) } provided must be a valid enum.", nameof(value));
+                throw new ArgumentException($"The {nameof(NotifyFilters)} provided must be a valid enum.", nameof(value));
 
             _filters = value;
         }
