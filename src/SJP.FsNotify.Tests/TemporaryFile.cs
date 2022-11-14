@@ -12,10 +12,10 @@ public sealed class TemporaryFile : IDisposable
     /// <summary>
     /// Initializes a new instance of the <see cref="TemporaryFile"/> class.
     /// </summary>
-    public TemporaryFile(DirectoryInfo testDir)
+    public TemporaryFile(DirectoryInfo tempDir)
     {
         var fileName = Path.GetRandomFileName();
-        FilePath = Path.Combine(testDir.FullName, fileName);
+        FilePath = Path.Combine(tempDir.FullName, fileName);
         FileInfo = new FileInfo(FilePath);
     }
 
