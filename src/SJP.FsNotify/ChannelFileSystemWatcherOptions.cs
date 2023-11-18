@@ -36,7 +36,7 @@ public sealed class ChannelFileSystemWatcherOptions : IChannelFileSystemWatcherO
     /// <summary>
     /// Gets the collection of all the filters used to determine what files are monitored in a directory.
     /// </summary>
-    public Collection<string> Filters { get; init; } = new Collection<string>();
+    public Collection<string> Filters { get; init; } = [];
 
     /// <summary>
     /// Gets or sets a value indicating whether subdirectories within the specified path should be monitored.
