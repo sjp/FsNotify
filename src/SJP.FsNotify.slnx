@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="SJP.FsNotify.ConsoleTest/SJP.FsNotify.ConsoleTest.csproj" />
+  <Project Path="SJP.FsNotify.Tests/SJP.FsNotify.Tests.csproj" />
+  <Project Path="SJP.FsNotify/SJP.FsNotify.csproj" />
+</Solution>
