@@ -29,11 +29,11 @@ internal static class FileSystemWatcherAdapterTests
 
         var watcher = new FileSystemWatcher(tempDir.DirectoryPath);
         using var adapter = new FileSystemWatcherAdapter(watcher);
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(adapter.Path, Is.EqualTo(tempDir.DirectoryPath));
             Assert.That(watcher.Path, Is.EqualTo(tempDir.DirectoryPath));
-        });
+        }
     }
 
     [Test]
@@ -45,11 +45,11 @@ internal static class FileSystemWatcherAdapterTests
         var watcher = new FileSystemWatcher(tempDir.DirectoryPath);
         using var adapter = new FileSystemWatcherAdapter(watcher) { Path = tempDir2.DirectoryPath };
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(adapter.Path, Is.EqualTo(tempDir2.DirectoryPath));
             Assert.That(watcher.Path, Is.EqualTo(tempDir2.DirectoryPath));
-        });
+        }
     }
 
     [Test]
@@ -57,11 +57,11 @@ internal static class FileSystemWatcherAdapterTests
     {
         var watcher = new FileSystemWatcher() { IncludeSubdirectories = true };
         using var adapter = new FileSystemWatcherAdapter(watcher);
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(watcher.IncludeSubdirectories, Is.True);
             Assert.That(adapter.IncludeSubdirectories, Is.True);
-        });
+        }
     }
 
     [Test]
@@ -70,11 +70,11 @@ internal static class FileSystemWatcherAdapterTests
         var watcher = new FileSystemWatcher();
         using var adapter = new FileSystemWatcherAdapter(watcher) { IncludeSubdirectories = true };
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(watcher.IncludeSubdirectories, Is.True);
             Assert.That(adapter.IncludeSubdirectories, Is.True);
-        });
+        }
     }
 
     [Test]
@@ -84,11 +84,11 @@ internal static class FileSystemWatcherAdapterTests
         var watcher = new FileSystemWatcher() { Filter = filter };
         using var adapter = new FileSystemWatcherAdapter(watcher);
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(watcher.Filter, Is.EqualTo(filter));
             Assert.That(adapter.Filter, Is.EqualTo(filter));
-        });
+        }
     }
 
     [Test]
@@ -98,11 +98,11 @@ internal static class FileSystemWatcherAdapterTests
         var watcher = new FileSystemWatcher();
         using var adapter = new FileSystemWatcherAdapter(watcher) { Filter = filter };
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(watcher.Filter, Is.EqualTo(filter));
             Assert.That(adapter.Filter, Is.EqualTo(filter));
-        });
+        }
     }
 
     [Test]
@@ -123,11 +123,11 @@ internal static class FileSystemWatcherAdapterTests
         var watcher = new FileSystemWatcher() { NotifyFilter = filter };
         using var adapter = new FileSystemWatcherAdapter(watcher);
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(watcher.NotifyFilter, Is.EqualTo(filter));
             Assert.That(adapter.NotifyFilter, Is.EqualTo(filter));
-        });
+        }
     }
 
     [Test]
@@ -137,11 +137,11 @@ internal static class FileSystemWatcherAdapterTests
         var watcher = new FileSystemWatcher();
         using var adapter = new FileSystemWatcherAdapter(watcher) { NotifyFilter = filter };
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(watcher.NotifyFilter, Is.EqualTo(filter));
             Assert.That(adapter.NotifyFilter, Is.EqualTo(filter));
-        });
+        }
     }
 
     [Test]
@@ -152,11 +152,11 @@ internal static class FileSystemWatcherAdapterTests
         var watcher = new FileSystemWatcher(tempDir.DirectoryPath) { EnableRaisingEvents = true };
         using var adapter = new FileSystemWatcherAdapter(watcher);
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(watcher.EnableRaisingEvents, Is.True);
             Assert.That(adapter.EnableRaisingEvents, Is.True);
-        });
+        }
     }
 
     [Test]
@@ -167,11 +167,11 @@ internal static class FileSystemWatcherAdapterTests
         var watcher = new FileSystemWatcher(tempDir.DirectoryPath);
         using var adapter = new FileSystemWatcherAdapter(watcher) { EnableRaisingEvents = true };
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(watcher.EnableRaisingEvents, Is.True);
             Assert.That(adapter.EnableRaisingEvents, Is.True);
-        });
+        }
     }
 
     [Test]

@@ -112,7 +112,7 @@ internal class ChannelFileSystemWatcherTests
         _tempFile.FileInfo.Create().Dispose();
 
         _watcher.Start();
-        using (var writer = _tempFile.FileInfo.AppendText())
+        await using (var writer = _tempFile.FileInfo.AppendText())
             await writer.WriteLineAsync("trigger change").ConfigureAwait(false);
         _tempFile.FileInfo.LastWriteTime = new DateTime(2016, 1, 1);
         await Task.Delay(FsEventTimeout).ConfigureAwait(false); // wait for watcher to notify to channel before closing
@@ -226,7 +226,7 @@ internal class ChannelFileSystemWatcherTests
         _tempFile.FileInfo.Create().Dispose();
 
         _watcher.Start();
-        using (var writer = _tempFile.FileInfo.AppendText())
+        await using (var writer = _tempFile.FileInfo.AppendText())
             await writer.WriteLineAsync("trigger change").ConfigureAwait(false);
         _tempFile.FileInfo.LastWriteTime = new DateTime(2016, 1, 1);
         await Task.Delay(FsEventTimeout).ConfigureAwait(false); // wait for watcher to notify to channel before closing

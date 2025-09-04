@@ -382,13 +382,13 @@ public class EnhancedChannelFileSystemWatcher : IChannelFileSystemWatcher, IDisp
 
     private readonly IReadOnlyDictionary<NotifyFilters, IFileSystemWatcher> _changeWatchers;
 
-    private static readonly IEnumerable<NotifyFilters> ChangeFilters = new[]
-    {
+    private static readonly IEnumerable<NotifyFilters> ChangeFilters =
+    [
         NotifyFilters.Attributes,
         NotifyFilters.Size,
         NotifyFilters.LastWrite,
         NotifyFilters.LastAccess,
         NotifyFilters.CreationTime,
         NotifyFilters.Security
-    };
+    ];
 }

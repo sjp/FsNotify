@@ -520,7 +520,7 @@ internal class EnhancedChannelFileSystemWatcherTests
         _tempFile.FileInfo.Create().Dispose();
 
         _watcher.Start();
-        using (var writer = _tempFile.FileInfo.AppendText())
+        await using (var writer = _tempFile.FileInfo.AppendText())
             await writer.WriteLineAsync("trigger change").ConfigureAwait(false);
         await Task.Delay(FsEventTimeout).ConfigureAwait(false); // wait for watcher to notify to channel before closing
         _watcher.Stop();
@@ -552,7 +552,7 @@ internal class EnhancedChannelFileSystemWatcherTests
         _tempFile.FileInfo.Create().Dispose();
 
         _watcher.Start();
-        using (var writer = _tempFile.FileInfo.AppendText())
+        await using (var writer = _tempFile.FileInfo.AppendText())
             await writer.WriteLineAsync("trigger change").ConfigureAwait(false);
         await Task.Delay(FsEventTimeout).ConfigureAwait(false); // wait for watcher to notify to channel before closing
         _watcher.Stop();

@@ -9,7 +9,7 @@ internal static class Program
 {
     public static async Task<int> Main(string[] args)
     {
-        args ??= Array.Empty<string>();
+        args ??= [];
         if (args.Length == 0)
         {
             await Console.Error.WriteLineAsync("A path to a directory to watch must be provided.").ConfigureAwait(false);
