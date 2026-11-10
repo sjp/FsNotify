@@ -1,18 +1,29 @@
 {
-	"name": "SJP.FsNotify Development",
-	"build": {
-		"dockerfile": "Dockerfile",
-		"args": {
-			"VARIANT": "8.0"
-		}
+	"name": "FsNotify (.NET)",
+	"image": "mcr.microsoft.com/devcontainers/base:trixie",
+	"features": {
+		"ghcr.io/devcontainers/features/dotnet:2": {
+			"version": "latest"
+		},
+		"ghcr.io/devcontainers/features/node:2": {
+			"version": "26"
+		},
+		"ghcr.io/anthropics/devcontainer-features/claude-code:1.0": {}
 	},
 	"customizations": {
 		"vscode": {
-			"settings": { },
 			"extensions": [
-				"ms-dotnettools.csharp"
+				"ms-dotnettools.csdevkit",
+				"editorconfig.editorconfig"
 			]
 		}
 	},
-	"remoteUser": "vscode"
+	"mounts": [
+		"source=claude-code-config,target=/home/vscode/.claude,type=volume"
+	],
+	"remoteUser": "vscode",
+	"containerEnv": {
+		"CLAUDE_CONFIG_DIR": "/home/vscode/.claude"
+	},
+	"postCreateCommand": "bash .devcontainer/post-create.sh"
 }
